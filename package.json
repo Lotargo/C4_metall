@@ -6,8 +6,15 @@
   "scripts": {
     "dev": "astro dev --host 127.0.0.1 --port 4325",
     "build": "astro build",
-    "preview": "astro preview --host 127.0.0.1 --port 4325",
-    "verify:evidence": "node scripts/verify-evidence.mjs"
+    "preview": "astro preview --host 127.0.0.1 --port 4326",
+    "verify:evidence": "node scripts/verify-evidence.mjs",
+    "typecheck": "tsc --project tsconfig.scripts.json"
   },
-  "dependencies": { "astro": "7.3.8" }
+  "dependencies": {
+    "@fontsource/ibm-plex-sans": "^5.3.0",
+    "astro": "7.3.8"
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2"
+  }
 }

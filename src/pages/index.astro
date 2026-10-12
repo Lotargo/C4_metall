@@ -1,110 +1,111 @@
 ---
 import data from '../data/evidence.json';
-import SourceLinks from '../components/SourceLinks.astro';
+import screenshots from '../data/screenshots.json';
+import { outcomes, stepStories, recognitionPhases, roleStories, dataDestinations, geometryColumns } from '../data/presentation.mjs';
+import '@fontsource/ibm-plex-sans/latin-400.css';
+import '@fontsource/ibm-plex-sans/latin-500.css';
+import '@fontsource/ibm-plex-sans/cyrillic-400.css';
+import '@fontsource/ibm-plex-sans/cyrillic-500.css';
+import { stepTitles, stepConditions, businessRoles, businessLocations } from '../data/business.mjs';
 import '../styles/global.css';
-const { audit, steps, agents, storageGroups, sources } = data;
-const date = new Date(audit.capturedAt).toLocaleString('ru-RU', {timeZone:'Asia/Yakutsk',day:'2-digit',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});
+const { steps, agents } = data;
 ---
 <!doctype html>
 <html lang="ru">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Подготовка производства — интерактивная архитектура C4</title>
-  <meta name="description" content="Архитектура подготовки производства по фактическому коду: интерактивная C4, алгоритм чтения чертежа, роли агентов, структура паспорта и SQL-хранилищ." />
+  <title>Подготовка производства — от чертежа к решению технолога</title>
+  <meta name="description" content="Понятный разбор подготовки производства: как читается чертёж, работают агенты, формируется паспорт и сохраняются результаты. Скриншоты интерфейса и проверяемые основания." />
   <meta name="robots" content="noindex, nofollow" />
-  <meta name="theme-color" content="#112f36" />
-  <meta property="og:title" content="От чертежа до предварительного маршрута · C4" />
-  <meta property="og:description" content="Разберите реализованный пайплайн, агентов и данные на четырёх уровнях архитектуры." />
+  <meta name="theme-color" content="#f7f6f2" />
+  <meta property="og:title" content="Подготовка производства — от чертежа к решению технолога" />
+  <meta property="og:description" content="Презентация реализованного процесса: распознавание, заготовка, предварительный маршрут и контроль человеком." />
   <meta property="og:type" content="website" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 </head>
 <body>
   <a class="skip-link" href="#main">Перейти к содержанию</a>
-  <header class="site-header wrap">
-    <a class="brand" href="#top" aria-label="Подготовка производства — начало страницы"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>Подготовка<br/><b>производства</b></span></a>
-    <nav aria-label="Разделы"><a href="#architecture">Архитектура</a><a href="#pipeline">Пайплайн</a><a href="#agents">Агенты</a><a href="#data">Данные</a></nav>
-    <a class="header-source" href="#sources"><span class="status-dot"></span>По исходному коду <span aria-hidden="true">↗</span></a>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="#top"><span class="brand-mark" aria-hidden="true">ПП</span><span>Подготовка<br/>производства</span></a>
+      <nav aria-label="Разделы"><a href="#pipeline">Процесс</a><a href="#recognition">Распознавание</a><a href="#agents">Агенты</a><a href="#data">Данные</a></nav>
+      <a class="audience-link" href="/it/" target="_blank" rel="noopener" aria-label="Для IT-специалистов — в новой вкладке">Для IT <span aria-hidden="true">↗</span></a>
+      <button class="secondary-button presentation-trigger" id="start-presentation" aria-pressed="false">Режим показа <span aria-hidden="true">↗</span></button>
+    </div>
   </header>
   <main id="main">
-    <section class="hero wrap" id="top">
-      <div class="hero-copy"><p class="eyebrow"><span class="tiny-cross">+</span> ИНТЕРАКТИВНЫЙ АТЛАС АРХИТЕКТУРЫ</p><h1>От чертежа<br/>до <em>предварительного</em><br/>маршрута.</h1><p class="hero-description">Как система читает чертёж, сохраняет факты, подбирает заготовку и составляет маршрут. Только то, что есть в текущем коде.</p><a class="primary-button" href="#architecture">Разобрать архитектуру <span aria-hidden="true">↗</span></a><p class="hero-footnote">Общий контекст → компоненты → алгоритм → данные</p></div>
-      <div class="hero-visual" aria-label="Путь от исходного чертежа к паспорту, заготовке и предварительному маршруту">
-        <div class="visual-top"><span>СХЕМА ПРЕОБРАЗОВАНИЯ</span><span>01 — 08</span></div>
-        <svg class="shaft-illustration" viewBox="0 0 520 250" role="img" aria-label="Условный чертёж ступенчатого вала, иллюстрация входного документа">
-          <defs><pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(40)"><line x1="0" y1="0" x2="0" y2="7" stroke="#45777d" stroke-width="1"/></pattern></defs>
-          <path d="M58 97 H126 V73 H189 V58 H328 V80 H395 V101 H458 V153 H395 V174 H328 V190 H189 V174 H126 V153 H58 Z" fill="url(#hatch)" stroke="#99c0bf" stroke-width="1.5"/>
-          <path d="M40 124 H480" stroke="#7fa2a3" stroke-width="1" stroke-dasharray="12 4 2 4"/><path d="M58 75 V37 M458 78 V37 M58 44 H458" stroke="#47757b" fill="none"/><path d="m58 44 7 -3 v6 Z M458 44 l-7 -3 v6 Z" fill="#91bdbb"/>
-          <path d="M189 206 V221 M328 206 V221 M189 215 H328" stroke="#47757b" fill="none"/><path d="M476 101 H491 M476 153 H491 M484 101 V153" stroke="#47757b" fill="none"/>
-          <rect x="280" y="100" width="78" height="20" fill="#183f45" stroke="#a4c4c1"/><path d="M135 82 V166 M394 103 V152 M197 66 V182" stroke="#7da6a8" stroke-width="1"/>
-          <text x="260" y="29" text-anchor="middle" fill="#789d9e" font-size="10" letter-spacing="2">ИСХОДНЫЙ ЛИСТ</text><text x="260" y="245" text-anchor="middle" fill="#648d91" font-size="10">Условная геометрия · не данные конкретного чертежа</text>
-        </svg>
-        <div class="visual-flow"><span class="flow-input">Чертёж</span><span class="flow-line"></span><span class="flow-pill">Vision</span><span class="flow-line"></span><span class="flow-input">Паспорт</span></div>
-        <div class="visual-divider"><span></span><span>ФАКТЫ С ПРОИСХОЖДЕНИЕМ</span><span></span></div>
-        <div class="visual-outputs"><div><span class="visual-num">01 / АЛГОРИТМ</span><b>Заготовка</b><small>Геометрия + НСИ</small></div><span class="visual-arrow" aria-hidden="true">→</span><div><span class="visual-num">02 / АГЕНТ</span><b>Маршрут</b><small>Операции + оборудование</small></div></div>
-        <div class="visual-bottom"><span><i class="status-dot"></i> Снимок реализации</span><span>12.10.2026</span></div>
+    <section class="chapter hero" id="top" data-chapter="О продукте">
+      <div class="wrap">
+        <p class="eyebrow">Для руководства и инвесторов</p>
+        <div class="hero-layout">
+          <div class="hero-copy">
+            <h1>От чертежа<br/>к решению<br/><span>технолога.</span></h1>
+            <p class="lead">Система читает чертёж, собирает паспорт детали и готовит основу для выбора заготовки и операций.</p>
+            <p class="hero-context">Технолог получает сведения, предложения и их основания в одном процессе. Решение о пригодности остаётся за специалистом.</p>
+            <a class="primary-button" href="#pipeline">Как устроен процесс <span aria-hidden="true">↓</span></a>
+          </div>
+          <figure class="hero-figure">
+            <div class="figure-heading"><span>Рабочий интерфейс</span><a href="#screens">3 скриншота <span aria-hidden="true">↗</span></a></div>
+            <button class="screenshot-button" data-image="tables" aria-label="Увеличить скриншот рабочих таблиц справочника"><img src={screenshots[0].file} width="1274" height="717" alt="Интерфейс справочника: рабочие таблицы, активная ревизия и строки сортамента" fetchpriority="high" /></button>
+            <figcaption>Сортамент и его версии. Сохранённый скриншот интерфейса от 01.10.2026.</figcaption>
+          </figure>
+        </div>
+        <div class="outcomes">{outcomes.map((o,i)=><article><span class="ordinal">0{i+1}</span><h3>{o.title}</h3><p>{o.text}</p></article>)}</div>
+        <p class="chapter-footnote">Описание системы на 12 октября 2026. Маршрут предварительный; готовая смета и инженерная приёмка — отдельные результаты.</p>
       </div>
     </section>
-    <div class="proof-rail wrap"><div><b>4</b><span>уровня C4</span></div><div><b>8</b><span>этапов пайплайна</span></div><div><b>5</b><span>колонок геометрии</span></div><p>Каждое описание связано с кодом.<br/><a href="#sources">Посмотреть основание схемы <span aria-hidden="true">↗</span></a></p></div>
 
-    <section class="section wrap" id="architecture">
-      <div class="section-heading"><div><p class="eyebrow">01 / СТРУКТУРА СИСТЕМЫ</p><h2>От общей картины<br/>к конкретному компоненту.</h2></div><p>Выберите уровень, затем блок схемы.<br/>Справа откроются его роль, входы, выходы<br/>и ссылки на реализацию.</p></div>
-      <div class="atlas" id="atlas">
-        <div class="atlas-toolbar"><div class="tabs" role="tablist" aria-label="Уровень C4">
-          <button role="tab" aria-selected="true" data-level="context" id="tab-context" aria-controls="diagram-panel"><span>C1</span> Контекст</button>
-          <button role="tab" aria-selected="false" data-level="containers" id="tab-containers" aria-controls="diagram-panel" tabindex="-1"><span>C2</span> Контейнеры</button>
-          <button role="tab" aria-selected="false" data-level="components" id="tab-components" aria-controls="diagram-panel" tabindex="-1"><span>C3</span> Компоненты</button>
-          <button role="tab" aria-selected="false" data-level="code" id="tab-code" aria-controls="diagram-panel" tabindex="-1"><span>C4</span> Код и данные</button>
-        </div><button class="icon-button" id="share-diagram" aria-label="Скопировать ссылку на выбранный блок" title="Ссылка на блок">↗</button></div>
-        <div class="component-selector" id="component-selector" hidden><span>Фокус:</span><button data-focus="recognition" aria-pressed="true">Распознавание</button><button data-focus="selection" aria-pressed="false">Подбор заготовки</button><button data-focus="routing" aria-pressed="false">Маршрут</button><button data-focus="materials" aria-pressed="false">Материалы</button></div>
-        <div class="atlas-body"><div class="diagram-panel" id="diagram-panel" role="tabpanel" aria-labelledby="tab-context">
-          <div class="diagram-label"><span id="diagram-title">Контекст системы</span><span id="diagram-counter">C1 / 4</span></div>
-          <div class="diagram-stage" id="diagram-stage"><svg id="diagram-svg" viewBox="0 0 1020 665" role="img" aria-label="Интерактивная C4-диаграмма"><defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#68979b"/></marker></defs><g id="diagram-content"></g></svg></div>
-          <div class="diagram-controls"><span>Выберите блок · перемещайте фон</span><div><button class="diagram-button" id="zoom-out" aria-label="Уменьшить масштаб">−</button><output id="zoom-label" aria-live="polite">100%</output><button class="diagram-button" id="zoom-in" aria-label="Увеличить масштаб">+</button><button class="diagram-button" id="zoom-fit" title="Вернуть исходный вид">Сброс</button><button class="diagram-button" id="download-svg" title="Скачать текущую схему">SVG ↓</button><button class="diagram-button" id="fullscreen" aria-label="Схема на весь экран">⤢</button></div></div>
-          <div class="diagram-legend"><span><i class="legend-code"></i> Код / система</span><span><i class="legend-agent"></i> Модель</span><span><i class="legend-store"></i> Хранилище</span><span class="optional-line">Условная связь</span></div>
-        </div><aside class="inspector" id="inspector" aria-live="polite"></aside></div>
-        <div class="node-index" id="node-index" aria-label="Блоки текущей схемы"></div>
-        <p class="diagram-caption" id="diagram-caption"></p>
-      </div>
-      <p class="section-note">C4 показывает структуру системы. Последовательность исполнения раскрыта ниже. <a href="https://c4model.com/diagrams" target="_blank" rel="noopener">О модели C4 ↗</a></p>
-    </section>
-
-    <section class="section pipeline-section" id="pipeline"><div class="wrap">
-      <div class="section-heading"><div><p class="eyebrow">02 / СКВОЗНОЙ ПАЙПЛАЙН</p><h2>Что происходит<br/>после загрузки чертежа.</h2></div><p>Восемь этапов основного пути.<br/>Выберите этап, чтобы увидеть алгоритм,<br/>результат и условия перехода.</p></div>
-      <div class="pipeline-layout"><div class="step-list" role="tablist" aria-label="Этапы пайплайна" aria-orientation="vertical">{steps.map((s,i)=><button class:list={['step-button',{active:i===0}]} role="tab" aria-selected={i===0?'true':'false'} aria-controls={'step-panel-'+s.id} id={'step-tab-'+s.id} tabindex={i===0?0:-1} data-step={s.id}><span class="step-number">{String(i+1).padStart(2,'0')}</span><span>{s.name}<small>{s.tag}</small></span><span class="step-chevron" aria-hidden="true">↗</span></button>)}</div>
-      <div class="step-panels">{steps.map((s,i)=><article role="tabpanel" aria-labelledby={'step-tab-'+s.id} id={'step-panel-'+s.id} hidden={i!==0} class="step-panel"><div class="step-panel-top"><span class="badge">{s.tag}</span><span class="mono">ЭТАП {String(i+1).padStart(2,'0')} / 08</span></div><h3>{s.title}</h3><p>{s.text}</p><ul class="fact-list">{s.facts.map(f=><li>{f}</li>)}</ul><div class="output-box"><span>НА ВЫХОДЕ</span><p>{s.output}</p></div><SourceLinks ids={s.sources}/></article>)}</div></div>
-      <details class="bounded-detail reading-method"><summary>Алгоритм чтения чертежа: инструкция, контракт и уточнение <span aria-hidden="true">+</span></summary><ol><li><b>Обзор всех зон.</b> Vision-модель читает геометрию, виды и разрезы, штамп, размеры, общие обозначения и технические требования. Это чтение изображений мультимодальной LLM; основной путь не вызывает отдельный классический OCR-движок.</li><li><b>Разделение смысла.</b> Инструкция требует различать наружные и внутренние элементы, габарит и размер участка, буквальный размер и расчётную цепь, назначение проката и геометрию готовой детали. Чтение не должно составлять техмаршрут или подбирать станки.</li><li><b>Структурированный ответ.</b> В autonomous модель возвращает JSON по AutonomousRecognitionOutput. В reading_v2 — DrawingReadingV2 с раздельными наблюдениями и интерпретациями. Ответ проходит валидацию Pydantic и соответствующий адаптер.</li><li><b>Самопроверка и проверка кодом.</b> Инструкция требует сохранить исходные допуски, звёздочки, номера ГОСТов и конфликтующие альтернативы. После ответа код проверяет инвентарь, габариты и ссылки; требование в инструкции само по себе не гарантирует качество чтения.</li><li><b>Прицельное уточнение.</b> В ветке v1 агент 2 получает кроп высокого разрешения, проверочный обзор с положением кропа, индекс фактов и контракт AgentTwoPatch. Повтор расширяет поля кропа с 4% до 12%; общий бюджет ограничен.</li><li><b>Детерминированная публикация.</b> Адаптеры и код формируют канонические наблюдения, паспорт, отчёт проверки, таблицу и JSON для интерфейса. Сырые и разобранные ответы модели сохраняются отдельными артефактами.</li></ol><p><b>Точность привязки зависит от режима.</b> Совместимый v1-адаптер сохраняет историческое поведение вывода геометрических связей. В autonomous часть размерных аннотаций создаётся с общей областью листа <code>[0.05, 0.05, 0.95, 0.95]</code>; такая область не доказывает точную локализацию надписи. Журнал reading_v2 — отдельный реализованный режим, а не название всех текущих результатов.</p><SourceLinks ids={['readingMethod','readingCheck','readingSchema','cropCall','v1Adapter','autonomousEvidence','llmResult']}/></details>
-      <details class="bounded-detail"><summary>Где основной путь может остановиться <span aria-hidden="true">+</span></summary><p>Некорректный файл, ошибка провайдера, исчерпанный бюджет, отсутствие пригодного паспорта или ошибка контекста НСИ сохраняются как диагностика. Статус «требует проверки» не равен автоматическому запрету любого следующего этапа: конкретный переход определяется кодом. В текущем снимке планировщик умеет работать без расчётно выбранного круга, но автоматическое продолжение всё ещё зависит от успешной подготовки контекста.</p><SourceLinks ids={['continuation','pipeline','routeAgentStock']}/></details>
+    <section class="chapter section wash" id="pipeline" data-chapter="Весь процесс"><div class="wrap">
+      <div class="section-heading"><div><p class="eyebrow">01 / Весь процесс</p><h2>Один чертёж.<br/>Восемь шагов.</h2></div><p class="section-intro">Сначала — факты о детали. Затем — справочные данные и предложения по изготовлению. В конце — рассмотрение технологом.</p></div>
+      <div class="journey-summary" aria-label="Основная последовательность"><span>Чертёж</span><i aria-hidden="true">→</i><span>Паспорт</span><i aria-hidden="true">→</i><span>Заготовка</span><i aria-hidden="true">→</i><span>Маршрут</span><i aria-hidden="true">→</i><span>Технолог</span></div>
+      <div class="pipeline-layout"><div class="step-list" role="tablist" aria-label="Этапы процесса" aria-orientation="vertical">{steps.map((s,i)=><button class:list={['step-button',{active:i===0}]} role="tab" aria-selected={i===0?'true':'false'} aria-controls={'step-panel-'+s.id} id={'step-tab-'+s.id} tabindex={i===0?0:-1} data-step={s.id}><span class="step-number">{String(i+1).padStart(2,'0')}</span><span>{s.id==='nsi'?'Допуски и справочники':s.name}</span><span class="step-chevron" aria-hidden="true">→</span></button>)}</div>
+      <div class="step-panels">{steps.map((s,i)=><article role="tabpanel" aria-labelledby={'step-tab-'+s.id} id={'step-panel-'+s.id} hidden={i!==0} class="step-panel"><div class="step-panel-top"><span class="badge">{s.tag==='Vision'?'Модель ИИ':s.tag==='Код + агент'?'Программа + агент':s.tag==='Агент'?'Модель ИИ':s.tag==='Алгоритм'?'Расчёт':s.tag==='UI + версии'?'Технолог + программа':'Программа'}</span><span class="muted">Шаг {i+1} из 8</span></div><h3>{stepTitles[s.id]}</h3><p class="step-story">{stepStories[s.id].text}</p><div class="output-box"><span>Что получаем</span><p>{stepStories[s.id].result}</p></div><details class="technical-detail"><summary>Условия и ограничения</summary><p>{stepConditions[s.id]}</p></details></article>)}</div></div>
+      <details class="bounded-detail"><summary>Что происходит, если данных не хватает или возникла ошибка <span aria-hidden="true">+</span></summary><p>Некорректный файл, ошибка сервиса чтения, исчерпанный лимит попыток или проблема справочных данных сохраняются в диагностике. Неопределённость показывается технологу. Переход к следующему шагу определяется готовностью сведений и правилами процесса: статус «требует проверки» сам по себе не означает остановку любой дальнейшей работы.</p><p>Планировщик в соответствующем режиме может предложить заготовку без расчётно выбранного круга. При этом автоматическое продолжение всё ещё зависит от подготовки паспорта и справочного контекста.</p></details>
     </div></section>
 
-    <section class="section wrap" id="agents">
-      <div class="section-heading"><div><p class="eyebrow">03 / РОЛИ И ИСПОЛНИТЕЛИ</p><h2>Какую работу<br/>выполняет каждый агент.</h2></div><p>Название роли не всегда означает LLM.<br/>Тип исполнения и условие запуска<br/>указаны для каждой роли.</p></div>
-      <div class="agents-controls"><div class="filter-chips" aria-label="Фильтр ролей"><button data-agent-filter="all" aria-pressed="true">Все роли</button><button data-agent-filter="llm" aria-pressed="false">Вызовы модели</button><button data-agent-filter="code" aria-pressed="false">Обычный код</button></div><span class="muted mono" id="agent-count">{agents.length} РОЛЕЙ</span></div>
-      <div class="agents-table"><div class="agents-head"><span>Исполнитель</span><span>Когда и с чем работает</span><span>Что возвращает</span></div>{agents.map(a=><article class="agent-row" data-agent-kind={a.kind==='Детерминированный'?'code':'llm'}><div><h3>{a.name}</h3><p>{a.role}</p><span class:list={['badge',{agent:a.kind!=='Детерминированный'}]}>{a.kind}</span></div><div><b>{a.when}</b><p>{a.input}</p></div><div><p>{a.output}</p><SourceLinks ids={a.sources} compact/></div></article>)}</div>
-      <div class="callout"><span class="callout-symbol" aria-hidden="true">i</span><p><b>Модель выбирается конфигурацией.</b> Реализация поддерживает несколько API и CLI-провайдеров. Эффективные provider/model и параметры конкретного вызова записываются в trace. Этот атлас не назначает одну модель всему продукту и не делает нового модельного запуска.</p><SourceLinks ids={['providers','providerResolve','llm']}/></div>
-      <details class="bounded-detail"><summary>Почему здесь нет обязательной цепочки из четырёх агентов <span aria-hidden="true">+</span></summary><p>В исходниках есть отдельные endpoints <code>/pipeline/*</code> и контракты чтения, обогащения материала, оборудования и routing. Обычная загрузка вызывает <code>/runs/recognition/start</code> и другой workflow. Поэтому отдельный четырёхэтапный API не изображён как обязательная цепочка этой загрузки. Расчётный код со старыми операциями и стоимостью также не становится автоматически текущей сметой.</p><SourceLinks ids={['alternate','upload','estimate']}/></details>
-    </section>
+    <section class="chapter section" id="recognition" data-chapter="Распознавание"><div class="wrap">
+      <div class="section-heading"><div><p class="eyebrow">02 / Распознавание чертежа</p><h2>Прочитать лист.<br/>Сохранить смысл.</h2></div><p class="section-intro">Модель читает изображение, а программа собирает и проверяет результат. Факт с чертежа, расчёт и предположение должны оставаться различимыми.</p></div>
+      <div class="method-strip">{recognitionPhases.map((p,i)=><article><span class="method-number">0{i+1}</span><p class="method-owner">{p.owner}</p><h3>{p.title}</h3><p>{p.text}</p></article>)}</div>
+      <div class="reading-principle"><div><h3>В результате важно<br/>не потерять источник.</h3><p>Паспорт хранит исходную надпись, ссылки на свидетельства и статус. Если значение не прочитано, оно остаётся неизвестным. Если источники расходятся, конфликт сохраняется.</p></div><div class="fact-record"><p class="eyebrow">Что сопровождает факт</p><dl><div><dt>Буквальная запись</dt><dd>Сохраняется дословно</dd></div><div><dt>Связь с источником</dt><dd>Можно сверить с источником</dd></div><div><dt>Неизвестное значение</dt><dd>Помечается как неизвестное</dd></div><div><dt>Противоречия</dt><dd>Показываются отдельно</dd></div></dl><p class="caption">Так сохраняется происхождение и определённость сведений.</p></div></div>
+      <details class="bounded-detail reading-method"><summary>Подробнее: как система читает чертёж <span aria-hidden="true">+</span></summary><ol><li><b>Готовит два изображения.</b> Обзор нужен для чтения всей детали, подробная копия — для мелких надписей. Исходный документ сохраняется отдельно.</li><li><b>Задаёт правила чтения.</b> Модель получает изображение и инструкцию: прочитать геометрию, размеры, материал и требования; различать наружные и внутренние элементы, габарит и размер участка, буквальную надпись и расчёт.</li><li><b>Возвращает сведения в заданной структуре.</b> Это позволяет программе собрать единый паспорт. Сведения о готовой детали отделены от предложений по её изготовлению.</li><li><b>Уточняет найденные пропуски.</b> В обычном режиме агент может получить увеличенный фрагмент и уже известные факты. Количество попыток ограничено. Есть отдельный режим чтения с журналом наблюдений; он работает без этой ветки уточнений.</li><li><b>Собирает и проверяет паспорт.</b> Программа связывает факты с источником, проверяет ссылки и покрытие, готовит таблицу размеров и отчёт для технолога.</li></ol><p><b>Что требует проверки человеком.</b> Правила чтения не гарантируют точность результата. Для части аннотаций область источника может охватывать весь лист; она не доказывает точное расположение надписи. Непрочитанные значения и конфликты сохраняются для разбора.</p></details>
 
-    <section class="section data-section" id="data"><div class="wrap">
-      <div class="section-heading"><div><p class="eyebrow">04 / ДАННЫЕ И ХРАНЕНИЕ</p><h2>Что записывается.<br/>В какой форме. Куда.</h2></div><p>Схемы ниже извлечены из объявлений<br/>SQL-таблиц в снимке кода.<br/>Имена полей сохранены буквально.</p></div>
-      <div class="storage-tabs tabs" role="tablist" aria-label="Группа данных">{storageGroups.map((g,i)=><button role="tab" data-storage={g.id} aria-selected={i===0?'true':'false'} aria-controls="storage-panel" id={'storage-tab-'+g.id} tabindex={i===0?0:-1}>{g.name}</button>)}</div>
-      <div id="storage-panel" role="tabpanel" aria-labelledby="storage-tab-trace" class="storage-panel"><div class="storage-intro"><div><p class="eyebrow">ФОРМА ЗАПИСИ</p><h3 id="storage-name"></h3><p id="storage-description"></p></div><div><span class="mono muted">ПУТЬ ПО УМОЛЧАНИЮ</span><code id="storage-path"></code><p class="muted storage-path-note">Пути настраиваются. Указана конфигурация из кода, а не проверка файлов рабочей базы.</p></div></div><div id="storage-content"></div><div id="storage-sources"></div></div>
-      <div class="storage-bottom"><div><p class="eyebrow">ФАЙЛ + МЕТАДАННЫЕ</p><h3>Результат можно<br/>проследить до источника.</h3><p>Каждый файл артефакта имеет SHA-256, размер, тип и связь с запуском. SQL хранит <code>object_ref</code>; сам паспорт или маршрут — отдельный JSON-файл.</p><SourceLinks ids={['artifacts','trace']}/></div><div class="artifact-flow"><div><span class="mono">processing_runs.id</span><small>Запуск обработки</small></div><i aria-hidden="true">↓</i><div><span class="mono">artifacts.run_id → object_ref</span><small>Тип · SHA-256 · размер · span_id</small></div><i aria-hidden="true">↓</i><div><span class="mono">{`{run_id}/{uuid}-passport.json`}</span><small>Факты · связи · свидетельства · ревизия</small></div></div></div>
     </div></section>
 
-    <section class="section wrap" id="sources">
-      <div class="section-heading"><div><p class="eyebrow">05 / ПРОВЕРЯЕМОЕ ОСНОВАНИЕ</p><h2>За каждым блоком —<br/>конкретная реализация.</h2></div><p>Это описание снимка исходников.<br/>Планы и прошлые презентации<br/>не использованы как доказательство реализации.</p></div>
-      <div class="audit-strip"><div><span>СНИМОК</span><b>{date} (Якутск)</b></div><div><span>ОСНОВА GIT</span><b class="mono">{audit.branch} · {audit.head.slice(0,7)}</b></div><div><span>ОСНОВАНИЯ</span><b>{audit.sourceCount} фрагментов · {audit.referencedFiles} файлов</b></div></div>
-      <p class="audit-note">Снимок включает текущие незакоммиченные Python/TypeScript-файлы. Хеши совпали при повторном чтении во время захвата. Три Go-файла справочного сервиса взяты из того же Git HEAD и сверены с рабочим деревом. Проверка проведена по структуре и вызовам кода, без запуска распознавания или расчёта в рабочей системе. Дальнейшие правки другого агента могут изменить архитектуру после этого снимка.</p>
-      <div class="source-search"><label for="source-query">Найти основание</label><input id="source-query" type="search" placeholder="Например: паспорт, route, repository…"/><a href="/architecture.json" download class="secondary-button">Скачать атлас JSON ↓</a><button class="secondary-button" id="print-page">Печать</button></div>
-      <p id="source-result-count" class="muted mono" aria-live="polite"></p>
-      <div class="source-catalog" id="source-catalog">{Object.values(sources).map((s,i)=><button class="source-entry" hidden={i>=8} data-source={s.id} data-search={(s.title+' '+s.path).toLowerCase()}><span class="source-entry-symbol" aria-hidden="true">↗</span><span><b>{s.title}</b><code>{s.path}:{s.start}–{s.end}</code></span><span class="source-hash mono">{s.sha256.slice(0,8)}</span></button>)}</div><p id="source-empty" hidden>По этому запросу источников нет. Попробуйте название компонента или файла.</p><button class="secondary-button" id="expand-sources" aria-expanded="false" aria-controls="source-catalog" style="margin-top:22px">Показать все основания ↓</button>
-      <div class="limits"><div><span>01</span><h3>Подбор ≠ назначение</h3><p>Назначение проката на чертеже и рассчитанная альтернатива сохраняются отдельно. Кривизна из НСИ — расчётный параметр, а не измерение конкретного прутка.</p></div><div><span>02</span><h3>Маршрут предварительный</h3><p>Результат агента содержит условия и оценки. Завершённое задание не подтверждает инженерную пригодность, технологическую приёмку или готовую смету.</p></div><div><span>03</span><h3>Реализация ≠ live-проверка</h3><p>Схема подтверждена исходниками снимка. Доставка изображений выбранной модели и качество реального результата требуют отдельной проверки запуска.</p></div></div>
-    </section>
+    <section class="chapter section wash" id="screens" data-chapter="Интерфейс"><div class="wrap">
+      <div class="section-heading"><div><p class="eyebrow">03 / Интерфейс продукта</p><h2>Данные, с которыми<br/>работает технолог.</h2></div><p class="section-intro">Сохранённые скриншоты реального интерфейса показывают справочник и оборудование. Выберите экран и откройте его в полном размере.</p></div>
+      <div class="screen-tabs tabs" role="tablist" aria-label="Скриншоты продукта">{screenshots.map((s,i)=><button role="tab" data-screen={s.id} aria-selected={i===0?'true':'false'} id={'screen-tab-'+s.id} aria-controls={'screen-panel-'+s.id} tabindex={i===0?0:-1}>{s.title}</button>)}</div>
+      {screenshots.map((s,i)=><article class="screen-panel" id={'screen-panel-'+s.id} role="tabpanel" aria-labelledby={'screen-tab-'+s.id} hidden={i!==0}><figure><button class="screenshot-button" data-image={s.id} aria-label={'Увеличить: '+s.title}><img src={s.file} width={s.width} height={s.height} alt={s.title} loading="lazy" /></button><figcaption>Скриншот от {s.date} · <button class="text-button" data-image={s.id}>Открыть в полном размере ↗</button></figcaption></figure><div class="screen-story"><p class="eyebrow">Что здесь происходит</p><h3>{s.point}</h3><p>{s.text}</p></div></article>)}
+      <p class="chapter-footnote">Экраны взяты из материалов проверки за 1 и 9 октября и скопированы без редактирования. Это иллюстрации интерфейса тех дат; актуальные утверждения о процессе основаны на снимке кода от 12 октября. Количество записей на экранах не описывает текущие рабочие базы.</p>
+    </div></section>
+
+    <section class="chapter section" id="agents" data-chapter="Агенты"><div class="wrap">
+      <div class="section-heading"><div><p class="eyebrow">04 / Исполнители</p><h2>У каждого агента<br/>своя задача.</h2></div><p class="section-intro">Модели читают и предлагают. Программа собирает данные и выполняет заданные проверки. Технолог рассматривает результат и сохраняет свои изменения.</p></div>
+      <div class="agents-controls"><div class="filter-chips" aria-label="Фильтр ролей"><button data-agent-filter="all" aria-pressed="true">Все роли</button><button data-agent-filter="llm" aria-pressed="false">Вызовы модели</button><button data-agent-filter="code" aria-pressed="false">Обычный код</button></div><span class="muted" id="agent-count">{agents.length} ролей</span></div>
+      <div class="agents-table">{agents.map((a,i)=><details class="agent-row" data-agent-kind={a.kind==='Детерминированный'?'code':'llm'}><summary><span class="agent-number">{String(i+1).padStart(2,'0')}</span><span class="agent-summary"><span class="agent-title">{roleStories[i].title}</span><span class="agent-name">{businessRoles[i].name}</span></span><span class:list={['badge',{agent:a.kind!=='Детерминированный'}]}>{a.kind==='Детерминированный'?'Программа':'Модель'}</span><span class="expand-mark" aria-hidden="true">+</span></summary><div class="agent-body"><dl><div><dt>Когда запускается</dt><dd>{businessRoles[i].when}</dd></div><div><dt>Что получает</dt><dd>{businessRoles[i].input}</dd></div><div><dt>Что возвращает</dt><dd>{businessRoles[i].output}</dd></div></dl></div></details>)}</div>
+      <details class="bounded-detail"><summary>Всегда ли участвуют все агенты <span aria-hidden="true">+</span></summary><p>Сборка паспорта и представление проверки выполняются программой. Уточнение чтения и исследование материала включаются при определённых условиях. Пояснение подбора и дополнительный анализ запускаются по отдельному запросу.</p><p>Модель выбирается настройками системы. Для каждого вызова сохраняются сведения о том, какая модель участвовала и что вернула. Подробное техническое устройство доступно во вкладке для IT-специалистов.</p></details>
+    </div></section>
+
+    <section class="chapter section wash" id="data" data-chapter="Данные"><div class="wrap">
+      <div class="section-heading"><div><p class="eyebrow">05 / Данные и хранение</p><h2>Паспорт хранит сведения.<br/>Таблица помогает их проверить.</h2></div><p class="section-intro">Сведения о детали сохраняются вместе с происхождением и историей изменений. Таблица делает размеры и требования удобными для проверки. Оригинал и результаты обработки остаются связанными.</p></div>
+      <div class="geometry-intro"><h3>Как устроена таблица геометрии</h3><p>Одна строка соответствует одному размеру из паспорта детали. Это может быть наружный или внутренний диаметр, линейный размер, радиус, угол, толщина либо другой размер.</p></div>
+      <div class="table-scroll geometry-table"><table><caption>Пять колонок таблицы. Здесь объясняется их смысл, без чисел конкретного чертежа.</caption><thead><tr>{geometryColumns.map(c=><th scope="col">{c[0].startsWith('Без заголовка')?'Что измерено':c[0]}</th>)}</tr></thead><tbody><tr>{geometryColumns.map(c=><td>{c[1]}</td>)}</tr></tbody></table></div>
+      <p class="caption">Каждая строка связана с исходными сведениями. Если принадлежность диаметра не подтверждена, это отмечается явно. Количество строк зависит от прочитанных размеров.</p>
+      <div class="destination-list">{dataDestinations.map((d,i)=><article><span class="ordinal">0{i+1}</span><div><h3>{d.title}</h3><p>{d.meaning}</p></div><div><span class="business-location">{businessLocations[i]}</span></div></article>)}</div>
+      <details class="bounded-detail"><summary>Что происходит при изменении данных <span aria-hidden="true">+</span></summary><p>Правки паспорта сохраняются как новые версии. В справочнике фиксируется активная версия таблицы; изменения через интерфейс и CSV проходят через один сервис. Предложение агента и пользовательские правки маршрута сохраняются отдельно, чтобы можно было проследить принятое решение.</p></details>
+    </div></section>
+
+    <section class="chapter section" id="sources" data-chapter="Границы результата"><div class="wrap">
+      <div class="section-heading"><div><p class="eyebrow">06 / Границы результата</p><h2>Система готовит основу.<br/>Технолог принимает решение.</h2></div><p class="section-intro">Для дальнейшей работы важно видеть исходные факты, предложения и ограничения. Человек проверяет их применимость к конкретной детали и производству.</p></div>
+      <div class="limits"><article><h3>Выбор заготовки</h3><p>Назначение на чертеже и рассчитанная альтернатива сохраняются отдельно. Кривизна из справочника — расчётный параметр, а не измерение конкретного прутка.</p></article><article><h3>Готовность маршрута</h3><p>Маршрут содержит предложения и условия. Завершение задания агента подтверждает окончание его работы. Инженерная приёмка и готовая смета требуют отдельного результата.</p></article><article><h3>Качество чтения</h3><p>Паспорт помогает проверить результат по исходному чертежу. Качество распознавания и работа выбранной модели оцениваются на конкретном запуске.</p></article></div>
+      <div class="business-conclusion"><h3>Что получает заказчик</h3><p>Паспорт детали, результат проверки заготовки и предварительные операции с основаниями. Технолог может рассмотреть их, исправить сведения и сохранить историю изменений.</p><p class="caption">Описание системы на 12 октября 2026. Скриншоты показывают интерфейс на подписанные даты. Инженерная приёмка не заменяется автоматическим результатом.</p><a class="secondary-button" href="/it/" target="_blank" rel="noopener">Технический разбор для IT-специалистов ↗</a></div>
+    </div></section>
   </main>
-  <footer class="wrap"><span>Подготовка производства <b> / Атлас C4</b></span><span>Фактическая архитектура · 12 октября 2026</span><a href="#top">Наверх ↑</a></footer>
-  <dialog id="source-dialog" aria-labelledby="source-dialog-title"><div class="dialog-top"><p class="eyebrow">ОСНОВАНИЕ ИЗ СНИМКА</p><button class="icon-button" id="close-source" aria-label="Закрыть фрагмент">×</button></div><h2 id="source-dialog-title"></h2><p id="source-dialog-path" class="mono"></p><div class="dialog-meta"><span>Хеш всего файла</span><code id="source-dialog-hash"></code></div><pre id="source-dialog-code" tabindex="0"></pre><p class="muted">Номера строк относятся к сохранённому снимку, включая незакоммиченные изменения. Фрагмент не обращается к рабочему репозиторию.</p></dialog>
+  <footer><div class="wrap footer-inner"><span>Подготовка производства</span><span>Описание реализации · 12 октября 2026</span><a href="#top">Наверх ↑</a></div></footer>
+  <div class="presentation-bar" id="presentation-bar" hidden><button id="chapter-prev" aria-label="Предыдущая глава">←</button><span id="chapter-status" aria-live="polite"></span><button id="chapter-next" aria-label="Следующая глава">→</button><button id="end-presentation">Завершить показ <span aria-hidden="true">×</span></button></div>
+  <dialog id="image-dialog" aria-labelledby="image-dialog-title"><div class="dialog-top"><h2 id="image-dialog-title"></h2><button class="icon-button" id="close-image" aria-label="Закрыть скриншот">×</button></div><p id="image-dialog-note" class="caption"></p><div class="image-scroll"><img id="image-dialog-img" alt=""/></div><p class="caption">Сохранённый снимок интерфейса. Масштаб изображения сохраняет исходное разрешение; при необходимости используйте прокрутку.</p></dialog>
   <div id="toast" role="status" aria-live="polite" hidden></div>
-  <script src="../scripts/atlas.ts"></script>
+  <noscript><p class="wrap">Для переключения этапов и просмотра исходников включите JavaScript. Технический разбор доступен на <a href="/it/">отдельной странице</a>.</p></noscript>
+  <script src="../scripts/presentation.ts"></script>
 </body>
 </html>

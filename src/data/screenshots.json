@@ -1,0 +1,53 @@
+[
+  {
+    "id": "tables",
+    "file": "/screenshots/reference-tables.png",
+    "source": "docs/QA/UI_REFACTOR_EVIDENCE_2026-10-01/catalog-light-controls.png",
+    "date": "01.10.2026",
+    "width": 1274,
+    "height": 717,
+    "title": "Рабочие таблицы справочника",
+    "text": "Технолог видит таблицы сортамента, активную ревизию и строки данных. Правки в интерфейсе и CSV проходят через общий сервис версий.",
+    "sources": [
+      "editable",
+      "csvRows"
+    ],
+    "point": "Расчёт опирается на конкретную версию справочных данных.",
+    "sha256": "dddf56123cd88272877ebe1448813522fca7ab14d42452cf2f54571e84ae31be",
+    "basis": "Historical product QA capture; copied without editing. Not a new live run or evidence of the current UI state."
+  },
+  {
+    "id": "catalogue",
+    "file": "/screenshots/machine-catalogue.jpg",
+    "source": "docs/QA/agent-route-p1p2-2026-10-09/production-catalogue.jpg",
+    "date": "09.10.2026",
+    "width": 934,
+    "height": 823,
+    "title": "Каталог оборудования",
+    "text": "Станки сгруппированы по категориям. Их текстовые паспорта передаются планировщику маршрута как контекст выбора оборудования.",
+    "sources": [
+      "machines",
+      "routeContext"
+    ],
+    "point": "Планировщик получает сведения об оборудовании из каталога.",
+    "sha256": "c4bb7c9a7729f5b374debe473a836c723f0d3e0f4e1f361a49a7804f4c27a46e",
+    "basis": "Historical product QA capture; copied without editing. Not a new live run or evidence of the current UI state."
+  },
+  {
+    "id": "editor",
+    "file": "/screenshots/machine-editor.jpg",
+    "source": "docs/QA/agent-route-p1p2-2026-10-09/editor-1440.jpg",
+    "date": "09.10.2026",
+    "width": 1440,
+    "height": 900,
+    "title": "Редактор паспорта оборудования",
+    "text": "Название, категория и свободное описание станка сохраняются с версией. На скриншоте показана тестовая QA-запись.",
+    "sources": [
+      "machines",
+      "machinesDb"
+    ],
+    "point": "Описание оборудования можно дополнять по мере работы.",
+    "sha256": "827a908d4ffcbea6f5984272bf89cc9fd4b53692a4ca98e1fdabeff5292d4c43",
+    "basis": "Historical product QA capture; copied without editing. Not a new live run or evidence of the current UI state."
+  }
+]
