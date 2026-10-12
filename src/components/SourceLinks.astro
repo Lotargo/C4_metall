@@ -1,0 +1,7 @@
+---
+import data from '../data/evidence.json';
+const { ids, compact = false } = Astro.props;
+---
+<div class:list={['source-links',{compact}]}>
+  {ids.map((id: string) => <button type="button" data-source={id} title={data.sources[id as keyof typeof data.sources]?.path}><span aria-hidden="true">↗</span> {data.sources[id as keyof typeof data.sources]?.title}</button>)}
+</div>

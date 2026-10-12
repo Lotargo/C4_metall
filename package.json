@@ -1,0 +1,13 @@
+{
+  "name": "production-preparation-c4",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev --host 127.0.0.1 --port 4325",
+    "build": "astro build",
+    "preview": "astro preview --host 127.0.0.1 --port 4325",
+    "verify:evidence": "node scripts/verify-evidence.mjs"
+  },
+  "dependencies": { "astro": "7.3.8" }
+}
