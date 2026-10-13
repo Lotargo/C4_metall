@@ -12,6 +12,6 @@ for(const file of ['splav-parser/internal/storage/sqlite.go','splav-parser/inter
  const record={path:file,sha256:createHash('sha256').update(bytes).digest('hex'),bytes:bytes.length,basis:'committed HEAD '+manifest.head};
  const i=manifest.files.findIndex(f=>f.path===file);if(i<0)manifest.files.push(record);else manifest.files[i]=record;
 }
-manifest.supplementalSourceNote='Three Go files from the same captured HEAD; normalized contents verified equal to the working tree. Original Python/TypeScript snapshot unchanged.';
+manifest.supplementalSourceNote='Three Go files from the same captured HEAD; normalized contents verified equal to the working tree. Python/TypeScript files are not modified by this step.';
 await writeFile('.evidence/manifest.json',JSON.stringify(manifest,null,2));
 console.log('Three committed Splav sources captured; working tree matches.');

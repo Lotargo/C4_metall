@@ -679,6 +679,11 @@ summary::-webkit-details-marker {
   object-fit: contain;
   object-position: left top;
 }
+/* A tall capture shows its key region here; the dialog keeps every pixel. */
+.screen-panel .crop-focus img {
+  object-fit: cover;
+  object-position: center top;
+}
 .screen-panel figcaption {
   font-size: 16px;
   color: var(--muted);
@@ -2340,6 +2345,9 @@ dialog::backdrop {
   }
 }
 @media (max-width: 760px) {
+  .screen-panel .crop-focus img {
+    max-height: 560px;
+  }
   .technical-title {
     font-size: 44px;
   }

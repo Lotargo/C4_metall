@@ -1,5 +1,100 @@
 [
   {
+    "id": "workspace",
+    "file": "/screenshots/workspace-passport.jpg",
+    "source": "docs/QA/voksa-adoption-smoke-2026-10-13/s1.1-followup-02/main-ui-restored.png",
+    "date": "13.10.2026",
+    "width": 1274,
+    "height": 717,
+    "title": "Чертёж и паспорт рядом",
+    "text": "Слева — исходный лист с зонами распознавания, справа — инженерный паспорт: реквизиты из рамки, общие технические данные и поверхности. Статус «Требует проверки» остаётся до решения технолога. Открыт исторический запуск от 02.10.",
+    "note": "Исторический запуск от 02.10.2026, открытый 13.10.2026 в основном интерфейсе.",
+    "sources": [
+      "review",
+      "reviewCurrent",
+      "operator"
+    ],
+    "point": "Каждый факт паспорта можно сверить с исходным листом.",
+    "sha256": "50160d77b2a3e4f33227a62f6e69775d087027784650d5ad245b4fb625f394e3",
+    "basis": "Product QA capture copied without editing. Shows the UI on its capture date; not evidence of model quality or engineering acceptance."
+  },
+  {
+    "id": "progress",
+    "file": "/screenshots/pipeline-progress.jpg",
+    "source": "docs/QA/voksa-adoption-smoke-2026-10-13/s1.1-followup-02/fresh-housing-attempt-20/browser-passport.png",
+    "date": "13.10.2026",
+    "width": 934,
+    "height": 823,
+    "title": "Ход автоматической обработки",
+    "text": "После загрузки обработка идёт по четырём стадиям: чертёж и геометрия, материалы и НСИ, оборудование, техмаршрут. На снимке первые три завершены, планировщик составляет маршрут. Окно можно свернуть и открыть трассировку.",
+    "note": "Свежий запуск на чертеже заказчика 13.10.2026.",
+    "sources": [
+      "continuation",
+      "routeJobs"
+    ],
+    "point": "Цепочка продолжается сама, а ход виден технологу.",
+    "sha256": "b9108a586f7d8d00eeac0e2af0f8ade2d070819f69b43f2ab0ad6ffe4e0fc363",
+    "basis": "Product QA capture copied without editing. Shows the UI on its capture date; not evidence of model quality or engineering acceptance."
+  },
+  {
+    "id": "surfaces",
+    "file": "/screenshots/surface-registry.jpg",
+    "source": "docs/QA/voksa-adoption-smoke-2026-10-13/s1.1-followup-01/surfaces-reopened.png",
+    "date": "13.10.2026",
+    "width": 934,
+    "height": 823,
+    "title": "Поверхности и принадлежность размеров",
+    "text": "Для каждого элемента видны сторона, роль, собственные размеры и контекст, а также источник: распознавание или ручное решение с основанием. Две нижние строки — контрольные записи QA-проверки, сохранённые после повторного открытия.",
+    "note": "Две нижние строки — контрольные QA-записи, не факты чертежа.",
+    "sources": [
+      "surfaceRegistryView",
+      "surfaceRegistry",
+      "featureSurface"
+    ],
+    "point": "Сторону поверхности и принадлежность размера можно проверить и исправить.",
+    "sha256": "3b3ef1c139eee50739119c2e9978a41ff8f49a709deffa702a1532cd20e9ffd3",
+    "basis": "Product QA capture copied without editing. Shows the UI on its capture date; not evidence of model quality or engineering acceptance."
+  },
+  {
+    "id": "mentions",
+    "file": "/screenshots/description-mentions.jpg",
+    "source": "docs/QA/voksa-adoption-smoke-2026-10-13/s1.1-followup-01/warnings-and-link.png",
+    "date": "13.10.2026",
+    "width": 934,
+    "height": 823,
+    "title": "Проверка полноты описания",
+    "text": "Диаметры, названные в описании модели, но не привязанные к элементу, показываются вопросами. Технолог добавляет поверхность из упоминания или указывает другую роль. Здесь показаны контрольные примеры QA-проверки.",
+    "note": "Все упоминания на снимке — контрольные QA-примеры, не факты чертежа.",
+    "sources": [
+      "geometryMentions",
+      "mentionModel",
+      "surfaceRegistryView"
+    ],
+    "point": "Упоминание в описании не становится фактом без решения человека.",
+    "sha256": "67346a4d766034ff64a896c1a3c34b347d0e1998beed0cdc3e18f34c3fe99d17",
+    "basis": "Product QA capture copied without editing. Shows the UI on its capture date; not evidence of model quality or engineering acceptance."
+  },
+  {
+    "id": "route",
+    "file": "/screenshots/route-map.jpg",
+    "source": "docs/QA/voksa-adoption-smoke-2026-10-13/s1/K1/attempt-1/browser-result-full.png",
+    "date": "13.10.2026",
+    "width": 934,
+    "height": 1882,
+    "focusY": "26%",
+    "title": "Карта технологического маршрута",
+    "text": "Девять операций от исходной заготовки до контроля. На каждом этапе — материал, габарит, плановая масса и станок из каталога; задачи раскрываются по строке. Статус «Требует уточнения» и условия остаются видимыми. Ревизия 11 инженерно не принималась.",
+    "note": "Ревизия маршрута 11 от 13.10.2026 для запуска от 09.10.2026. Полная карта — с прокруткой.",
+    "sources": [
+      "routeMass",
+      "routeSave",
+      "routeReview"
+    ],
+    "point": "Маршрут — предварительное предложение с массами и условиями.",
+    "sha256": "8c252aea45d17b1cf08069148978300c8ec7c5c4d3c3f912a60f37df57dd6acf",
+    "basis": "Product QA capture copied without editing. Shows the UI on its capture date; not evidence of model quality or engineering acceptance."
+  },
+  {
     "id": "tables",
     "file": "/screenshots/reference-tables.png",
     "source": "docs/QA/UI_REFACTOR_EVIDENCE_2026-10-01/catalog-light-controls.png",
@@ -8,13 +103,14 @@
     "height": 717,
     "title": "Рабочие таблицы справочника",
     "text": "Технолог видит таблицы сортамента, активную ревизию и строки данных. Правки в интерфейсе и CSV проходят через общий сервис версий.",
+    "note": "Число записей относится к дате снимка.",
     "sources": [
       "editable",
       "csvRows"
     ],
     "point": "Расчёт опирается на конкретную версию справочных данных.",
     "sha256": "dddf56123cd88272877ebe1448813522fca7ab14d42452cf2f54571e84ae31be",
-    "basis": "Historical product QA capture; copied without editing. Not a new live run or evidence of the current UI state."
+    "basis": "Product QA capture copied without editing. Shows the UI on its capture date; not evidence of model quality or engineering acceptance."
   },
   {
     "id": "catalogue",
@@ -25,29 +121,13 @@
     "height": 823,
     "title": "Каталог оборудования",
     "text": "Станки сгруппированы по категориям. Их текстовые паспорта передаются планировщику маршрута как контекст выбора оборудования.",
+    "note": "Число записей относится к дате снимка.",
     "sources": [
       "machines",
       "routeContext"
     ],
     "point": "Планировщик получает сведения об оборудовании из каталога.",
     "sha256": "c4bb7c9a7729f5b374debe473a836c723f0d3e0f4e1f361a49a7804f4c27a46e",
-    "basis": "Historical product QA capture; copied without editing. Not a new live run or evidence of the current UI state."
-  },
-  {
-    "id": "editor",
-    "file": "/screenshots/machine-editor.jpg",
-    "source": "docs/QA/agent-route-p1p2-2026-10-09/editor-1440.jpg",
-    "date": "09.10.2026",
-    "width": 1440,
-    "height": 900,
-    "title": "Редактор паспорта оборудования",
-    "text": "Название, категория и свободное описание станка сохраняются с версией. На скриншоте показана тестовая QA-запись.",
-    "sources": [
-      "machines",
-      "machinesDb"
-    ],
-    "point": "Описание оборудования можно дополнять по мере работы.",
-    "sha256": "827a908d4ffcbea6f5984272bf89cc9fd4b53692a4ca98e1fdabeff5292d4c43",
-    "basis": "Historical product QA capture; copied without editing. Not a new live run or evidence of the current UI state."
+    "basis": "Product QA capture copied without editing. Shows the UI on its capture date; not evidence of model quality or engineering acceptance."
   }
 ]

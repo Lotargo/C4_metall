@@ -24,10 +24,14 @@ await mkdir('.evidence',{recursive:true});
 const startedAt = new Date().toISOString();
 const head = git('rev-parse','HEAD');
 const status = git('status','--porcelain','-uall');
-for (const dir of ['mvp/src/metall_mvp','web/src','docs/agents']) await walk(dir);
+const capturedPaths = ['mvp/src/metall_mvp','web/src','docs/agents'];
+// Describe the captured scope itself; unrelated QA notes elsewhere do not change it.
+const scopedStatus = git('status','--porcelain','-uall','--',...capturedPaths);
+for (const dir of capturedPaths) await walk(dir);
 let changed = [];
 for(const f of files) if(sha(await readFile(path.join(root,f.path)))!==f.sha256) changed.push(f.path);
-const manifest={root,head,branch:git('branch','--show-current'),startedAt,completedAt:new Date().toISOString(),workingTree:'includes uncommitted files',files,changedDuringCapture:changed};
+const workingTree = scopedStatus ? 'includes uncommitted files' : 'captured paths clean; equal to HEAD';
+const manifest={root,head,branch:git('branch','--show-current'),startedAt,completedAt:new Date().toISOString(),workingTree,capturedPaths,files,changedDuringCapture:changed};
 await writeFile('.evidence/manifest.json',JSON.stringify(manifest,null,2));
 await writeFile('.evidence/git-status.txt',status+'\n');
 console.log(JSON.stringify({head,files:files.length,changedDuringCapture:changed,startedAt}));

@@ -17,7 +17,7 @@ document.addEventListener("click", (event) => {
   imageTrigger = button;
   $("#image-dialog-title").textContent = item.title;
   $("#image-dialog-note").textContent =
-    `Скриншот интерфейса от ${item.date}. ${item.id === "editor" ? "Показана тестовая QA-запись." : "Число записей относится к дате снимка."}`;
+    `Скриншот интерфейса от ${item.date}. ${item.note}`;
   const image = $<HTMLImageElement>("#image-dialog-img");
   image.src = item.file;
   image.alt = item.title;
