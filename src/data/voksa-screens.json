@@ -1,0 +1,154 @@
+[
+  {
+    "id": "v-passport",
+    "source": "voksa-metall-comparison/ui-atlas/2026-10-13/reference/user-provided-passport.png",
+    "date": "13.10.2026",
+    "title": "ВоксаТех: утверждение паспорта детали",
+    "note": "Паспорт контрольного синтетического вала на паузе перед утверждением. Тёмная тема кабинета; снимок пользователя, обрезан до рабочей области.",
+    "file": "/voksa/v-passport.jpg",
+    "sourceSha256": "9afbffbfa6074db32b8aafb4c017568ef68cee90871f81c9aae5f6c2387185b8",
+    "crop": [
+      712,
+      128,
+      1920,
+      884
+    ],
+    "width": 1208,
+    "height": 756,
+    "sha256": "ca53808c306ef6e481643e4b7442e6c7a74b3767c2f53df19e55ac7bc96a8420"
+  },
+  {
+    "id": "v-stock",
+    "source": "voksa-metall-comparison/ui-atlas/2026-10-13/screenshots/01-passport-stock.jpg",
+    "date": "13.10.2026",
+    "title": "ВоксаТех: назначенная поковка и альтернатива формы",
+    "note": "Свежий бесплатный паспорт контрольного вала до правок. Шапка аккаунта и левая панель обрезаны.",
+    "file": "/voksa/v-stock.jpg",
+    "sourceSha256": "a45be60c81c0c1b0e20ae740a550b6aa63ae817330518810ab09074a79566bb4",
+    "crop": [
+      740,
+      60,
+      1250,
+      720
+    ],
+    "width": 510,
+    "height": 660,
+    "sha256": "688e1f30b4130451ea50668cc2e4ef83c129ba271afe2492ef879b5393d140e5"
+  },
+  {
+    "id": "v-surfaces",
+    "source": "voksa-metall-comparison/ui-atlas/2026-10-13/screenshots/05-surface-provenance.jpg",
+    "date": "13.10.2026",
+    "title": "ВоксаТех: поверхности, сторона и координаты Z",
+    "note": "Свежий бесплатный паспорт контрольного вала до правок. Шапка аккаунта и левая панель обрезаны.",
+    "file": "/voksa/v-surfaces.jpg",
+    "sourceSha256": "db2f40679ae97e04ca61260abb71fa58868371125b0bfde431d537892404c770",
+    "crop": [
+      730,
+      60,
+      1260,
+      720
+    ],
+    "width": 530,
+    "height": 660,
+    "sha256": "dfdb36e217eda69613e6057ec98a216e00d4c971c05e1678f2b4a2ba690f1b06"
+  },
+  {
+    "id": "v-quality",
+    "source": "voksa-metall-comparison/ui-atlas/2026-10-13/screenshots/13-quality-panel.jpg",
+    "date": "13.10.2026",
+    "title": "ВоксаТех: сводка проверки готового примера",
+    "note": "Сохранённый общий пример «Скоба», партия 100. Шапка аккаунта и левая панель обрезаны.",
+    "file": "/voksa/v-quality.jpg",
+    "sourceSha256": "25bea9b57547ade5491fe9e82b2e0ac4d6f5c2db84c2748790700694be219084",
+    "crop": [
+      480,
+      60,
+      1280,
+      720
+    ],
+    "width": 800,
+    "height": 660,
+    "sha256": "facaea52deb0df0ad464a886e040a520ff314645aa0946ae15c6c1d2b69a7ffc"
+  },
+  {
+    "id": "v-route",
+    "source": "voksa-metall-comparison/ui-atlas/2026-10-13/screenshots/14-route-card.jpg",
+    "date": "13.10.2026",
+    "title": "ВоксаТех: маршрутная карта с переходами",
+    "note": "Сохранённый общий пример «Скоба». Шапка аккаунта и левая панель обрезаны.",
+    "file": "/voksa/v-route.jpg",
+    "sourceSha256": "c674f5e2ab56c4a3af8a94e0036caaf048a8224a1a409bf770e5ef48cd6b53aa",
+    "crop": [
+      480,
+      60,
+      1280,
+      720
+    ],
+    "width": 800,
+    "height": 660,
+    "sha256": "6f29b2e09036526d28ec62374b160376e888e71b6784a042f2277b644d8d984c"
+  },
+  {
+    "id": "v-economics",
+    "source": "voksa-metall-comparison/ui-atlas/2026-10-13/screenshots/16-economics-breakdown.jpg",
+    "date": "13.10.2026",
+    "title": "ВоксаТех: из чего сложилась трудоёмкость",
+    "note": "Сохранённый общий пример «Скоба». Шапка аккаунта и левая панель обрезаны.",
+    "file": "/voksa/v-economics.jpg",
+    "sourceSha256": "a25e957f2b477dd3f02f024d7c8111a333127f398f9427afff4b3a82a1f0648f",
+    "crop": [
+      480,
+      60,
+      1280,
+      720
+    ],
+    "width": 800,
+    "height": 660,
+    "sha256": "ce74384930eb851d731d5c6c01641a877d51208d499c4b32683877f9b2f791e8"
+  },
+  {
+    "id": "v-price",
+    "source": "voksa-metall-comparison/ui-atlas/2026-10-13/screenshots/32-plita-price.jpg",
+    "date": "13.10.2026",
+    "title": "ВоксаТех: цена детали и партии",
+    "note": "Сохранённый общий пример «Плита», партия 1000. Шапка аккаунта и левая панель обрезаны.",
+    "file": "/voksa/v-price.jpg",
+    "sourceSha256": "20c29755b0b757115fce5ae248f2ce699f2e86798007111e6cae49c1d8f32018",
+    "crop": [
+      480,
+      60,
+      1280,
+      720
+    ],
+    "width": 800,
+    "height": 660,
+    "sha256": "30229f03ed23183baa7d4f37e1cf8753a05a01cf65ecf75c879d1f4b8cc050ac"
+  },
+  {
+    "id": "m-status",
+    "source": "voksa-metall-comparison/ui-atlas/2026-10-13/screenshots/M03-route.jpg",
+    "date": "13.10.2026",
+    "title": "Подготовка производства: маршрут и его статус",
+    "note": "Сохранённая ревизия 9 запуска от 09.10.2026, другой чертёж. Скопировано без изменений.",
+    "file": "/voksa/m-status.jpg",
+    "sourceSha256": "eb65b333a7e06e4c2f953228c936900985b2022ce84c7b8fd206e51e137ebc32",
+    "crop": null,
+    "width": 1274,
+    "height": 717,
+    "sha256": "eb65b333a7e06e4c2f953228c936900985b2022ce84c7b8fd206e51e137ebc32"
+  },
+  {
+    "id": "m-estimate",
+    "source": "voksa-metall-comparison/ui-atlas/2026-10-13/screenshots/M04-estimate-empty.jpg",
+    "date": "13.10.2026",
+    "title": "Подготовка производства: смета до согласованного результата",
+    "note": "Запуск от 09.10.2026, другой чертёж. Скопировано без изменений.",
+    "file": "/voksa/m-estimate.jpg",
+    "sourceSha256": "a98544102dcc4f1cb1fad4d16357d733b4fe0487b76a5688f728ba95579ff11f",
+    "crop": null,
+    "width": 1274,
+    "height": 717,
+    "sha256": "a98544102dcc4f1cb1fad4d16357d733b4fe0487b76a5688f728ba95579ff11f"
+  }
+]

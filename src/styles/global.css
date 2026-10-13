@@ -2301,6 +2301,9 @@ dialog::backdrop {
 .audience-link:hover {
   text-decoration: underline;
 }
+.audience-link + .audience-link {
+  margin-left: 0;
+}
 .business-location {
   font-size: 18px;
   color: var(--accent);
@@ -2316,6 +2319,15 @@ dialog::backdrop {
 }
 .business-conclusion .secondary-button {
   margin-top: 22px;
+}
+.conclusion-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 22px;
+}
+.business-conclusion .conclusion-links .secondary-button {
+  margin-top: 0;
 }
 .technical-title {
   font-size: 64px;
@@ -2354,6 +2366,9 @@ dialog::backdrop {
   .audience-link {
     font-size: 16px;
   }
+  .audience-link .wide-label {
+    display: none;
+  }
   .technical-page .badge {
     white-space: normal;
   }
@@ -2370,6 +2385,10 @@ dialog::backdrop {
   }
   .audience-link {
     font-size: 15px;
+  }
+  /* Phones keep the research page in the closing links. */
+  .header-inner .voksa-link {
+    display: none;
   }
   .technical-title {
     font-size: 36px;

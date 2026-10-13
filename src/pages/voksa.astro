@@ -1,0 +1,133 @@
+---
+import screenshots from '../data/screenshots.json';
+import voksaScreens from '../data/voksa-screens.json';
+import { evidenceLevels, headlines, pipeline, knowledgeSources, roles, priceChecks, timeBranches, reviewNotes, shared, comparison, pairs, adoptStatus, adoption, notAdopted, roadmap, scope } from '../data/voksa.mjs';
+import '@fontsource/ibm-plex-sans/latin-400.css';
+import '@fontsource/ibm-plex-sans/latin-500.css';
+import '@fontsource/ibm-plex-sans/cyrillic-400.css';
+import '@fontsource/ibm-plex-sans/cyrillic-500.css';
+import '../styles/global.css';
+import '../styles/voksa.css';
+const shots = Object.fromEntries([...screenshots, ...voksaScreens].map((s) => [s.id, s]));
+const hero = shots['v-passport'];
+const kindBadge = { model: 'Модель', code: 'Программа', human: 'Инженер и программа', unknown: 'Не раскрыто' };
+const roadmapLabel = { done: 'Завершён', active: 'В работе', waiting: 'Не начат', deferred: 'Отложен' };
+const statusCount = (s) => adoption.filter((a) => a.status === s).length;
+---
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ВоксаТех под капотом — разбор и сравнение подходов</title>
+  <meta name="description" content="Что показала разведка кабинета ВоксаТех: устройство конвейера, роли модели и кода, проверенная арифметика, отличия от «Подготовки производства» и что стоит перенять." />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#f7f6f2" />
+  <meta property="og:title" content="ВоксаТех под капотом — разбор и сравнение подходов" />
+  <meta property="og:description" content="Как устроена ВоксаТех, чем отличается наш подход и что мы переносим к себе." />
+  <meta property="og:type" content="website" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+</head>
+<body class="voksa-page">
+  <a class="skip-link" href="#main">Перейти к содержанию</a>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="/"><span class="brand-mark" aria-hidden="true">ПП</span><span>Подготовка<br/>производства</span></a>
+      <nav aria-label="Разделы разбора"><a href="#how">Устройство</a><a href="#roles">Модель и код</a><a href="#math">Расчёты</a><a href="#compare">Сравнение</a><a href="#adopt">Что перенять</a></nav>
+      <a class="audience-link" href="/">К презентации <span aria-hidden="true">↗</span></a>
+      <button class="secondary-button presentation-trigger" id="start-presentation" aria-pressed="false">Режим показа <span aria-hidden="true">↗</span></button>
+    </div>
+  </header>
+  <main id="main">
+    <section class="chapter hero" id="top" data-chapter="О разборе">
+      <div class="wrap">
+        <p class="eyebrow">Разбор ВоксаТех · 12–13 октября 2026</p>
+        <div class="hero-layout">
+          <div class="hero-copy">
+            <h1>ВоксаТех<br/>под капотом —<br/><span>и что мы берём.</span></h1>
+            <p class="lead">Мы изучили кабинет ВоксаТех: опубликованный код интерфейса, описание API, руководство, бесплатный паспорт контрольного чертежа и два готовых расчёта.</p>
+            <p class="hero-context">Ниже — что подтверждено, что известно только из документации и где подход «Подготовки производства» сознательно отличается.</p>
+            <a class="primary-button" href="#how">Как устроена ВоксаТех <span aria-hidden="true">↓</span></a>
+          </div>
+          <figure class="hero-figure">
+            <div class="figure-heading"><span>Кабинет ВоксаТех</span><span>Снимок от {hero.date}</span></div>
+            <button class="screenshot-button" data-image={hero.id} aria-label={'Увеличить скриншот: ' + hero.title}><img src={hero.file} width={hero.width} height={hero.height} alt="Паспорт детали в ВоксаТех: плитки типов обработки и заготовки, материал из штампа и мини-копия чертежа" fetchpriority="high" /></button>
+            <figcaption>Паспорт синтетического контрольного вала ждёт утверждения инженером. Тип обработки и заготовки выбирается плитками; материал взят из штампа.</figcaption>
+          </figure>
+        </div>
+        <div class="outcomes">{headlines.map((h, i) => <article><span class="ordinal">0{i + 1}</span><h3>{h.title}</h3><p>{h.text}</p></article>)}</div>
+        <p class="chapter-footnote">Серверные исходники и промпты ВоксаТех не получены, платный полный расчёт не запускался. Свежего сравнения двух систем на одном чертеже пока нет, поэтому победителя по точности мы не объявляем.</p>
+      </div>
+    </section>
+
+    <section class="chapter section wash" id="how" data-chapter="Как устроена"><div class="wrap">
+      <div class="section-heading"><div><p class="eyebrow">01 / Как устроена ВоксаТех</p><h2>Девять шагов<br/>от листа до цены.</h2></div><p class="section-intro">После паспорта расчёт останавливается: дальше идут только по сведениям, которые утвердил инженер. У каждого шага отмечено, как мы о нём узнали.</p></div>
+      <div class="journey-summary" aria-label="Основная последовательность"><span>Чертёж</span><i aria-hidden="true">→</i><span>Паспорт</span><i aria-hidden="true">→</i><span>Инженер</span><i aria-hidden="true">→</i><span>Техпроцесс</span><i aria-hidden="true">→</i><span>Цена и документы</span></div>
+      <div class="pipeline-layout"><div class="step-list" role="tablist" aria-label="Шаги ВоксаТех" aria-orientation="vertical">{pipeline.map((s, i) => <button class:list={['step-button', { active: i === 0 }]} role="tab" aria-selected={i === 0 ? 'true' : 'false'} aria-controls={'step-panel-' + s.id} id={'step-tab-' + s.id} tabindex={i === 0 ? 0 : -1} data-step={s.id}><span class="step-number">{String(i + 1).padStart(2, '0')}</span><span>{s.name}</span><span class="step-chevron" aria-hidden="true">→</span></button>)}</div>
+      <div class="step-panels">{pipeline.map((s, i) => <article role="tabpanel" aria-labelledby={'step-tab-' + s.id} id={'step-panel-' + s.id} hidden={i !== 0} class="step-panel"><div class="step-panel-top"><span class:list={['badge', { agent: s.kind === 'model' }, { unknown: s.kind === 'unknown' }]}>{kindBadge[s.kind]}</span><span class="evidence-tags">{s.evidence.map((e) => <span class="evidence-tag">{evidenceLevels[e]}</span>)}</span></div><h3>{s.title}</h3><p class="step-story">{s.text}</p><div class="output-box"><span>Что получается</span><p>{s.result}</p></div><details class="technical-detail"><summary>Что известно и чего мы не видели</summary><p>{s.limits}</p></details></article>)}</div></div>
+      <details class="bounded-detail"><summary>Откуда мы это знаем <span aria-hidden="true">+</span></summary><div class="table-scroll knowledge-table"><table><caption>Пять источников разной силы. Документация описывает поведение, а живой прогон и готовые примеры показывают результат.</caption><thead><tr><th scope="col">Источник</th><th scope="col">Что даёт</th><th scope="col">Чего не устанавливает</th></tr></thead><tbody>{knowledgeSources.map((k) => <tr><th scope="row">{k.title}</th><td>{k.what}</td><td>{k.gap}</td></tr>)}</tbody></table></div></details>
+      <details class="bounded-detail"><summary>Подробнее для IT: запросы кабинета <span aria-hidden="true">+</span></summary><ol class="api-flow"><li><code>POST /api/upload</code> — файл с подтверждением; при необходимости закрытие зон листа.</li><li><code>POST /api/analyze/start</code> или <code>/api/analyze/free-passport</code> — полный расчёт или чтение с остановкой на паспорте.</li><li><code>GET /api/analyze/status</code> каждые 1500 мс; состояние <code>waiting_base</code> открывает проверку паспорта.</li><li><code>POST /api/passport/blank-preview</code> — предпросмотр заготовки с задержкой 280 мс после правки формы. По описанию API предпросмотр, экономика и КП используют общий <code>blank_calc.select_blank</code>.</li><li><code>POST /api/analyze/confirm_base</code> — утверждение; повторное чтение отправляет ту же форму с подсказкой.</li><li><code>GET /api/analyze/result</code>, затем <code>/api/economics/inputs</code> и <code>POST /api/economics/recalc</code> — пересчёт партии и ручных чисел без перегенерации технологии.</li></ol><p>Из описаний и комментариев известны 16 имён серверных функций, например <code>cutting_modes.build_rows</code> и <code>app.prose_diameters</code>. Их тела не получены, полное число детерминированных функций неизвестно.</p></details>
+    </div></section>
+
+    <section class="chapter section" id="roles" data-chapter="Модель и код"><div class="wrap">
+      <div class="section-heading"><div><p class="eyebrow">02 / Кто что делает</p><h2>Модель предлагает.<br/>Код считает.</h2></div><p class="section-intro">Граница проходит не там, где обещает вступление руководства: модель влияет и на итоговое время. Арифметика кода опирается на смысл, который выбрала модель.</p></div>
+      <div class="role-split">
+        <article class="role-column model"><p class="eyebrow">Модель</p><h3>Читает, классифицирует и пишет технологию</h3><ul>{roles.model.map((r) => <li>{r}</li>)}</ul></article>
+        <article class="role-column code"><p class="eyebrow">Программа</p><h3>Разбирает, считает и выгружает</h3><ul>{roles.code.map((r) => <li>{r}</li>)}</ul></article>
+      </div>
+      <div class="boundary-note"><h3>Где граница размыта</h3><p>Код получает от модели способ установки, число переходов, инструмент и вид операции. В обычной станочной ветви итоговое штучное время — большее из расчёта кода и оценки модели. Шесть описанных стадий не означают шесть агентов: число агентов, модели и промпты не раскрыты.</p></div>
+      <figure class="inline-shot"><button class="screenshot-button" data-image="v-surfaces" aria-label={'Увеличить: ' + shots['v-surfaces'].title}><img src={shots['v-surfaces'].file} width={shots['v-surfaces'].width} height={shots['v-surfaces'].height} alt={shots['v-surfaces'].title} loading="lazy" /></button><figcaption><b>Как это видно в паспорте.</b> Координаты Z канавки на чертеже нет — модель пересчитала их из других размеров и пометила строку «расчёт» с пояснением. Инженеру предлагают сверить её с листом. Снимок от {shots['v-surfaces'].date}.</figcaption></figure>
+    </div></section>
+
+    <section class="chapter section wash" id="math" data-chapter="Расчёты"><div class="wrap">
+      <div class="section-heading"><div><p class="eyebrow">03 / Проверенная арифметика</p><h2>Числа сходятся.<br/>Основания — не всегда.</h2></div><p class="section-intro">Мы пересчитали массы, раскрой прутка, время партии и цену независимо от сервиса. Явных арифметических расхождений не нашли. Это проверка чисел при заданных предпосылках, а не технологии.</p></div>
+      <div class="calc-layout">
+        <div class="calc-sheet"><p class="eyebrow">Пример: заготовка из прутка</p><h3>Цена учитывает весь пруток, а не только отрезок.</h3><dl><div><dt>Пруток</dt><dd>Ø23 × 6000 мм · 19,569 кг</dd></div><div><dt>Отрезок и пропил</dt><dd>107 + 1,5 = 108,5 мм</dd></div><div><dt>Заготовок из прутка</dt><dd>⌊6000 / 108,5⌋ = 55</dd></div><div><dt>Некратный остаток</dt><dd>6000 − 55 × 108,5 = 32,5 мм</dd></div><div><dt>Металл в цене детали</dt><dd>19,569 / 55 ≈ 0,3558 кг</dd></div><div><dt>Масса самого отрезка</dt><dd>≈ 0,3490 кг</dd></div></dl><p class="caption">Пропил и остаток распределены на детали. Плотность 7850 кг/м³ восстановлена по числам ответа.</p></div>
+        <figure class="inline-shot"><button class="screenshot-button" data-image="v-stock" aria-label={'Увеличить: ' + shots['v-stock'].title}><img src={shots['v-stock'].file} width={shots['v-stock'].width} height={shots['v-stock'].height} alt={shots['v-stock'].title} loading="lazy" /></button><figcaption>Назначенная чертежом поковка Ø90 × 310 и рассчитанная альтернатива 87 × 87 × 315 стоят рядом. Назначение имеет приоритет. Снимок от {shots['v-stock'].date}.</figcaption></figure>
+      </div>
+      <div class="table-scroll checks-table"><table><caption>Одиннадцать сверок: вход, ответ ВоксаТех и вывод нашей проверки</caption><thead><tr><th scope="col">Проверка</th><th scope="col">Ответ ВоксаТех</th><th scope="col">Что подтверждено</th></tr></thead><tbody>{priceChecks.map((r) => <tr><th scope="row">{r[0]}</th><td class="num" data-label="Ответ ВоксаТех">{r[1]}</td><td data-label="Что подтверждено">{r[2]}</td></tr>)}</tbody></table></div>
+      <div class="formula-layout">
+        <div><p class="eyebrow">Нормирование по руководству</p><h3>Время складывается из составляющих.</h3><div class="formula" role="group" aria-label="Формулы нормирования"><p>Тшт<sub>код</sub> = (То + Тв) × (1 + (a + b) / 100)</p><p>Тв = установка + смена инструмента + измерения + управление</p><p>Тшт = max(Тшт<sub>код</sub>, Тшт<sub>модели</sub>)</p><p>Работы = Σ ставка / 60 × (Тшт + Тпз / партия)</p><p>Время партии = партия × ΣТшт + ΣТпз</p></div><p class="caption">То — машинное время от модели; a и b — отдых и обслуживание в процентах. Формула с max относится к обычной станочной ветви.</p></div>
+        <figure class="inline-shot"><button class="screenshot-button" data-image="v-price" aria-label={'Увеличить: ' + shots['v-price'].title}><img src={shots['v-price'].file} width={shots['v-price'].width} height={shots['v-price'].height} alt={shots['v-price'].title} loading="lazy" /></button><figcaption>Готовый пример «Плита»: себестоимость, накладные 20 %, наценка 30 % и объяснение, как партия распределяет наладку. Снимок от {shots['v-price'].date}.</figcaption></figure>
+      </div>
+      <details class="bounded-detail"><summary>Разные ветви нормирования <span aria-hidden="true">+</span></summary><div class="table-scroll"><table><caption>Формула выше не универсальна: у части операций время задаёт модель целиком.</caption><thead><tr><th scope="col">Ветвь</th><th scope="col">Роль модели и кода</th></tr></thead><tbody>{timeBranches.map((r) => <tr><th scope="row">{r[0]}</th><td>{r[1]}</td></tr>)}</tbody></table></div></details>
+      <h3 class="subhead">Где арифметика верна, а основание спорно</h3>
+      <div class="note-grid">{reviewNotes.map((n, i) => <article><span class="ordinal">0{i + 1}</span><h4>{n.title}</h4><p>{n.text}</p></article>)}</div>
+    </div></section>
+
+    <section class="chapter section" id="compare" data-chapter="Сравнение"><div class="wrap">
+      <div class="section-heading"><div><p class="eyebrow">04 / Сравнение подходов</p><h2>Полный ответ<br/>или проверяемая основа.</h2></div><p class="section-intro">ВоксаТех стремится сразу выдать маршрут с ценой. «Подготовка производства» сначала сохраняет происхождение каждого факта и не выдаёт оценку за готовый результат.</p></div>
+      <div class="limits shared-ground">{shared.map((s) => <article><p class="eyebrow">Совпадает</p><h3>{s.title}</h3><p>{s.text}</p></article>)}</div>
+      <div class="table-scroll compare-table"><table><caption>Десять областей. Сведения о «Подготовке производства» — по снимку кода от 13 октября.</caption><thead><tr><th scope="col">Область</th><th scope="col">ВоксаТех</th><th scope="col">Подготовка производства</th></tr></thead><tbody>{comparison.map((c) => <tr><th scope="row">{c.area}</th><td data-label="ВоксаТех">{c.voksa}</td><td data-label="Подготовка производства">{c.ours}</td></tr>)}</tbody></table></div>
+      <h3 class="subhead">Одна задача — два интерфейса</h3>
+      <div class="pair-tabs tabs" role="tablist" aria-label="Сравнение экранов">{pairs.map((p, i) => <button role="tab" data-pair={p.id} aria-selected={i === 0 ? 'true' : 'false'} id={'pair-tab-' + p.id} aria-controls={'pair-panel-' + p.id} tabindex={i === 0 ? 0 : -1}>{p.label}</button>)}</div>
+      {pairs.map((p, i) => <article class="pair-panel" id={'pair-panel-' + p.id} role="tabpanel" aria-labelledby={'pair-tab-' + p.id} hidden={i !== 0}>
+        {[['ВоксаТех', shots[p.voksaImage], p.voksa, 'voksa'], ['Подготовка производства', shots[p.oursImage], p.ours, 'ours']].map(([label, s, text, side]) => <figure class:list={['pair-side', side]}><figcaption class="pair-label">{label}</figcaption><button class="screenshot-button" data-image={s.id} aria-label={'Увеличить: ' + s.title}><img src={s.file} width={s.width} height={s.height} alt={s.title} loading="lazy" style={s.focusY ? 'object-position:center ' + s.focusY : undefined} /></button><p>{text}</p><p class="caption">Снимок от {s.date}. {s.note}</p></figure>)}
+      </article>)}
+      <p class="chapter-footnote">Экраны относятся к разным чертежам: у ВоксаТех — контрольный вал и готовые примеры, у нас — рабочие запуски. Это сравнение представления данных, а не точности распознавания.</p>
+    </div></section>
+
+    <section class="chapter section wash" id="adopt" data-chapter="Что перенять"><div class="wrap">
+      <div class="section-heading"><div><p class="eyebrow">05 / Что стоит перенять</p><h2>Берём механизм,<br/>а не внешний вид.</h2></div><p class="section-intro">Каждое заимствование проходит нашу проверку пользы: свежий прогон, сверку с оригиналом чертежа и браузер. Приоритет означает очередь проверки, а не обещание срока.</p></div>
+      <div class="agents-controls"><div class="filter-chips" aria-label="Фильтр по состоянию"><button data-adopt-filter="all" aria-pressed="true">Все</button>{Object.entries(adoptStatus).map(([k, v]) => <button data-adopt-filter={k} aria-pressed="false">{v} · {statusCount(k)}</button>)}</div><span class="muted" id="adopt-count" aria-live="polite">{adoption.length} механизмов</span></div>
+      <div class="agents-table adopt-table">{adoption.map((a) => <details class="agent-row adopt-row" data-status={a.status}><summary><span class="priority">{a.priority}</span><span class="agent-summary"><span class="agent-title">{a.title}</span><span class="agent-name">{a.stage === '—' ? 'Вне этапов плана' : 'Этап ' + a.stage}</span></span><span class:list={['badge', 'status-' + a.status]}>{adoptStatus[a.status]}</span><span class="expand-mark" aria-hidden="true">+</span></summary><div class="agent-body"><dl><div><dt>Что у ВоксаТех</dt><dd>{a.voksa}</dd></div><div><dt>Как берём</dt><dd>{a.ours}</dd></div><div><dt>Критерий приёмки</dt><dd>{a.gate}</dd></div></dl>{a.note && <p class="caption">{a.note}</p>}</div></details>)}</div>
+      <div class="not-adopted"><div><p class="eyebrow">Сознательно не переносим</p><h3>Убедительные числа<br/>без основания.</h3></div><ul>{notAdopted.map((n) => <li>{n}</li>)}</ul></div>
+    </div></section>
+
+    <section class="chapter section" id="plan" data-chapter="План и границы"><div class="wrap">
+      <div class="section-heading"><div><p class="eyebrow">06 / План внедрения и границы</p><h2>Маленькими шагами.<br/>С живой проверкой.</h2></div><p class="section-intro">Статус этапа меняется только по датированному отчёту с доказательствами. Успешный ответ агента, верная арифметика и пригодность к изготовлению проверяются отдельно.</p></div>
+      <ol class="roadmap">{roadmap.map(([id, title, state, note]) => <li class={'roadmap-' + state}><span class="roadmap-id">{id}</span><span class="roadmap-title">{title}</span><span class:list={['badge', 'roadmap-badge', 'state-' + state]}>{roadmapLabel[state]}</span>{note !== roadmapLabel[state] && <span class="roadmap-note">{note}</span>}</li>)}</ol>
+      <div class="scope-columns">
+        <div><h3>Что сделано в разведке</h3><ul class="fact-list">{scope.done.map((s) => <li>{s}</li>)}</ul></div>
+        <div><h3>Чего мы не делали</h3><ul class="fact-list">{scope.notDone.map((s) => <li>{s}</li>)}</ul></div>
+      </div>
+      <div class="business-conclusion"><h3>Итог</h3><p>ВоксаТех сильна полнотой коммерческого результата: технолог сразу видит переходы, нормы и цену. «Подготовка производства» сильнее в проверяемости исходных фактов и истории решений. Мы переносим механизмы, которые проходят нашу проверку пользы: явную структуру поверхностей, происхождение каждого числа, разложение времени и раздельный пересчёт цены.</p><p class="caption">Разбор по материалам 12–13 октября 2026 и плану внедрения на вечер 13 октября. Снимки ВоксаТех обрезаны до рабочей области: шапка аккаунта не публикуется, пиксели не ретушировались.</p><div class="conclusion-links"><a class="secondary-button" href="/">Презентация продукта ↗</a><a class="secondary-button" href="/it/" target="_blank" rel="noopener">Технический разбор для IT ↗</a></div></div>
+    </div></section>
+  </main>
+  <footer><div class="wrap footer-inner"><span>Подготовка производства / Разбор ВоксаТех</span><span>Материалы 12–13 октября 2026</span><a href="#top">Наверх ↑</a></div></footer>
+  <div class="presentation-bar" id="presentation-bar" hidden><button id="chapter-prev" aria-label="Предыдущая глава">←</button><span id="chapter-status" aria-live="polite"></span><button id="chapter-next" aria-label="Следующая глава">→</button><button id="end-presentation">Завершить показ <span aria-hidden="true">×</span></button></div>
+  <dialog id="image-dialog" aria-labelledby="image-dialog-title"><div class="dialog-top"><h2 id="image-dialog-title"></h2><button class="icon-button" id="close-image" aria-label="Закрыть скриншот">×</button></div><p id="image-dialog-note" class="caption"></p><div class="image-scroll"><img id="image-dialog-img" alt=""/></div><p class="caption">Сохранённый снимок интерфейса. Масштаб изображения сохраняет исходное разрешение; при необходимости используйте прокрутку.</p></dialog>
+  <noscript><p class="wrap">Для переключения шагов, экранов и фильтров включите JavaScript.</p></noscript>
+  <script src="../scripts/voksa.ts"></script>
+</body>
+</html>

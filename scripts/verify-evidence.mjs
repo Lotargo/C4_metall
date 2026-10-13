@@ -29,6 +29,18 @@ for (const screenshot of data.screenshots) {
   if (createHash("sha256").update(bytes).digest("hex") !== screenshot.sha256)
     throw Error("Screenshot hash mismatch " + screenshot.file);
 }
+// Research page captures: cropped VoksaTech frames and unedited product frames.
+const voksaScreens = JSON.parse(
+  await readFile("src/data/voksa-screens.json", "utf8"),
+);
+for (const screenshot of voksaScreens) {
+  const bytes = await readFile("public" + screenshot.file);
+  if (createHash("sha256").update(bytes).digest("hex") !== screenshot.sha256)
+    throw Error("Research capture hash mismatch " + screenshot.file);
+  if (!screenshot.crop && screenshot.sha256 !== screenshot.sourceSha256)
+    throw Error("Uncropped capture differs from its source " + screenshot.file);
+  checks++;
+}
 for (const diagram of Object.values(data.diagrams)) {
   const ids = new Set(diagram.nodes.map((n) => n.id));
   for (const n of diagram.nodes) {

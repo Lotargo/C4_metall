@@ -61,6 +61,9 @@
 - `src/data/evidence.json` — извлечённые фрагменты и схемы.
 - `public/architecture.json` — скачиваемая копия данных атласа.
 - `src/pages/index.astro`, `src/scripts/atlas.ts`, `src/styles/global.css` — интерфейс.
+- `src/pages/voksa.astro`, `src/data/voksa.mjs`, `src/data/voksa-screens.json` —
+  разбор ВоксаТех по материалам `F:\projects\metall-dev-2\voksa-metall-comparison`.
+  Кадры обновляй `scripts/register-voksa-screens.py`; шапку аккаунта не публикуй.
 
 Обновляй снимок сознательно в рамках задачи актуализации архитектуры.
 Не запускай захват автоматически при правке оформления или инструкций.

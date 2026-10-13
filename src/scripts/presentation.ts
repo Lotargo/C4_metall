@@ -1,5 +1,9 @@
-import screenshots from "../data/screenshots.json";
+import productScreens from "../data/screenshots.json";
+import voksaScreens from "../data/voksa-screens.json";
 import "./shared";
+
+// The research page shows product captures next to cropped VoksaTech ones.
+const screenshots = [...productScreens, ...voksaScreens];
 
 const $ = <T extends HTMLElement = HTMLElement>(selector: string) =>
   document.querySelector<T>(selector)!;
