@@ -1,0 +1,233 @@
+[
+  {
+    "id": "p-req-source",
+    "source": "docs/03-reports/88-input-01-requirements-2026-10-19/main-ui-source-location.jpg",
+    "date": "19.10.2026",
+    "title": "Требование и его строка на чертеже",
+    "note": "Рабочий сохранённый чертёж №4 «Вал конвейера приводной». Выбрано требование о неуказанных предельных отклонениях; система подсвечивает его строку на исходном листе.",
+    "file": "/plan/p-req-source.jpg",
+    "width": 1904,
+    "height": 1071,
+    "sha256": "4f8183ffc6f72d8f2f79faf1e68571208360def2770f04aefb18dbe8c7ad3ee3"
+  },
+  {
+    "id": "p-req-edit",
+    "source": "docs/03-reports/118-r09b-tr05-correction-2026-10-21/apply-requirement-form.png",
+    "date": "21.10.2026",
+    "title": "Исправление требования через обычную форму",
+    "note": "Рабочий сохранённый чертёж №4 «Вал конвейера приводной». Знак биения правой шейки исправлен по исходному листу; прежняя запись осталась в истории.",
+    "file": "/plan/p-req-edit.png",
+    "width": 1600,
+    "height": 900,
+    "sha256": "78eb4a7e595e01cc674f241ba49751f4a856a376bcc7f107a31c18679d9f5f52"
+  },
+  {
+    "id": "p-req-stale",
+    "source": "docs/03-reports/116-r09c-derived-stale-2026-10-21/after-overview-validation-card-16x9.png",
+    "date": "21.10.2026",
+    "title": "Устаревшие выводы помечены явно",
+    "note": "Рабочий сохранённый чертёж №4 «Вал конвейера приводной». Замечания автоматической проверки относятся к прежней редакции паспорта и помечены как требующие перепроверки.",
+    "file": "/plan/p-req-stale.png",
+    "width": 1600,
+    "height": 900,
+    "sha256": "fa212373c79d301682f20ba631e0dced41cf4b591dc877e5c6bed7021bfd6fa6"
+  },
+  {
+    "id": "p-req-route",
+    "source": "docs/03-reports/127-right-runout-route-review-2026-10-21/main-ui-op060-reload.png",
+    "date": "21.10.2026",
+    "title": "Исправленное требование в операции маршрута",
+    "note": "Операция окончательной обработки шеек после исправления требования о биении. Временная тестовая копия, рабочие данные не менялись.",
+    "file": "/plan/p-req-route.jpg",
+    "width": 1274,
+    "height": 717,
+    "sha256": "8389b37c9322be349c11d80a4beb053dae40d35749bb1afcf13e24acfe23b5b8"
+  },
+  {
+    "id": "p-surf-registry",
+    "source": "docs/03-reports/89-input-02-surfaces-2026-10-19/main-ui-surface-registry-wide.jpg",
+    "date": "19.10.2026",
+    "title": "Перечень поверхностей и их размеров",
+    "note": "Рабочий сохранённый чертёж №4 «Вал конвейера приводной». Каждая поверхность: сторона, роль, размеры и требования, ссылка на место на чертеже.",
+    "file": "/plan/p-surf-registry.jpg",
+    "width": 1904,
+    "height": 1071,
+    "sha256": "5294e5879461907086000f4a1468c9420e20dc1b02881bf1abac9e7826423037"
+  },
+  {
+    "id": "p-surf-source",
+    "source": "docs/03-reports/94-input-fixes-r01-source-2026-10-19/main-ui-surface-source.jpg",
+    "date": "19.10.2026",
+    "title": "Переход от поверхности к чертежу",
+    "note": "Рабочий сохранённый чертёж №4 «Вал конвейера приводной». Для средней шейки открывается знак шероховатости 3,2; система прямо пишет, что границы поверхности и принадлежность базе нужно сверить.",
+    "file": "/plan/p-surf-source.jpg",
+    "width": 1904,
+    "height": 1071,
+    "sha256": "79c57f566ade6ebfa4171b2eb0c17606da1cff4270871d43e142208867e3e9e7"
+  },
+  {
+    "id": "p-surf-legacy",
+    "source": "docs/03-reports/96-legacy-passport-display-2026-10-19/main-ui-legacy-registry.jpg",
+    "date": "19.10.2026",
+    "title": "Старые записи размеров с одной пометкой",
+    "note": "Рабочий сохранённый чертёж №4 «Вал конвейера приводной». Записи из прежней версии паспорта показаны с единой пометкой «принадлежность не подтверждена», без повторов пустых полей.",
+    "file": "/plan/p-surf-legacy.jpg",
+    "width": 1904,
+    "height": 1071,
+    "sha256": "d68731e84d57f7fe4fd9bfb872f97b73f75088634d4068cdb2b1e8c6e66e8e5a"
+  },
+  {
+    "id": "p-mat-source",
+    "source": "docs/03-reports/90-input-03-material-2026-10-19/main-ui-material-source.jpg",
+    "date": "19.10.2026",
+    "title": "Материал и его строка в основной надписи",
+    "note": "Рабочий сохранённый чертёж №4 «Вал конвейера приводной». «Сталь 45 ГОСТ 1050-2013» подсвечена на листе; марка и стандарт хранятся раздельно.",
+    "file": "/plan/p-mat-source.jpg",
+    "width": 1904,
+    "height": 1071,
+    "sha256": "1936f948643a3d8248a5b2ec849a86b7ca1f9ef1c77a7522e24a6f537e2f54fa"
+  },
+  {
+    "id": "p-mat-props",
+    "source": "docs/03-reports/109-r05-material-properties-2026-10-20/main-ui-material-values.jpg",
+    "date": "20.10.2026",
+    "title": "Справочные свойства материала",
+    "note": "Рабочий сохранённый чертёж №4 «Вал конвейера приводной». Плотность подписана в кг/м³, твёрдость — как запись справочника, заменители — только справочно. Узкое окно браузера.",
+    "file": "/plan/p-mat-props.jpg",
+    "width": 645,
+    "height": 820,
+    "sha256": "a12338fde85e2ffc213e1227bcff3843d45fc256a267516c9f728067775e9b27"
+  },
+  {
+    "id": "p-mat-offline",
+    "source": "docs/03-reports/110-r06-material-cache-2026-10-20/main-ui-unavailable.jpg",
+    "date": "20.10.2026",
+    "title": "Справочник материалов недоступен",
+    "note": "Справочник отключён намеренно: система честно сообщает, что свойства не получены, и не подставляет старые. Временная тестовая копия, рабочие данные не менялись.",
+    "file": "/plan/p-mat-offline.jpg",
+    "width": 1274,
+    "height": 717,
+    "sha256": "983ee90a8d468668f43505a4591af0d068df78b736b19ef6e99b06b7c54f6ce2"
+  },
+  {
+    "id": "p-stock-stages",
+    "source": "docs/03-reports/103-r04-stock-stages-2026-10-20/main-ui-stock-stages-16x9.png",
+    "date": "20.10.2026",
+    "title": "Три стадии заготовки",
+    "note": "Рабочий сохранённый чертёж №4 «Вал конвейера приводной». Назначение на чертеже не найдено, предварительная рекомендация — круг Ø90 (условно), окончательное задание не сформировано.",
+    "file": "/plan/p-stock-stages.png",
+    "width": 1600,
+    "height": 900,
+    "sha256": "de5461e330d7eab531c65298274cb1bbfe192de2f3ace561f708b63a36485e7e"
+  },
+  {
+    "id": "p-stock-gost",
+    "source": "docs/03-reports/121-r13-saved-examples-2026-10-21/gost88-vs2006.jpg",
+    "date": "21.10.2026",
+    "title": "Назначение чертежа отдельно от рекомендации",
+    "note": "Вал В.1883: на чертеже назначен круг 30 по ГОСТ 2590-88, система отдельно показывает расчётный круг Ø34. Временная тестовая копия, рабочие данные не менялись.",
+    "file": "/plan/p-stock-gost.jpg",
+    "width": 1594,
+    "height": 897,
+    "sha256": "6f9b18e407f982a5172d4492465fe1bf28a30a510cbcd22d6ace3d878abf19c7"
+  },
+  {
+    "id": "p-stock-question",
+    "source": "docs/03-reports/128-technologist-stock-question-2026-10-21/main-ui-question.png",
+    "date": "21.10.2026",
+    "title": "Вопрос технологу о заготовке",
+    "note": "Вал В.1883: назначенный круг 30 не проходит расчёт с учётом кривизны прутка; технолог выбирает решение. Временная тестовая копия, рабочие данные не менялись.",
+    "file": "/plan/p-stock-question.png",
+    "width": 1600,
+    "height": 900,
+    "sha256": "0b90aa47b0181e23402bf80cb4bac84f5cd8a9544d4891f9b7655a731a730a6b"
+  },
+  {
+    "id": "p-stock-answer",
+    "source": "docs/03-reports/128-technologist-stock-question-2026-10-21/main-ui-answer-reload.png",
+    "date": "21.10.2026",
+    "title": "Решение технолога сохранено",
+    "note": "После перезагрузки страницы выбор технолога и его последствия видны в форме маршрута. Временная тестовая копия, рабочие данные не менялись.",
+    "file": "/plan/p-stock-answer.png",
+    "width": 1600,
+    "height": 900,
+    "sha256": "5b9e8b9f5a763f229c3711af84ace967907060f60898878b719fe7334c78c2db"
+  },
+  {
+    "id": "p-mass-objects",
+    "source": "docs/03-reports/112-r08-mass-objects-2026-10-20/main-ui-mass-objects-16x9.png",
+    "date": "20.10.2026",
+    "title": "Масса детали и массы заготовки — раздельно",
+    "note": "Рабочий сохранённый чертёж №4 «Вал конвейера приводной». Масса детали по штампу 31,86 кг, пруток Ø90 × 6000 мм ≈ 298,72 кг, цилиндр Ø90 × 900 мм ≈ 44,81 кг.",
+    "file": "/plan/p-mass-objects.png",
+    "width": 1600,
+    "height": 900,
+    "sha256": "09b4ecbcc0bfe7d4de8f23d4370eb0a6ffea8f349c1445f53bec21dbfaf4f33b"
+  },
+  {
+    "id": "p-mass-norms",
+    "source": "docs/03-reports/113-r11-cut-norms-2026-10-21/comment-cut-norms-16x9.png",
+    "date": "21.10.2026",
+    "title": "Справочник норм отрезки круга",
+    "note": "Рабочий справочник: припуск на торец и ширина пропила по диапазонам диаметра. Значения внесены условно, это не нормы цеха.",
+    "file": "/plan/p-mass-norms.png",
+    "width": 1600,
+    "height": 900,
+    "sha256": "d34b88758f811cd981b98d352ca0f834529a2cd5394272ddb787963dbaf80466"
+  },
+  {
+    "id": "p-mass-cut",
+    "source": "docs/03-reports/113-r11-cut-norms-2026-10-21/comment-route-masses-16x9.png",
+    "date": "21.10.2026",
+    "title": "Длина и масса отрезка по норме",
+    "note": "Рабочий сохранённый чертёж №4 «Вал конвейера приводной». Отрезок 906 мм ≈ 45,11 кг, 6 заготовок из прутка; рядом пометка, что нормы условные.",
+    "file": "/plan/p-mass-cut.png",
+    "width": 1600,
+    "height": 900,
+    "sha256": "03cedcc22612fad0b9eebf5b0685fa3910147f2dfeadcea15d5fb7d55db98b3a"
+  },
+  {
+    "id": "p-mass-drawing",
+    "source": "docs/03-reports/97-mass-source-choice-r02-2026-10-19/main-ui-value.jpg",
+    "date": "19.10.2026",
+    "title": "Масса детали со штампа и её источник",
+    "note": "Рабочий сохранённый чертёж №4 «Вал конвейера приводной». Пользователь выбирает, что подсветить: значение «31,86» или название поля «Масса».",
+    "file": "/plan/p-mass-drawing.jpg",
+    "width": 1904,
+    "height": 1071,
+    "sha256": "46d10b767796996d55606bef94ddf393d1c2d5df10d9e1a94f3c96fa9c1f6c52"
+  },
+  {
+    "id": "p-mach-catalog",
+    "source": "docs/03-reports/93-input-06-machine-knowledge-2026-10-19/main-ui-machine-catalog.jpg",
+    "date": "19.10.2026",
+    "title": "База знаний «Станки»",
+    "note": "Рабочий каталог: 15 паспортов оборудования в 11 категориях, поиск по тексту.",
+    "file": "/plan/p-mach-catalog.jpg",
+    "width": 1904,
+    "height": 1071,
+    "sha256": "1af6891d674ad9e67697115c6af6e82180dc9fa270d628a5036fe0ec2d8369b3"
+  },
+  {
+    "id": "p-mach-passport",
+    "source": "docs/03-reports/93-input-06-machine-knowledge-2026-10-19/main-ui-machine-passport.jpg",
+    "date": "19.10.2026",
+    "title": "Паспорт ленточнопильного станка CHENLONG",
+    "note": "Рабочий каталог. Строки допустимой массы, минимальной длины отрезки и точности не заполнены — они остаются неизвестными.",
+    "file": "/plan/p-mach-passport.jpg",
+    "width": 1904,
+    "height": 1071,
+    "sha256": "2f6999382057a8dd463021a91600b6e9df9e811427dd104b785541ad68899a8e"
+  },
+  {
+    "id": "p-mach-conflict",
+    "source": "docs/03-reports/124-r14-equipment-ui-2026-10-21/main-ui-passport-conflict.png",
+    "date": "21.10.2026",
+    "title": "Защита от потери правок паспорта",
+    "note": "Каталог изменился в другой вкладке: система не перезаписывает чужую правку и сохраняет введённый текст. Временная тестовая копия, рабочие данные не менялись.",
+    "file": "/plan/p-mach-conflict.jpg",
+    "width": 1920,
+    "height": 1080,
+    "sha256": "9671720546d4394ab64f851884a80406452d5134f8490b005f75189e162229c8"
+  }
+]

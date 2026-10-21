@@ -2387,7 +2387,8 @@ dialog::backdrop {
     font-size: 15px;
   }
   /* Phones keep the research page in the closing links. */
-  .header-inner .voksa-link {
+  .header-inner .voksa-link,
+  .header-inner .plan-link {
     display: none;
   }
   .technical-title {
