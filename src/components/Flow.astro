@@ -1,0 +1,142 @@
+---
+// Logical flowchart. With `lanes` it draws a swimlane diagram (one row per
+// participant); without lanes it draws a single chain of shapes.
+// Phones get the same steps as an ordered list instead of a shrunken picture.
+import { kinds } from '../data/process.mjs';
+
+interface Lane { id: string; label: string }
+interface Node {
+  id: string;
+  col: number;
+  lane?: string;
+  kind: keyof typeof kinds;
+  title: string;
+  shape?: 'start' | 'task' | 'decision' | 'end' | 'doc';
+  here?: boolean;
+}
+interface Edge { from: string; to: string; label?: string; dashed?: boolean; via?: 'top' | 'bottom' }
+interface Props { id: string; label: string; lanes?: Lane[]; nodes: Node[]; edges: Edge[]; legend?: boolean }
+
+const { id, label, lanes = [], nodes, edges, legend = true } = Astro.props;
+
+const LANE_W = lanes.length ? 116 : 0;
+const COL_W = lanes.length ? 142 : 176;
+const LANE_H = lanes.length ? 128 : 140;
+const BOX_W = lanes.length ? 126 : 152;
+const BOX_H = 76;
+const FONT = 15;
+const cols = Math.max(...nodes.map((n) => n.col)) + 1;
+const rows = Math.max(lanes.length, 1);
+const width = LANE_W + cols * COL_W + 8;
+const height = rows * LANE_H;
+const laneIndex = (n: Node) => (lanes.length ? lanes.findIndex((l) => l.id === n.lane) : 0);
+
+function size(n: Node) {
+  if (n.shape === 'decision') return { w: BOX_W - 6, h: BOX_H + 30 };
+  return { w: BOX_W, h: BOX_H };
+}
+function place(n: Node) {
+  const s = size(n);
+  return { cx: LANE_W + n.col * COL_W + COL_W / 2, cy: laneIndex(n) * LANE_H + LANE_H / 2, ...s };
+}
+function wrap(text: string, maxChars: number) {
+  const lines: string[] = [];
+  for (const word of text.split(' ')) {
+    const last = lines.at(-1);
+    if (last !== undefined && (last + ' ' + word).length <= maxChars) lines[lines.length - 1] = last + ' ' + word;
+    else lines.push(word);
+  }
+  return lines;
+}
+const byId = Object.fromEntries(nodes.map((n) => [n.id, { ...n, ...place(n) }]));
+
+function shapePath(n: ReturnType<typeof place> & Node) {
+  const { cx, cy, w, h } = n;
+  const l = cx - w / 2, t = cy - h / 2, r = cx + w / 2, b = cy + h / 2;
+  if (n.shape === 'decision') return `M${cx} ${t} L${r} ${cy} L${cx} ${b} L${l} ${cy} Z`;
+  if (n.shape === 'doc') {
+    const wave = 7;
+    return `M${l} ${t} H${r} V${b - wave} C${r - w / 4} ${b - 2 * wave} ${cx + w / 4} ${b + wave} ${cx} ${b - wave} S${l + w / 4} ${b - 2 * wave} ${l} ${b - wave} Z`;
+  }
+  const rx = n.shape === 'start' || n.shape === 'end' ? h / 2 : 6;
+  return `M${l + rx} ${t} H${r - rx} A${rx} ${rx} 0 0 1 ${r} ${t + rx} V${b - rx} A${rx} ${rx} 0 0 1 ${r - rx} ${b} H${l + rx} A${rx} ${rx} 0 0 1 ${l} ${b - rx} V${t + rx} A${rx} ${rx} 0 0 1 ${l + rx} ${t} Z`;
+}
+
+// Orthogonal connectors: forward edges leave right and enter left,
+// same-column edges run vertically, backward edges use a channel above/below.
+function route(e: Edge) {
+  const a = byId[e.from], z = byId[e.to];
+  if (z.col === a.col) {
+    const down = z.cy > a.cy;
+    const y1 = down ? a.cy + a.h / 2 : a.cy - a.h / 2;
+    const y2 = down ? z.cy - z.h / 2 : z.cy + z.h / 2;
+    return { d: `M${a.cx} ${y1} V${y2}`, lx: a.cx - 8, ly: (y1 + y2) / 2 + 4, anchor: 'end' };
+  }
+  if (z.col > a.col) {
+    const x1 = a.cx + a.w / 2, x2 = z.cx - z.w / 2;
+    if (Math.abs(z.cy - a.cy) < 1) return { d: `M${x1} ${a.cy} H${x2}`, lx: (x1 + x2) / 2, ly: a.cy - 8, anchor: 'middle' };
+    const mx = x1 + (COL_W - a.w) / 2;
+    return { d: `M${x1} ${a.cy} H${mx} V${z.cy} H${x2}`, lx: mx + 6, ly: (a.cy + z.cy) / 2 + 4, anchor: 'start' };
+  }
+  const top = e.via !== 'bottom';
+  const y1 = top ? a.cy - a.h / 2 : a.cy + a.h / 2;
+  const y2 = top ? z.cy - z.h / 2 : z.cy + z.h / 2;
+  const channel = top ? Math.min(y1, y2) - 14 : Math.max(y1, y2) + 14;
+  return { d: `M${a.cx} ${y1} V${channel} H${z.cx} V${y2}`, lx: (a.cx + z.cx) / 2, ly: channel - 6, anchor: 'middle' };
+}
+
+// Reading order for the list: by column; inside a column, a node follows the
+// nodes that feed it, and optional (dashed) side steps come after main ones.
+const optional = (n: Node) => edges.some((e) => e.from === n.id && e.dashed);
+const order = [...new Set(nodes.map((n) => n.col))].sort((a, b) => a - b).flatMap((col) => {
+  const group = nodes.filter((n) => n.col === col)
+    .sort((p, q) => Number(optional(p)) - Number(optional(q)) || laneIndex(p) - laneIndex(q));
+  const placed: Node[] = [];
+  while (group.length) {
+    const next = group.findIndex((n) => !group.some((m) => edges.some((e) => e.from === m.id && e.to === n.id)));
+    placed.push(...group.splice(Math.max(next, 0), 1));
+  }
+  return placed;
+});
+const outgoing = (n: Node) => edges.filter((e) => e.from === n.id && e.label);
+const laneName = (n: Node) => (lanes.length ? lanes[laneIndex(n)].label : kinds[n.kind].label);
+const usedKinds = [...new Set(nodes.map((n) => n.kind))];
+---
+<figure class="flow" aria-label={label}>
+  <div class="flow-canvas" style={`--flow-min:${Math.round(width * 0.78)}px`}>
+    <svg viewBox={`0 0 ${width} ${height}`} style={`max-width:${Math.round(width * 1.25)}px`} role="img" aria-labelledby={id + '-title'}>
+      <title id={id + '-title'}>{label}</title>
+      <defs>
+        <marker id={id + '-arrow'} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0 0 L10 5 L0 10 Z" class="flow-arrowhead" />
+        </marker>
+      </defs>
+      {lanes.map((l, i) => <g class={'flow-lane lane-' + (i % 2)}>
+        <rect x="0" y={i * LANE_H} width={width} height={LANE_H} />
+        <rect class="flow-lane-head" x="0" y={i * LANE_H} width={LANE_W - 10} height={LANE_H} />
+        <rect class={'flow-lane-mark kind-' + l.id} x="0" y={i * LANE_H} width="4" height={LANE_H} />
+        {wrap(l.label, 11).map((line, k, all) => <text class="flow-lane-label" x="16" y={i * LANE_H + LANE_H / 2 + (k - (all.length - 1) / 2) * 18 + 5}>{line}</text>)}
+      </g>)}
+      {edges.map((e) => { const r = route(e); return <g class:list={['flow-edge', { dashed: e.dashed }]}>
+        <path d={r.d} marker-end={`url(#${id}-arrow)`} />
+        {e.label && <text x={r.lx} y={r.ly} text-anchor={r.anchor} class="flow-edge-label">{e.label}</text>}
+      </g>; })}
+      {nodes.map((n) => { const p = byId[n.id]; const max = n.shape === 'decision' ? 10 : Math.floor((p.w - 14) / (FONT * 0.56)); const lines = wrap(n.title, max); return <g class:list={['flow-node', 'kind-' + n.kind, 'shape-' + (n.shape ?? 'task'), { here: n.here }]}>
+        <path d={shapePath(p)} />
+        {lines.map((line, k) => <text x={p.cx} y={p.cy + (k - (lines.length - 1) / 2) * 18 + 5 - (n.shape === 'doc' ? 3 : 0)}>{line}</text>)}
+      </g>; })}
+    </svg>
+  </div>
+  <ol class="flow-list">
+    {order.map((n) => <li class:list={['kind-' + n.kind, { here: n.here, decision: n.shape === 'decision' }]}>
+      <span class="flow-list-who">{laneName(n)}{n.here && ' · этот пункт'}</span>
+      <b>{n.title}</b>
+      {outgoing(n).map((e) => <span class="flow-list-branch">{e.label} → {byId[e.to].title}</span>)}
+    </li>)}
+  </ol>
+  {legend && <figcaption class="flow-legend">
+    {usedKinds.map((k) => <span class={'kind-' + k}><i aria-hidden="true"></i>{kinds[k].legend}</span>)}
+    {nodes.some((n) => n.shape === 'decision') && <span class="legend-decision"><i aria-hidden="true"></i>Решение / проверка</span>}
+    {edges.some((e) => e.dashed) && <span class="legend-dashed"><i aria-hidden="true"></i>По необходимости</span>}
+  </figcaption>}
+</figure>

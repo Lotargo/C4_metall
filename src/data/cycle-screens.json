@@ -1,0 +1,30 @@
+[
+  {
+    "id": "cycle-running",
+    "file": "/cycle/cycle-running.png",
+    "source": "docs/03-reports/138-d199-p8-working-2026-10-22/working-running.png",
+    "date": "22.10.2026",
+    "width": 911,
+    "height": 823,
+    "title": "Ход цикла по шести этапам",
+    "text": "Цикл показывает шесть этапов: чтение, общие данные, карта, операции, время, смета. Здесь чтение и общие данные готовы, планировщик составляет маршрут. Ниже — данные, закреплённые для цикла: заготовка по назначению чертежа и партия. На чертеже количество не указано, поэтому взята 1 шт., и это видно на экране.",
+    "note": "Рабочая среда, вал из круглого проката.",
+    "point": "Технолог видит, на каком этапе работа и на каких данных она идёт.",
+    "sha256": "342313a407b28701c0aee436a9e2a3bce2c8594c7383ea7d51f600d5eac7abb9",
+    "basis": "Product QA capture copied without editing. Shows the working UI on its capture date; not evidence of model quality or engineering acceptance."
+  },
+  {
+    "id": "cycle-estimate",
+    "file": "/cycle/cycle-estimate.png",
+    "source": "docs/03-reports/138-d199-p8-working-2026-10-22/working-estimate.png",
+    "date": "22.10.2026",
+    "width": 911,
+    "height": 823,
+    "title": "Смета цикла",
+    "text": "Смета по каждой операции маршрута вала. Цены материала и ставки по операциям ещё не внесены — у каждой строки написано «Ставка не задана», поэтому стоимость не определена. Система не подставляет придуманные цены: после ввода цен и ставок смета пересчитывается без нового обращения к агентам.",
+    "note": "Рабочая среда; цены и ставки заказчика пока не внесены.",
+    "point": "Стоимость появляется, когда заданы цены и ставки.",
+    "sha256": "9ebcc7162f4d078d8766d3ea61e8ea3cae8673e9f9b0796f792347945f3cf440",
+    "basis": "Product QA capture copied without editing. Shows the working UI on its capture date; not evidence of model quality or engineering acceptance."
+  }
+]

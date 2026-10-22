@@ -1,48 +1,72 @@
 import productScreens from "../data/screenshots.json";
+import cycleScreens from "../data/cycle-screens.json";
 import voksaScreens from "../data/voksa-screens.json";
+import manifest from "../data/instructions-manifest.json";
 import "./shared";
+import { openImage } from "./image-viewer";
+
+interface InstructionFile {
+  file: string;
+  source: string;
+  chars: number;
+}
+const instructionFiles = manifest.files;
 
 // The research page shows product captures next to cropped VoksaTech ones.
-const screenshots = [...productScreens, ...voksaScreens];
+const screenshots = [...productScreens, ...cycleScreens, ...voksaScreens];
 
 const $ = <T extends HTMLElement = HTMLElement>(selector: string) =>
   document.querySelector<T>(selector)!;
 const $$ = <T extends HTMLElement = HTMLElement>(selector: string) =>
   Array.from(document.querySelectorAll<T>(selector));
 
-// Image inspection preserves the actual pixels of the historical QA capture.
-const imageDialog = $<HTMLDialogElement>("#image-dialog");
-let imageTrigger: HTMLElement | null = null;
+// Screenshots open in the shared zoomable viewer.
 document.addEventListener("click", (event) => {
   const button = (event.target as Element).closest<HTMLElement>("[data-image]");
   if (!button) return;
   const item = screenshots.find((s) => s.id === button.dataset.image);
-  if (!item) return;
-  imageTrigger = button;
-  $("#image-dialog-title").textContent = item.title;
-  $("#image-dialog-note").textContent =
-    `Скриншот интерфейса от ${item.date}. ${item.note}`;
-  const image = $<HTMLImageElement>("#image-dialog-img");
-  image.src = item.file;
-  image.alt = item.title;
-  image.width = item.width;
-  image.height = item.height;
-  imageDialog.showModal();
-  $("#close-image").focus();
+  if (item) openImage(item, button);
 });
-$("#close-image").addEventListener("click", () => imageDialog.close());
-imageDialog.addEventListener("close", () => imageTrigger?.focus());
-imageDialog.addEventListener("click", (event) => {
-  if (event.target !== imageDialog) return;
-  const rect = imageDialog.getBoundingClientRect();
-  if (
-    event.clientX < rect.left ||
-    event.clientX > rect.right ||
-    event.clientY < rect.top ||
-    event.clientY > rect.bottom
-  )
-    imageDialog.close();
+// Agent instructions are loaded on demand and shown verbatim.
+const textDialog = document.querySelector<HTMLDialogElement>("#text-dialog");
+let textTrigger: HTMLElement | null = null;
+document.addEventListener("click", async (event) => {
+  const button = (event.target as Element).closest<HTMLElement>(
+    "[data-instruction]",
+  );
+  if (!button) return;
+  const entry = (instructionFiles as Record<string, InstructionFile>)[
+    button.dataset.instruction!
+  ];
+  if (!entry || !textDialog) return;
+  textTrigger = button;
+  $("#text-dialog-title").textContent = button.dataset.label ?? "";
+  $("#text-dialog-note").textContent =
+    `${entry.chars.toLocaleString("ru-RU")} знаков · источник в продукте: ${entry.source}`;
+  $<HTMLAnchorElement>("#text-dialog-download").href = entry.file;
+  const body = $("#text-dialog-body");
+  body.textContent = "Загрузка…";
+  textDialog.showModal();
+  $("#close-text").focus();
+  try {
+    const response = await fetch(entry.file);
+    if (!response.ok) throw new Error(String(response.status));
+    body.textContent = await response.text();
+    body.scrollTop = 0;
+  } catch {
+    body.textContent =
+      "Не удалось загрузить текст. Его можно скачать по ссылке ниже.";
+  }
 });
+// The Voksa review reuses this script without the instruction dialog.
+if (textDialog) {
+  $("#close-text").addEventListener("click", () => textDialog.close());
+  textDialog.addEventListener("close", () => textTrigger?.focus());
+  textDialog.addEventListener("click", (event) => {
+    if (event.target === textDialog) textDialog.close();
+  });
+}
+
 $$("[data-screen]").forEach((button) =>
   button.addEventListener("click", () => {
     const id = button.dataset.screen;

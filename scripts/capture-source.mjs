@@ -24,7 +24,7 @@ await mkdir('.evidence',{recursive:true});
 const startedAt = new Date().toISOString();
 const head = git('rev-parse','HEAD');
 const status = git('status','--porcelain','-uall');
-const capturedPaths = ['mvp/src/metall_mvp','web/src','docs/agents'];
+const capturedPaths = ['mvp/src/metall_mvp','mvp/instructions','mvp/skills','web/src','docs/agents'];
 // Describe the captured scope itself; unrelated QA notes elsewhere do not change it.
 const scopedStatus = git('status','--porcelain','-uall','--',...capturedPaths);
 for (const dir of capturedPaths) await walk(dir);

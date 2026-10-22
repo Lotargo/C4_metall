@@ -1,27 +1,38 @@
 ---
-import data from '../data/evidence.json';
-import screenshots from '../data/screenshots.json';
-import { outcomes, stepStories, recognitionPhases, roleStories, dataDestinations, geometryColumns } from '../data/presentation.mjs';
+import productScreens from '../data/screenshots.json';
+import cycleScreens from '../data/cycle-screens.json';
+import { recognitionPhases, geometryColumns } from '../data/presentation.mjs';
+import { outcomes, steps, overallFlow, cycleFlow, principles, roles, destinations } from '../data/process.mjs';
+import { anatomy, skillFlow, pinnedFlow, approaches, tradeoffs, instructions, kindLabel, skillUse } from '../data/instructions.mjs';
+import manifest from '../data/instructions-manifest.json';
+import Flow from '../components/Flow.astro';
 import '@fontsource/ibm-plex-sans/latin-400.css';
 import '@fontsource/ibm-plex-sans/latin-500.css';
 import '@fontsource/ibm-plex-sans/cyrillic-400.css';
 import '@fontsource/ibm-plex-sans/cyrillic-500.css';
-import { stepTitles, stepConditions, businessRoles, businessLocations } from '../data/business.mjs';
 import '../styles/global.css';
-const { steps, agents } = data;
+import '../styles/flow.css';
+// Screens of the passport, references and equipment, then the cycle to estimate.
+const screenshots = [...productScreens.filter((s) => ['workspace', 'tables', 'catalogue'].includes(s.id)), ...cycleScreens];
 const hero = screenshots[0];
+const llmCount = roles.filter((r) => r.kind === 'llm').length;
+const badge = { 'Технолог': 'human', 'ИИ-агенты': 'model', 'ИИ-агент': 'model', 'Программа': 'code' };
+const files = manifest.files;
+const chars = (n) => n.toLocaleString('ru-RU') + ' знаков';
+const totalChars = (i) => i.files.filter(([k]) => k !== 'reader-full').reduce((sum, [k]) => sum + files[k].chars, 0);
+const skillChars = ['rotational', 'sheet-metal', 'weldment'].reduce((sum, k) => sum + files['skill-geometry-' + k].chars, 0);
 ---
 <!doctype html>
 <html lang="ru">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Подготовка производства — от чертежа к решению технолога</title>
-  <meta name="description" content="Понятный разбор подготовки производства: как читается чертёж, работают агенты, формируется паспорт и сохраняются результаты. Скриншоты интерфейса и проверяемые основания." />
+  <title>Подготовка производства — от чертежа до сметы</title>
+  <meta name="description" content="Как «Подготовка производства» проводит деталь от чертежа до предварительной сметы: чтение листа, паспорт, заготовка, маршрут, проработка операций, время и смета. Роли ИИ-агентов и решения технолога." />
   <meta name="robots" content="noindex, nofollow" />
   <meta name="theme-color" content="#f7f6f2" />
-  <meta property="og:title" content="Подготовка производства — от чертежа к решению технолога" />
-  <meta property="og:description" content="Презентация реализованного процесса: распознавание, заготовка, предварительный маршрут и контроль человеком." />
+  <meta property="og:title" content="Подготовка производства — от чертежа до сметы" />
+  <meta property="og:description" content="Команда ИИ-агентов читает чертёж, строит маршрут и оценивает время; программа проверяет ответы и считает смету; технолог принимает решения." />
   <meta property="og:type" content="website" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 </head>
@@ -30,7 +41,7 @@ const hero = screenshots[0];
   <header class="site-header">
     <div class="wrap header-inner">
       <a class="brand" href="#top"><span class="brand-mark" aria-hidden="true">ПП</span><span>Подготовка<br/>производства</span></a>
-      <nav aria-label="Разделы"><a href="#pipeline">Процесс</a><a href="#recognition">Распознавание</a><a href="#agents">Агенты</a><a href="#data">Данные</a></nav>
+      <nav aria-label="Разделы"><a href="#pipeline">Процесс</a><a href="#agents">Агенты</a><a href="#instructions">Инструкции</a><a href="#recognition">Чтение</a><a href="#data">Данные</a></nav>
       <a class="audience-link" href="/it/" target="_blank" rel="noopener" aria-label="Для IT-специалистов — в новой вкладке">Для IT <span aria-hidden="true">↗</span></a>
       <a class="audience-link plan-link" href="/plan/" target="_blank" rel="noopener" aria-label="Общий план — в новой вкладке"><span class="wide-label">Общий </span>план <span aria-hidden="true">↗</span></a>
       <a class="audience-link voksa-link" href="/voksa/" target="_blank" rel="noopener" aria-label="Разбор ВоксаТех — в новой вкладке"><span class="wide-label">Разбор </span>ВоксаТех <span aria-hidden="true">↗</span></a>
@@ -43,9 +54,9 @@ const hero = screenshots[0];
         <p class="eyebrow">Для руководства и инвесторов</p>
         <div class="hero-layout">
           <div class="hero-copy">
-            <h1>От чертежа<br/>к решению<br/><span>технолога.</span></h1>
-            <p class="lead">Система читает чертёж, собирает паспорт детали и готовит основу для выбора заготовки и операций.</p>
-            <p class="hero-context">Технолог получает сведения, предложения и их основания в одном процессе. Решение о пригодности остаётся за специалистом.</p>
+            <h1>От чертежа<br/>до сметы —<br/><span>с технологом.</span></h1>
+            <p class="lead">Система читает чертёж, собирает паспорт детали, подбирает заготовку, строит маршрут, прорабатывает операции, оценивает время и собирает предварительную смету.</p>
+            <p class="hero-context">Работу ведёт команда ИИ-агентов, у каждого — своя узкая задача. Программа проверяет каждый их ответ и выполняет все расчёты. Технолог видит основания, отвечает на вопросы и принимает решения.</p>
             <a class="primary-button" href="#pipeline">Как устроен процесс <span aria-hidden="true">↓</span></a>
           </div>
           <figure class="hero-figure">
@@ -54,61 +65,120 @@ const hero = screenshots[0];
             <figcaption>{hero.title}: технолог сверяет паспорт с исходным листом. Скриншот интерфейса от {hero.date}.</figcaption>
           </figure>
         </div>
-        <div class="outcomes">{outcomes.map((o,i)=><article><span class="ordinal">0{i+1}</span><h3>{o.title}</h3><p>{o.text}</p></article>)}</div>
-        <p class="chapter-footnote">Описание системы на 13 октября 2026. Маршрут предварительный; готовая смета и инженерная приёмка — отдельные результаты.</p>
+        <div class="outcomes">{outcomes.map((o, i) => <article><span class="ordinal">0{i + 1}</span><h3>{o.title}</h3><p>{o.text}</p></article>)}</div>
+        <p class="chapter-footnote">Описание работы системы на 22 октября 2026. Основной сценарий — детали из круглого проката. Смета предварительная: она помогает технологу и не заменяет производственную приёмку.</p>
       </div>
     </section>
 
     <section class="chapter section wash" id="pipeline" data-chapter="Весь процесс"><div class="wrap">
-      <div class="section-heading"><div><p class="eyebrow">01 / Весь процесс</p><h2>Один чертёж.<br/>Восемь шагов.</h2></div><p class="section-intro">Сначала — факты о детали. Затем — справочные данные и предложения по изготовлению. В конце — рассмотрение технологом.</p></div>
-      <div class="journey-summary" aria-label="Основная последовательность"><span>Чертёж</span><i aria-hidden="true">→</i><span>Паспорт</span><i aria-hidden="true">→</i><span>Заготовка</span><i aria-hidden="true">→</i><span>Маршрут</span><i aria-hidden="true">→</i><span>Технолог</span></div>
-      <div class="pipeline-layout"><div class="step-list" role="tablist" aria-label="Этапы процесса" aria-orientation="vertical">{steps.map((s,i)=><button class:list={['step-button',{active:i===0}]} role="tab" aria-selected={i===0?'true':'false'} aria-controls={'step-panel-'+s.id} id={'step-tab-'+s.id} tabindex={i===0?0:-1} data-step={s.id}><span class="step-number">{String(i+1).padStart(2,'0')}</span><span>{s.id==='nsi'?'Допуски и справочники':s.name}</span><span class="step-chevron" aria-hidden="true">→</span></button>)}</div>
-      <div class="step-panels">{steps.map((s,i)=><article role="tabpanel" aria-labelledby={'step-tab-'+s.id} id={'step-panel-'+s.id} hidden={i!==0} class="step-panel"><div class="step-panel-top"><span class="badge">{s.tag==='Vision'?'Модель ИИ':s.tag==='Код + агент'?'Программа + агент':s.tag==='Агент'?'Модель ИИ':s.tag==='Алгоритм'?'Расчёт':s.tag==='UI + версии'?'Технолог + программа':'Программа'}</span><span class="muted">Шаг {i+1} из 8</span></div><h3>{stepTitles[s.id]}</h3><p class="step-story">{stepStories[s.id].text}</p><div class="output-box"><span>Что получаем</span><p>{stepStories[s.id].result}</p></div><details class="technical-detail"><summary>Условия и ограничения</summary><p>{stepConditions[s.id]}</p></details></article>)}</div></div>
-      <details class="bounded-detail"><summary>Что происходит, если данных не хватает или возникла ошибка <span aria-hidden="true">+</span></summary><p>Некорректный файл, ошибка сервиса чтения, исчерпанный лимит попыток или проблема справочных данных сохраняются в диагностике. Неопределённость показывается технологу. Переход к следующему шагу определяется готовностью сведений и правилами процесса: статус «требует проверки» сам по себе не означает остановку любой дальнейшей работы.</p><p>Планировщик в соответствующем режиме может предложить заготовку без расчётно выбранного круга. При этом автоматическое продолжение всё ещё зависит от подготовки паспорта и справочного контекста.</p></details>
-    </div></section>
+      <div class="section-heading"><div><p class="eyebrow">01 / Весь процесс</p><h2>Один чертёж.<br/>Одна цепочка до сметы.</h2></div><p class="section-intro">Агенты читают и предлагают, программа хранит, проверяет и считает, технолог решает там, где без него нельзя. Схема показывает, кто за что отвечает на каждом шаге.</p></div>
+      <Flow id="flow-overall" label="Путь детали от чертежа до сметы: кто выполняет каждый шаг" {...overallFlow} />
+      <p class="flow-note">Пунктир — шаги по необходимости: технолог правит паспорт, описывает операции без своего агента и задаёт цены. Ромб — точка решения: если заготовка не проходит проверку, цепочка ждёт выбора технолога.</p>
 
-    <section class="chapter section" id="recognition" data-chapter="Распознавание"><div class="wrap">
-      <div class="section-heading"><div><p class="eyebrow">02 / Распознавание чертежа</p><h2>Прочитать лист.<br/>Сохранить смысл.</h2></div><p class="section-intro">Модель читает изображение, а программа собирает и проверяет результат. Факт с чертежа, расчёт и предположение должны оставаться различимыми.</p></div>
-      <div class="method-strip">{recognitionPhases.map((p,i)=><article><span class="method-number">0{i+1}</span><p class="method-owner">{p.owner}</p><h3>{p.title}</h3><p>{p.text}</p></article>)}</div>
-      <div class="reading-principle"><div><h3>В результате важно<br/>не потерять источник.</h3><p>Паспорт хранит исходную надпись, ссылки на свидетельства и статус. Если значение не прочитано, оно остаётся неизвестным. Если источники расходятся, конфликт сохраняется.</p></div><div class="fact-record"><p class="eyebrow">Что сопровождает факт</p><dl><div><dt>Буквальная запись</dt><dd>Сохраняется дословно</dd></div><div><dt>Связь с источником</dt><dd>Можно сверить с источником</dd></div><div><dt>Сторона поверхности</dt><dd>Наружная, внутренняя или не установлена</dd></div><div><dt>Неизвестное значение</dt><dd>Помечается как неизвестное</dd></div><div><dt>Противоречия</dt><dd>Показываются отдельно</dd></div></dl><p class="caption">Так сохраняется происхождение и определённость сведений.</p></div></div>
-      <details class="bounded-detail reading-method"><summary>Подробнее: как система читает чертёж <span aria-hidden="true">+</span></summary><ol><li><b>Готовит два изображения.</b> Обзор нужен для чтения всей детали, подробная копия — для мелких надписей. Исходный документ сохраняется отдельно.</li><li><b>Задаёт правила чтения.</b> Модель получает изображение и инструкцию: сначала прочитать надпись дословно, затем определить, к какой поверхности она относится. Принадлежность устанавливается по выносным линиям и границам участка, а не по соседству. Вид или разрез — это изображение, а не новая поверхность.</li><li><b>Даёт рассмотреть мелкие надписи.</b> Если модель подключена через агентную среду, ей доступно подробное изображение листа, и она может увеличить нужную область. Размеры по пикселям не измеряются; неразборчивое остаётся неизвестным.</li><li><b>Возвращает сведения в заданной структуре.</b> Для каждой поверхности указаны сторона — наружная, внутренняя или не установлена — и роль: готовая деталь, заготовка или расположение. Равные диаметры разных поверхностей не объединяются.</li><li><b>Уточняет найденные пропуски.</b> В обычном режиме агент может получить увеличенный фрагмент и уже известные факты. Количество попыток ограничено. Есть отдельный режим чтения с журналом наблюдений; он работает без этой ветки уточнений.</li><li><b>Собирает и проверяет паспорт.</b> Программа связывает факты с источником, проверяет ссылки и покрытие, готовит таблицу размеров и отчёт. Диаметры, названные в описании модели, но не привязанные к поверхности, выносятся вопросами для технолога.</li></ol><p><b>Что требует проверки человеком.</b> Правила чтения не гарантируют точность результата. Для части аннотаций область источника может охватывать весь лист; она не доказывает точное расположение надписи. Непрочитанные значения, неустановленная сторона, конфликты и открытые упоминания сохраняются для разбора.</p></details>
-
-    </div></section>
-
-    <section class="chapter section wash" id="screens" data-chapter="Интерфейс"><div class="wrap">
-      <div class="section-heading"><div><p class="eyebrow">03 / Интерфейс продукта</p><h2>Данные, с которыми<br/>работает технолог.</h2></div><p class="section-intro">Скриншоты реального интерфейса: обработка чертежа, паспорт и поверхности, карта маршрута, справочник и оборудование. Выберите экран и откройте его в полном размере.</p></div>
-      <div class="screen-tabs tabs" role="tablist" aria-label="Скриншоты продукта">{screenshots.map((s,i)=><button role="tab" data-screen={s.id} aria-selected={i===0?'true':'false'} id={'screen-tab-'+s.id} aria-controls={'screen-panel-'+s.id} tabindex={i===0?0:-1}>{s.title}</button>)}</div>
-      {screenshots.map((s,i)=><article class="screen-panel" id={'screen-panel-'+s.id} role="tabpanel" aria-labelledby={'screen-tab-'+s.id} hidden={i!==0}><figure><button class:list={['screenshot-button',{'crop-focus':!!s.focusY}]} data-image={s.id} aria-label={'Увеличить: '+s.title}><img src={s.file} width={s.width} height={s.height} alt={s.title} loading="lazy" style={s.focusY ? 'object-position:center '+s.focusY : undefined} /></button><figcaption>Скриншот от {s.date} · <button class="text-button" data-image={s.id}>Открыть в полном размере ↗</button></figcaption></figure><div class="screen-story"><p class="eyebrow">Что здесь происходит</p><h3>{s.point}</h3><p>{s.text}</p></div></article>)}
-      <p class="chapter-footnote">Экраны взяты из материалов проверки продукта и скопированы без редактирования: обработка, паспорт, поверхности и маршрут — от 13 октября, справочник и каталог оборудования — от 1 и 9 октября. Утверждения о процессе основаны на снимке кода от 13 октября. Контрольные записи проверки подписаны; количество записей на экранах не описывает текущие рабочие базы.</p>
+      <div class="pipeline-layout process-steps"><div class="step-list" role="tablist" aria-label="Шаги процесса" aria-orientation="vertical">{steps.map((s, i) => <button class:list={['step-button', { active: i === 0 }]} role="tab" aria-selected={i === 0 ? 'true' : 'false'} aria-controls={'step-panel-' + s.id} id={'step-tab-' + s.id} tabindex={i === 0 ? 0 : -1} data-step={s.id}><span class="step-number">{String(i + 1).padStart(2, '0')}</span><span>{s.name}</span><span class="step-chevron" aria-hidden="true">→</span></button>)}</div>
+      <div class="step-panels">{steps.map((s, i) => <article role="tabpanel" aria-labelledby={'step-tab-' + s.id} id={'step-panel-' + s.id} hidden={i !== 0} class="step-panel"><div class="step-panel-top"><span class={'badge who-' + (badge[s.who.split(' ')[0]] ?? 'code')}>{s.who}</span><span class="muted">Шаг {i + 1} из {steps.length}</span></div><h3>{s.title}</h3><p class="step-story">{s.text}</p><div class="output-box"><span>Что получаем</span><p>{s.result}</p></div><details class="technical-detail"><summary>Условия и ограничения</summary><p>{s.conditions}</p></details></article>)}</div></div>
+      <details class="bounded-detail"><summary>Что происходит, если данных не хватает <span aria-hidden="true">+</span></summary><p>Цепочка не останавливается целиком из-за одного неизвестного значения. Пробел ограничивает только то, что от него зависит: нет нормы отрезки — неизвестна длина отрезка и его масса; нет времени для шлифования — неизвестна стоимость этой операции. Остальное считается дальше.</p><p>Работа ждёт технолога только там, где нужен его выбор: спорная заготовка, операция без своего агента, запрос агента на пересмотр маршрута. После ответа цикл продолжается с затронутого шага. Обычное сохранение правки, открытие истории или обновление страницы агентов не запускают.</p></details>
     </div></section>
 
     <section class="chapter section" id="agents" data-chapter="Агенты"><div class="wrap">
-      <div class="section-heading"><div><p class="eyebrow">04 / Исполнители</p><h2>У каждого агента<br/>своя задача.</h2></div><p class="section-intro">Модели читают и предлагают. Программа собирает данные и выполняет заданные проверки. Технолог рассматривает результат и сохраняет свои изменения.</p></div>
-      <div class="agents-controls"><div class="filter-chips" aria-label="Фильтр ролей"><button data-agent-filter="all" aria-pressed="true">Все роли</button><button data-agent-filter="llm" aria-pressed="false">Вызовы модели</button><button data-agent-filter="code" aria-pressed="false">Обычный код</button></div><span class="muted" id="agent-count">{agents.length} ролей</span></div>
-      <div class="agents-table">{agents.map((a,i)=><details class="agent-row" data-agent-kind={a.kind==='Детерминированный'?'code':'llm'}><summary><span class="agent-number">{String(i+1).padStart(2,'0')}</span><span class="agent-summary"><span class="agent-title">{roleStories[i].title}</span><span class="agent-name">{businessRoles[i].name}</span></span><span class:list={['badge',{agent:a.kind!=='Детерминированный'}]}>{a.kind==='Детерминированный'?'Программа':'Модель'}</span><span class="expand-mark" aria-hidden="true">+</span></summary><div class="agent-body"><dl><div><dt>Когда запускается</dt><dd>{businessRoles[i].when}</dd></div><div><dt>Что получает</dt><dd>{businessRoles[i].input}</dd></div><div><dt>Что возвращает</dt><dd>{businessRoles[i].output}</dd></div></dl></div></details>)}</div>
-      <details class="bounded-detail"><summary>Всегда ли участвуют все агенты <span aria-hidden="true">+</span></summary><p>Сверка описания, сборка паспорта и представление проверки выполняются программой. Уточнение чтения и исследование материала включаются при определённых условиях. Пояснение подбора и дополнительный анализ запускаются по отдельному запросу.</p><p>Модель выбирается настройками системы. Для каждого вызова сохраняются сведения о том, какая модель участвовала и что вернула. Подробное техническое устройство доступно во вкладке для IT-специалистов.</p></details>
+      <div class="section-heading"><div><p class="eyebrow">02 / Как работают агенты</p><h2>Команда агентов.<br/>У каждого — одна задача.</h2></div><p class="section-intro">От маршрута до сметы агенты работают эстафетой: планировщик раздаёт задания, профильные агенты прорабатывают операции по очереди, агент времени оценивает работу, программа считает деньги.</p></div>
+      <Flow id="flow-cycle" label="Эстафета агентов от маршрута до сметы" {...cycleFlow} />
+      <p class="flow-note">Проверка ответа (ромб) стоит после каждого агента, на схеме она показана один раз. Ответ, не прошедший проверку, в результат не попадает; повтор с замечаниями запускается явно и в пределах заданного лимита.</p>
+
+      <div class="principles">{principles.map((p, i) => <article><span class="ordinal">{String(i + 1).padStart(2, '0')}</span><h3>{p.title}</h3><p>{p.text}</p></article>)}</div>
+
+      <h3 class="roster-title">Кто есть кто</h3>
+      <div class="agents-controls"><div class="filter-chips" aria-label="Фильтр ролей"><button data-agent-filter="all" aria-pressed="true">Все роли</button><button data-agent-filter="llm" aria-pressed="false">ИИ-агенты · {llmCount}</button><button data-agent-filter="code" aria-pressed="false">Программа · {roles.length - llmCount}</button></div><span class="muted" id="agent-count">{roles.length} ролей</span></div>
+      <div class="agents-table">{roles.map((r, i) => <details class="agent-row" data-agent-kind={r.kind}><summary><span class="agent-number">{String(i + 1).padStart(2, '0')}</span><span class="agent-summary"><span class="agent-title">{r.title}</span><span class="agent-name">{r.name} · {r.stage}</span></span><span class:list={['badge', { agent: r.kind === 'llm' }]}>{r.kind === 'llm' ? 'ИИ-агент' : 'Программа'}</span><span class="expand-mark" aria-hidden="true">+</span></summary><div class="agent-body"><dl class="role-facts"><div><dt>Когда работает</dt><dd>{r.when}</dd></div><div><dt>Что получает</dt><dd>{r.input}</dd></div><div><dt>Что возвращает</dt><dd>{r.output}</dd></div><div><dt>Чего не делает</dt><dd>{r.limits}</dd></div></dl></div></details>)}</div>
+      <details class="bounded-detail"><summary>Какая модель работает и сколько это стоит по ресурсам <span aria-hidden="true">+</span></summary><p>Модель для агентов выбирается настройками системы и закрепляется при запуске вместе с пределами: числом обращений к модели, объёмом текста и временем. Для каждого обращения сохраняются модель, ответ, расход и длительность, поэтому любой результат можно проследить до конкретного ответа агента.</p><p>Пример первого рабочего цикла на валу: маршрут, проработка операций и оценка времени — вместе с повторами отклонённых ответов — заняли восемь обращений к модели и около 25 минут её работы. Это пример одного запуска, а не норматив.</p></details>
     </div></section>
 
-    <section class="chapter section wash" id="data" data-chapter="Данные"><div class="wrap">
-      <div class="section-heading"><div><p class="eyebrow">05 / Данные и хранение</p><h2>Паспорт хранит сведения.<br/>Таблица помогает их проверить.</h2></div><p class="section-intro">Сведения о детали сохраняются вместе с происхождением и историей изменений. Таблица делает размеры и требования удобными для проверки. Оригинал и результаты обработки остаются связанными.</p></div>
+    <section class="chapter section wash" id="instructions" data-chapter="Инструкции агентов"><div class="wrap">
+      <div class="section-heading"><div><p class="eyebrow">03 / Инструкции агентов</p><h2>Инструкция —<br/>рабочее задание агента.</h2></div><p class="section-intro">Модель сама по себе ничего не знает о заводе, чертежах и правилах проекта. Всё, что агент должен сделать и чего делать нельзя, написано в его инструкции. Ниже — как инструкции устроены, зачем нужна каждая и их полные тексты.</p></div>
+
+      <div class="instr-block">
+        <h3>Что такое инструкция</h3>
+        <p class="instr-lead">Проще всего думать об инструкции как о должностной инструкции нового сотрудника вместе с бланком отчёта. Сотрудник грамотный и начитанный, но каждый раз выходит как в первый день: ему нужно объяснить задачу, сказать, какие материалы он получит, какие правила действуют и в какой форме сдать результат. Агент получает инструкцию при каждом обращении — заново и целиком, поэтому от её текста напрямую зависит качество работы.</p>
+        <div class="anatomy">{anatomy.map((a, i) => <article><span class="ordinal">{String(i + 1).padStart(2, '0')}</span><h4>{a.title}</h4><p>{a.text}</p></article>)}</div>
+      </div>
+
+      <div class="instr-block">
+        <h3>Что такое skill-архитектура</h3>
+        <div class="instr-two">
+          <div>
+            <p><b>Skill (навык)</b> — отдельная памятка, которую можно подключить к основной инструкции. Памятка «Тела вращения» объясняет, на что смотреть у вала: ступени, их длины, резьбы, фаски, посадки. Памятка «Листовые детали» — про толщину листа и контур.</p>
+            <p><b>Skill-архитектура</b> — способ собирать инструкцию агента из частей: базовая инструкция плюс набор навыков. Это как должностная инструкция и методички по видам работ: методичку можно обновить или добавить, не переписывая всю инструкцию, а одну методичку можно выдать разным сотрудникам.</p>
+          </div>
+          <ol class="instr-steps">
+            <li><b>Навык — это папка с памяткой и паспортом.</b> В паспорте: название, описание, версия, лицензия и от каких навыков он зависит.</li>
+            <li><b>При запуске системы навыки проверяются.</b> Программа находит все папки, проверяет паспорта и вычисляет отпечаток содержимого — короткий код, который меняется при любой правке текста.</li>
+            <li><b>Агенту положен свой набор навыков.</b> Он задан заранее. Если навык зависит от другого, программа подключит и его, сверив версию.</li>
+            <li><b>Тексты склеиваются в один.</b> Сначала базовая инструкция, затем навыки под своими заголовками. Агент получает цельный текст.</li>
+            <li><b>В историю записывается состав.</b> Какие навыки, каких версий и с какими отпечатками участвовали — поэтому любой результат можно связать с точным текстом.</li>
+          </ol>
+        </div>
+        <Flow id="flow-skills" label="Рисунок — Как собирается составная инструкция" {...skillFlow} />
+      </div>
+
+      <div class="instr-block">
+        <h3>Два подхода в системе</h3>
+        <div class="approaches">{approaches.map((a) => <article><h4>{a.title}</h4><p class="approach-who">{a.who}</p><p>{a.text}</p><p class="approach-why"><b>Зачем так:</b> {a.why}</p></article>)}</div>
+        <p class="flow-note">Агенту чтения сейчас передаётся текст около {chars(files['reader-full'].chars)}: {chars(files['reader-base'].chars)} — базовая инструкция, {chars(skillChars)} — три навыка по типам деталей, {chars(files['reader-rules'].chars)} — общие правила работы с источником; остальное — заголовки частей. У ролей маршрута — один файл на роль, от {chars(files['time'].chars)} у агента времени до {chars(files['blank'].chars)} у агента отрезки.</p>
+        <Flow id="flow-pinned" label="Рисунок — Как закреплена инструкция роли маршрута" {...pinnedFlow} legend={false} />
+        <div class="doc-table-wrap tradeoffs"><table><caption>Сравнение подходов</caption><thead><tr><th scope="col">Что сравниваем</th><th scope="col">Составная: база + навыки</th><th scope="col">Одна закреплённая инструкция</th></tr></thead><tbody>{tradeoffs.map(([what, a, b]) => <tr><th scope="row">{what}</th><td>{a}</td><td>{b}</td></tr>)}</tbody></table></div>
+      </div>
+
+      <div class="instr-block">
+        <h3>Все инструкции агентов</h3>
+        <p class="instr-lead">Тексты скопированы из продукта без правок — именно их получают агенты. Часть написана на английском: модели одинаково понимают оба языка, а служебные правила по-английски короче. Для масштаба: страница книги — около 1 800 знаков.</p>
+        <div class="agents-table instr-list">{instructions.map((it, i) => <details class="agent-row"><summary><span class="agent-number">{String(i + 1).padStart(2, '0')}</span><span class="agent-summary"><span class="agent-title">{it.agent}</span><span class="agent-name">{it.stage} · {kindLabel[it.kind]} · {chars(totalChars(it))} · {it.lang}</span></span><span class:list={['badge', 'kind-' + it.kind]}>{kindLabel[it.kind]}</span><span class="expand-mark" aria-hidden="true">+</span></summary><div class="agent-body">
+          <dl class="instr-facts"><div><dt>Зачем нужна</dt><dd>{it.purpose}</dd></div><div><dt>Главные правила</dt><dd><ul>{it.rules.map((r) => <li>{r}</li>)}</ul></dd></div></dl>
+          <div class="instr-files"><span class="muted">Полный текст:</span>{it.files.map(([key, label]) => <span class="instr-file"><button type="button" class="secondary-button" data-instruction={key} data-label={it.agent + ' — ' + label}>{label} · {chars(files[key].chars)}</button><a href={files[key].file} download aria-label={'Скачать: ' + label}>Скачать</a></span>)}</div>
+        </div></details>)}</div>
+      </div>
+
+      <div class="instr-block">
+        <h3>Библиотека навыков</h3>
+        <p class="instr-lead">Все навыки, которые есть в системе. Часть подключается в цепочке до сметы, часть относится к отдельным вспомогательным агентам.</p>
+        <div class="doc-table-wrap tradeoffs"><table><thead><tr><th scope="col">Навык</th><th scope="col">Где используется</th><th scope="col">О чём</th><th scope="col">Текст</th></tr></thead><tbody>{manifest.skills.map((s) => <tr><th scope="row">{s.id}<span class="skill-version">версия {s.version}</span></th><td>{skillUse[s.id]?.[0]}</td><td>{skillUse[s.id]?.[1]}</td><td><button type="button" class="text-button" data-instruction={'skill-' + s.id} data-label={'Навык ' + s.id}>Открыть ↗</button></td></tr>)}</tbody></table></div>
+        <p class="chapter-footnote">Тексты взяты из исходного продукта на 22 октября 2026 года. Отпечатки инструкций ролей маршрута совпадают с закреплёнными в системе.</p>
+      </div>
+    </div></section>
+
+    <section class="chapter section" id="recognition" data-chapter="Чтение чертежа"><div class="wrap">
+      <div class="section-heading"><div><p class="eyebrow">04 / Чтение чертежа</p><h2>Прочитать лист.<br/>Сохранить смысл.</h2></div><p class="section-intro">Модель читает изображение, а программа собирает и проверяет результат. Факт с чертежа, расчёт и предположение должны оставаться различимыми.</p></div>
+      <div class="method-strip">{recognitionPhases.map((p, i) => <article><span class="method-number">0{i + 1}</span><p class="method-owner">{p.owner}</p><h3>{p.title}</h3><p>{p.text}</p></article>)}</div>
+      <div class="reading-principle"><div><h3>В результате важно<br/>не потерять источник.</h3><p>Паспорт хранит исходную надпись, место на листе и статус. Если значение не прочитано, оно остаётся неизвестным. Если источники расходятся, конфликт сохраняется.</p></div><div class="fact-record"><p class="eyebrow">Что сопровождает факт</p><dl><div><dt>Буквальная запись</dt><dd>Сохраняется дословно</dd></div><div><dt>Место на листе</dt><dd>Можно открыть и сверить</dd></div><div><dt>Сторона поверхности</dt><dd>Наружная, внутренняя или не установлена</dd></div><div><dt>Неизвестное значение</dt><dd>Помечается как неизвестное</dd></div><div><dt>Противоречия</dt><dd>Показываются отдельно</dd></div></dl><p class="caption">Так сохраняется происхождение и определённость сведений.</p></div></div>
+      <details class="bounded-detail reading-method"><summary>Подробнее: как система читает чертёж <span aria-hidden="true">+</span></summary><ol><li><b>Готовит два изображения.</b> Обзор нужен для чтения всей детали, подробная копия — для мелких надписей. Исходный документ сохраняется отдельно.</li><li><b>Задаёт правила чтения.</b> Сначала надпись читается дословно, затем определяется, к какой поверхности она относится. Принадлежность устанавливается по выносным линиям и границам участка, а не по соседству. Вид или разрез — это изображение, а не новая поверхность.</li><li><b>Даёт рассмотреть мелкие надписи.</b> Агент может увеличить нужную область и повернуть копию, чтобы прочитать боковой текст. Размеры по пикселям не измеряются; неразборчивое остаётся неизвестным.</li><li><b>Возвращает сведения в заданной форме.</b> Для каждой поверхности указаны сторона и роль: готовая деталь, заготовка или расположение. Равные диаметры разных поверхностей не объединяются.</li><li><b>Собирает и проверяет паспорт.</b> Программа связывает факты с листом, проверяет ссылки и покрытие, готовит таблицу размеров и отчёт. Упоминания размеров без привязки выносятся вопросами для технолога.</li></ol><p><b>Что требует проверки человеком.</b> Правила чтения не гарантируют точность результата: низкое разрешение, рукописный шрифт и повреждения листа ограничивают сам источник. Непрочитанные значения, неустановленная сторона и конфликты сохраняются для разбора и ручной правки.</p></details>
+    </div></section>
+
+    <section class="chapter section wash" id="screens" data-chapter="Интерфейс"><div class="wrap">
+      <div class="section-heading"><div><p class="eyebrow">05 / Интерфейс продукта</p><h2>Что видит<br/>технолог.</h2></div><p class="section-intro">Скриншоты реального интерфейса: паспорт, справочник, оборудование и цикл до сметы. Выберите экран и откройте его в полном размере.</p></div>
+      <div class="screen-tabs tabs" role="tablist" aria-label="Скриншоты продукта">{screenshots.map((s, i) => <button role="tab" data-screen={s.id} aria-selected={i === 0 ? 'true' : 'false'} id={'screen-tab-' + s.id} aria-controls={'screen-panel-' + s.id} tabindex={i === 0 ? 0 : -1}>{s.title}</button>)}</div>
+      {screenshots.map((s, i) => <article class="screen-panel" id={'screen-panel-' + s.id} role="tabpanel" aria-labelledby={'screen-tab-' + s.id} hidden={i !== 0}><figure><button class:list={['screenshot-button', { 'crop-focus': !!s.focusY }]} data-image={s.id} aria-label={'Увеличить: ' + s.title}><img src={s.file} width={s.width} height={s.height} alt={s.title} loading="lazy" style={s.focusY ? 'object-position:center ' + s.focusY : undefined} /></button><figcaption>Скриншот от {s.date} · {s.note} <button class="text-button" data-image={s.id}>Открыть в полном размере ↗</button></figcaption></figure><div class="screen-story"><p class="eyebrow">Что здесь происходит</p><h3>{s.point}</h3><p>{s.text}</p></div></article>)}
+      <p class="chapter-footnote">Экраны скопированы из интерфейса продукта без редактирования. Паспорт — от 13 октября, справочник и оборудование — от 1 и 9 октября, цикл до сметы — от 22 октября, рабочая среда.</p>
+    </div></section>
+
+    <section class="chapter section" id="data" data-chapter="Данные"><div class="wrap">
+      <div class="section-heading"><div><p class="eyebrow">06 / Данные и хранение</p><h2>Всё хранится<br/>с происхождением.</h2></div><p class="section-intro">Паспорт, ответы агентов, правки технолога и версии сметы связаны между собой. Любой результат можно проследить до листа чертежа, справочника или решения человека.</p></div>
       <div class="geometry-intro"><h3>Как устроена таблица геометрии</h3><p>Одна строка соответствует одному размеру из паспорта детали. Это может быть наружный или внутренний диаметр, линейный размер, радиус, угол, толщина либо другой размер.</p></div>
-      <div class="table-scroll geometry-table"><table><caption>Пять колонок таблицы. Здесь объясняется их смысл, без чисел конкретного чертежа.</caption><thead><tr>{geometryColumns.map(c=><th scope="col">{c[0].startsWith('Без заголовка')?'Что измерено':c[0]}</th>)}</tr></thead><tbody><tr>{geometryColumns.map(c=><td>{c[1]}</td>)}</tr></tbody></table></div>
-      <p class="caption">Каждая строка связана с исходными сведениями. «Наружный» или «внутренний» диаметр пишется только при подтверждённой стороне поверхности; иначе подпись говорит, что сторона не установлена. Размеры заготовки и расположения отверстий подписаны отдельно и в расчёт детали не входят.</p>
-      <div class="destination-list">{dataDestinations.map((d,i)=><article><span class="ordinal">0{i+1}</span><div><h3>{d.title}</h3><p>{d.meaning}</p></div><div><span class="business-location">{businessLocations[i]}</span></div></article>)}</div>
-      <details class="bounded-detail"><summary>Что происходит при изменении данных <span aria-hidden="true">+</span></summary><p>Правки паспорта, включая решения по поверхностям, сохраняются как новые версии с основанием. Отметка о сверке с оригиналом отличает подтверждённое решение от ручного дополнения. В справочнике фиксируется активная версия таблицы; изменения через интерфейс и CSV проходят через один сервис. Предложение агента и пользовательские правки маршрута сохраняются отдельно, чтобы можно было проследить принятое решение.</p></details>
+      <div class="table-scroll geometry-table"><table><caption>Пять колонок таблицы. Здесь объясняется их смысл, без чисел конкретного чертежа.</caption><thead><tr>{geometryColumns.map((c) => <th scope="col">{c[0].startsWith('Без заголовка') ? 'Что измерено' : c[0]}</th>)}</tr></thead><tbody><tr>{geometryColumns.map((c) => <td>{c[1]}</td>)}</tr></tbody></table></div>
+      <div class="destination-list">{destinations.map((d, i) => <article><span class="ordinal">0{i + 1}</span><div><h3>{d.title}</h3><p>{d.text}</p></div><div></div></article>)}</div>
+      <details class="bounded-detail"><summary>Что происходит при изменении данных <span aria-hidden="true">+</span></summary><p>Правка паспорта, выбор заготовки, ручное описание операции, правка времени или цены сохраняются новой версией с автором и основанием. Результаты, которые зависели от изменённого, помечаются как требующие пересчёта; независимые остаются в силе. Новый цикл до сметы создаётся рядом с прежним и не затирает его.</p></details>
     </div></section>
 
-    <section class="chapter section" id="sources" data-chapter="Границы результата"><div class="wrap">
-      <div class="section-heading"><div><p class="eyebrow">06 / Границы результата</p><h2>Система готовит основу.<br/>Технолог принимает решение.</h2></div><p class="section-intro">Для дальнейшей работы важно видеть исходные факты, предложения и ограничения. Человек проверяет их применимость к конкретной детали и производству.</p></div>
-      <div class="limits"><article><h3>Выбор заготовки</h3><p>Назначение на чертеже и рассчитанная альтернатива сохраняются отдельно. Кривизна из справочника — расчётный параметр, а не измерение конкретного прутка.</p></article><article><h3>Готовность маршрута</h3><p>Маршрут содержит предложения и условия. Масса на этапах — плановая оценка. Завершение задания агента подтверждает окончание его работы; инженерная приёмка и готовая смета требуют отдельного результата.</p></article><article><h3>Качество чтения</h3><p>Паспорт помогает проверить результат по исходному чертежу. Качество распознавания и работа выбранной модели оцениваются на конкретном запуске.</p></article></div>
-      <div class="business-conclusion"><h3>Что получает заказчик</h3><p>Паспорт детали, результат проверки заготовки и предварительные операции с основаниями. Технолог может рассмотреть их, исправить сведения и сохранить историю изменений.</p><p class="caption">Описание системы на 13 октября 2026. Скриншоты показывают интерфейс на подписанные даты. Инженерная приёмка не заменяется автоматическим результатом.</p><div class="conclusion-links"><a class="secondary-button" href="/plan/" target="_blank" rel="noopener">Общий план: входящие данные ↗</a><a class="secondary-button" href="/it/" target="_blank" rel="noopener">Технический разбор для IT-специалистов ↗</a><a class="secondary-button" href="/voksa/" target="_blank" rel="noopener">Сравнение с ВоксаТех ↗</a></div></div>
+    <section class="chapter section wash" id="sources" data-chapter="Границы результата"><div class="wrap">
+      <div class="section-heading"><div><p class="eyebrow">07 / Границы результата</p><h2>Система готовит смету.<br/>Технолог принимает решение.</h2></div><p class="section-intro">Цель цепочки — достаточная оценка, а не идеальная технология. Маршрут может быть неидеальным: его поправит технолог при производстве.</p></div>
+      <div class="limits"><article><h3>Заготовка</h3><p>Назначение на чертеже, расчётная рекомендация и выбор технолога хранятся раздельно. Кривизна прутка — норматив стандарта, а не измерение конкретной партии. Основной сценарий — круглый прокат.</p></article><article><h3>Время и смета</h3><p>Время — расчётная оценка с обоснованием, а не цеховая норма. Цены и ставки задают люди. Если чего-то не хватает, смета частичная, а итог показан как «не определено».</p></article><article><h3>Качество чтения</h3><p>Паспорт помогает проверить результат по исходному листу. Неразборчивый чертёж — ограничение источника: такие места остаются неизвестными и правятся вручную.</p></article></div>
+      <div class="business-conclusion"><h3>Что получает заказчик</h3><p>Паспорт детали, обоснованный выбор заготовки, маршрут с проработкой операций, оценку времени и предварительную смету на деталь и партию. Каждая строка показывает, откуда она взялась; технолог может исправить любое звено, и история изменений сохранится.</p><p class="caption">Описание работы системы на 22 октября 2026. Скриншоты показывают интерфейс на подписанные даты. Производственная приёмка не заменяется автоматическим результатом.</p><div class="conclusion-links"><a class="secondary-button" href="/plan/" target="_blank" rel="noopener">Общий план: входящие данные ↗</a><a class="secondary-button" href="/it/" target="_blank" rel="noopener">Технический разбор для IT-специалистов ↗</a><a class="secondary-button" href="/voksa/" target="_blank" rel="noopener">Сравнение с ВоксаТех ↗</a></div></div>
     </div></section>
   </main>
-  <footer><div class="wrap footer-inner"><span>Подготовка производства</span><span>Описание реализации · 13 октября 2026</span><a href="#top">Наверх ↑</a></div></footer>
+  <footer><div class="wrap footer-inner"><span>Подготовка производства</span><span>Описание работы · 22 октября 2026</span><a href="#top">Наверх ↑</a></div></footer>
   <div class="presentation-bar" id="presentation-bar" hidden><button id="chapter-prev" aria-label="Предыдущая глава">←</button><span id="chapter-status" aria-live="polite"></span><button id="chapter-next" aria-label="Следующая глава">→</button><button id="end-presentation">Завершить показ <span aria-hidden="true">×</span></button></div>
-  <dialog id="image-dialog" aria-labelledby="image-dialog-title"><div class="dialog-top"><h2 id="image-dialog-title"></h2><button class="icon-button" id="close-image" aria-label="Закрыть скриншот">×</button></div><p id="image-dialog-note" class="caption"></p><div class="image-scroll"><img id="image-dialog-img" alt=""/></div><p class="caption">Сохранённый снимок интерфейса. Масштаб изображения сохраняет исходное разрешение; при необходимости используйте прокрутку.</p></dialog>
+  <dialog id="image-dialog" class="image-viewer" aria-labelledby="image-dialog-title"><div class="viewer-top"><div class="viewer-heading"><h2 id="image-dialog-title"></h2><p id="image-dialog-note" class="caption"></p></div><div class="viewer-tools" role="toolbar" aria-label="Масштаб изображения"><button type="button" class="diagram-button" id="image-zoom-out" aria-label="Уменьшить">−</button><output id="image-zoom-label" aria-live="polite">100%</output><button type="button" class="diagram-button" id="image-zoom-in" aria-label="Увеличить">+</button><button type="button" class="diagram-button" id="image-fit">Вписать</button><button type="button" class="diagram-button" id="image-actual">1:1</button><button type="button" class="close-button" id="close-image" aria-label="Закрыть скриншот"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button></div></div><div class="viewer-stage" id="image-stage"><img id="image-dialog-img" alt="" draggable="false"/></div><p class="caption viewer-hint">Колёсико мыши — масштаб к курсору · левая кнопка — перемещение · двойной щелчок — вписать / 100% · щелчок по пустому месту или Esc — закрыть.</p></dialog>
+  <dialog id="text-dialog" class="text-dialog" aria-labelledby="text-dialog-title"><div class="dialog-top"><h2 id="text-dialog-title"></h2><button type="button" class="close-button" id="close-text" aria-label="Закрыть текст инструкции"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button></div><p id="text-dialog-note" class="caption"></p><pre id="text-dialog-body" tabindex="0"></pre><p class="caption"><a id="text-dialog-download" download>Скачать текст</a> · Текст показан без правок, в том виде, в каком его получает агент.</p></dialog>
   <div id="toast" role="status" aria-live="polite" hidden></div>
-  <noscript><p class="wrap">Для переключения этапов и просмотра исходников включите JavaScript. Технический разбор доступен на <a href="/it/">отдельной странице</a>.</p></noscript>
+  <noscript><p class="wrap">Для переключения шагов и скриншотов включите JavaScript. Технический разбор доступен на <a href="/it/">отдельной странице</a>.</p></noscript>
   <script src="../scripts/presentation.ts"></script>
 </body>
 </html>

@@ -1,14 +1,25 @@
 ---
 import planScreens from '../data/plan-screens.json';
-import { kinds, overallRoute, references, items, general } from '../data/plan.mjs';
+import { kinds, items, general } from '../data/plan.mjs';
+import Flow from '../components/Flow.astro';
 import '@fontsource/ibm-plex-sans/latin-400.css';
 import '@fontsource/ibm-plex-sans/latin-500.css';
 import '@fontsource/ibm-plex-sans/cyrillic-400.css';
 import '@fontsource/ibm-plex-sans/cyrillic-500.css';
 import '../styles/global.css';
+import '../styles/flow.css';
 import '../styles/plan.css';
 const shots = Object.fromEntries(planScreens.map((s) => [s.id, s]));
-const stateCount = (s) => items.filter((i) => i.state === s).length;
+const itemState = { done: 'done', partial: 'limited' };
+const shapeOf = { source: 'doc', result: 'end' };
+// Each item's data route as a left-to-right chain of flowchart shapes.
+const chain = (route) => ({
+  nodes: route.map((r, n) => ({ id: 'n' + n, col: n, kind: r.kind, shape: shapeOf[r.kind] ?? 'task', title: r.title, here: r.here })),
+  edges: route.slice(1).map((_, n) => ({ from: 'n' + n, to: 'n' + (n + 1) })),
+});
+const states = { done: 'Работает', limited: 'Работает с ограничениями' };
+const edition = '22 октября 2026';
+const toc = { id: 'inputs', n: '1', title: 'Входящие данные', sub: items.map((i, k) => ({ id: i.id, n: '1.' + (k + 1), title: i.title })) };
 ---
 <!doctype html>
 <html lang="ru">
@@ -16,11 +27,11 @@ const stateCount = (s) => items.filter((i) => i.state === s).length;
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Общий план — входящие данные</title>
-  <meta name="description" content="Как в «Подготовке производства» реализована работа с входящими данными: требования, поверхности, материал, заготовка, масса и база станков. Что сделано, как проверено и что ещё открыто." />
+  <meta name="description" content="Общий план «Подготовки производства»: шесть видов входящих данных — как работают, что проверено, как выглядят на экране и что не выполнено." />
   <meta name="robots" content="noindex, nofollow" />
   <meta name="theme-color" content="#f7f6f2" />
   <meta property="og:title" content="Общий план — входящие данные" />
-  <meta property="og:description" content="Шесть видов входящих данных: реализация, карта маршрута, скриншоты и открытые вопросы." />
+  <meta property="og:description" content="Требования, поверхности, материал, заготовка, масса и база знаний «Станки»." />
   <meta property="og:type" content="website" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 </head>
@@ -29,72 +40,83 @@ const stateCount = (s) => items.filter((i) => i.state === s).length;
   <header class="site-header">
     <div class="wrap header-inner">
       <a class="brand" href="/"><span class="brand-mark" aria-hidden="true">ПП</span><span>Подготовка<br/>производства</span></a>
-      <nav aria-label="Разделы плана"><a href="#overview">Обзор</a><a href="#items">Входящие данные</a><a href="#bounds">Границы</a></nav>
+      <span class="doc-header-title">Общий план · редакция от {edition}</span>
+      <button class="secondary-button doc-print" id="print-doc" type="button">Печать / PDF</button>
       <a class="audience-link" href="/">К презентации <span aria-hidden="true">↗</span></a>
     </div>
   </header>
-  <main id="main">
-    <section class="hero" id="top">
-      <div class="wrap">
-        <p class="eyebrow">Общий план · состояние на 21 октября 2026</p>
-        <h1>Общий план.<br/><span>Входящие данные.</span></h1>
-        <p class="lead">Шесть видов данных, из которых складываются маршрут и смета детали. По каждому — как это работает, по какому маршруту идут данные, как выглядит на экране и что ещё не сделано.</p>
-        <div class="plan-status" id="overview">
-          {items.map((i) => <a class="plan-status-card" href={'#' + i.id} data-goto={i.id}>
-            <span class="plan-num">{i.number}</span>
-            <span class="plan-status-title">{i.title}</span>
-            <span class:list={['badge', 'state-' + i.state]}>{i.stateLabel}</span>
-          </a>)}
+
+  <div class="wrap doc-layout">
+    <aside class="doc-toc" role="navigation" aria-label="Содержание документа">
+      <details class="doc-toc-box" open>
+        <summary>Содержание</summary>
+        <ol>
+          <li>
+            <a href={'#' + toc.id} data-toc={toc.id}><span class="toc-n">{toc.n}</span><span>{toc.title}</span></a>
+            <ol>{toc.sub.map((t) => <li><a href={'#' + t.id} data-toc={t.id}><span class="toc-n">{t.n}</span><span>{t.title}</span></a></li>)}</ol>
+          </li>
+        </ol>
+      </details>
+    </aside>
+
+    <main id="main" class="doc-sheet">
+      <header class="doc-title" id="top">
+        <p class="doc-kicker">Подготовка производства</p>
+        <h1>Общий план</h1>
+        <table class="doc-meta">
+          <tbody>
+            <tr><th scope="row">Редакция</th><td>{edition}</td></tr>
+            <tr><th scope="row">Основание</th><td>Рабочие документы и отчёты проверок проекта на 19–22 октября 2026 года.</td></tr>
+            <tr><th scope="row">Обозначения</th><td><div class="doc-legend">{Object.entries(states).map(([k, v]) => <span class={'status status-' + k}>{v}</span>)}</div></td></tr>
+          </tbody>
+        </table>
+      </header>
+
+      <section id="inputs" class="doc-section">
+        <h2><span class="sec-n">1</span>Входящие данные</h2>
+        <p>Шесть видов данных, из которых складываются маршрут и смета детали. По каждому: как это работает, по какому пути идут данные, что показала проверка, как это выглядит на экране и что не выполнено. Скриншоты сделаны в настоящем интерфейсе во время проверок 19–21 октября; нажмите на снимок, чтобы открыть его в исходном размере.</p>
+        <div class="doc-table-wrap">
+          <table class="doc-table">
+            <thead><tr><th scope="col" class="col-n">№</th><th scope="col">Входящие данные</th><th scope="col">Состояние</th></tr></thead>
+            <tbody>{items.map((i, k) => <tr><td class="col-n">1.{k + 1}</td><th scope="row"><a href={'#' + i.id}>{i.title}</a></th><td><span class={'status status-' + itemState[i.state]}>{states[itemState[i.state]]}</span> <span class="muted">{i.stateLabel}</span></td></tr>)}</tbody>
+          </table>
         </div>
-        <p class="chapter-footnote">«Работает» — функция есть в интерфейсе и проверена на рабочих или тестовых примерах. Оговорка после «работает» (жёлтая метка) значит, что основная часть действует, а отдельные данные неизвестны или зависят от решения технолога. Без оговорок: {stateCount('done')} из {items.length}; с оговорками: {stateCount('partial')}.</p>
-      </div>
-    </section>
 
-    <section class="section wash" id="route"><div class="wrap">
-      <div class="section-heading"><div><p class="eyebrow">Общая карта маршрута</p><h2>От чертежа<br/>до сметы.</h2></div><p class="section-intro">Все шесть видов данных проходят один путь: модель читает, программа хранит и считает, технолог проверяет и решает. Справочники подключаются там, где нужны числа.</p></div>
-      <ol class="route-map route-overall" aria-label="Общий маршрут данных">{overallRoute.map((n) => <li class={'node kind-' + n.kind}><span class="node-kind">{kinds[n.kind]}</span><b>{n.title}</b><span class="node-text">{n.text}</span></li>)}</ol>
-      <div class="route-refs"><span class="muted">Справочники:</span>{references.map((r) => <span class="ref-chip">{r}</span>)}</div>
-      <div class="route-legend" aria-label="Обозначения">{Object.entries(kinds).map(([k, v]) => <span class={'legend kind-' + k}><i aria-hidden="true"></i>{v}</span>)}</div>
-    </div></section>
+        {items.map((i, k) => { const n = '1.' + (k + 1); return <article class="input-item" id={i.id}>
+          <h3><span class="sec-n">{n}</span>{i.title}</h3>
+          <p class="item-status"><span class={'status status-' + itemState[i.state]}>{states[itemState[i.state]]}</span><span>{i.stateLabel}</span></p>
+          <p>{i.summary}</p>
 
-    <section class="section" id="items"><div class="wrap">
-      <div class="section-heading"><div><p class="eyebrow">Входящие данные 0.1–0.6</p><h2>Шесть вкладок —<br/>шесть задач.</h2></div><p class="section-intro">Скриншоты сделаны в настоящем интерфейсе во время проверок 19–21 октября. Нажмите на снимок, чтобы открыть его в исходном размере.</p></div>
-      <div class="plan-tabs tabs" role="tablist" aria-label="Входящие данные">{items.map((i, n) => <button role="tab" id={'tab-' + i.id} data-tab={i.id} aria-controls={'panel-' + i.id} aria-selected={n === 0 ? 'true' : 'false'} tabindex={n === 0 ? 0 : -1}><span class="tab-num">{i.number}</span> {i.short}</button>)}</div>
-      {items.map((i, n) => <article class="plan-panel" id={'panel-' + i.id} role="tabpanel" aria-labelledby={'tab-' + i.id} hidden={n !== 0}>
-        <div class="panel-head">
-          <div><p class="eyebrow">Пункт {i.number}</p><h3>{i.title}</h3></div>
-          <span class:list={['badge', 'state-' + i.state]}>{i.stateLabel}</span>
-        </div>
-        <p class="panel-summary">{i.summary}</p>
+          <h4>Как это работает</h4>
+          <ol class="how-list">{i.how.map(([kind, t]) => <li><span class={'who kind-' + kind}>{kinds[kind]}</span><span>{t}</span></li>)}</ol>
 
-        <h4 class="block-title">Как это реализовано</h4>
-        <ol class="how-list">{i.how.map(([k, t]) => <li><span class={'who kind-' + k}>{kinds[k]}</span><span>{t}</span></li>)}</ol>
+          <h4>Путь данных</h4>
+          <div class="route-chain"><Flow id={'route-' + i.id} label={'Путь данных: ' + i.title} {...chain(i.route)} legend={false} /></div>
+          <ol class="route-steps">{i.route.map((r, m) => <li class:list={['kind-' + r.kind, { here: r.here }]}><span class="route-step-num">{m + 1}</span><span><b>{r.title}{r.here && ' — этот пункт'}.</b> {r.text}</span></li>)}</ol>
 
-        <h4 class="block-title">Карта маршрута</h4>
-        <ol class="route-map" aria-label={'Маршрут данных: ' + i.title}>{i.route.map((r) => <li class:list={['node', 'kind-' + r.kind, { here: r.here }]}><span class="node-kind">{kinds[r.kind]}{r.here && ' · этот пункт'}</span><b>{r.title}</b><span class="node-text">{r.text}</span></li>)}</ol>
+          <h4>Результаты проверки</h4>
+          <ul class="result-list">{i.results.map((r) => <li>{r}</li>)}</ul>
 
-        <h4 class="block-title">Что получилось</h4>
-        <ul class="fact-list result-list">{i.results.map((r) => <li>{r}</li>)}</ul>
+          <h4>Как это выглядит</h4>
+          <div class="shot-grid">{i.shots.map((id, m) => { const s = shots[id]; return <figure class="plan-shot"><button class="screenshot-button" data-image={s.id} aria-label={'Увеличить скриншот: ' + s.title}><img src={s.file} width={s.width} height={s.height} alt={s.title} loading="lazy" /></button><figcaption><b>Рисунок {n}.{m + 1} — {s.title}.</b> {s.note} <span class="shot-date">Снимок от {s.date}.</span></figcaption></figure>; })}</div>
 
-        <h4 class="block-title">Как это выглядит</h4>
-        <div class="shot-grid">{i.shots.map((id) => { const s = shots[id]; return <figure class="plan-shot"><button class="screenshot-button" data-image={s.id} aria-label={'Увеличить скриншот: ' + s.title}><img src={s.file} width={s.width} height={s.height} alt={s.title} loading="lazy" /></button><figcaption><b>{s.title}.</b> {s.note} <span class="shot-date">Снимок от {s.date}.</span></figcaption></figure>; })}</div>
-
-        <div class="not-done">
           <h4>Что не выполнено и почему</h4>
-          <ul>{i.notDone.map(([what, why]) => <li><b>{what}</b><span>{why}</span></li>)}</ul>
-        </div>
-      </article>)}
-    </div></section>
+          <div class="doc-table-wrap">
+            <table class="doc-table not-done-table">
+              <thead><tr><th scope="col">Не выполнено</th><th scope="col">Причина</th></tr></thead>
+              <tbody>{i.notDone.map(([what, why]) => <tr><td>{what}</td><td>{why}</td></tr>)}</tbody>
+            </table>
+          </div>
+        </article>; })}
 
-    <section class="section wash" id="bounds"><div class="wrap">
-      <div class="section-heading"><div><p class="eyebrow">Общие границы</p><h2>Что важно<br/>держать в уме.</h2></div><p class="section-intro">Состояние описано по итогам проверок 19–21 октября 2026 года.</p></div>
-      <div class="limits">{general.map((g, n) => <article><span class="ordinal">0{n + 1}</span><p>{g}</p></article>)}</div>
-      <div class="conclusion-links plan-links"><a class="secondary-button" href="/">Презентация продукта ↗</a><a class="secondary-button" href="/it/" target="_blank" rel="noopener">Технический разбор для IT ↗</a></div>
-    </div></section>
-  </main>
-  <footer><div class="wrap footer-inner"><span>Подготовка производства / Общий план</span><span>Состояние на 21 октября 2026</span><a href="#top">Наверх ↑</a></div></footer>
-  <dialog id="image-dialog" aria-labelledby="image-dialog-title"><div class="dialog-top"><h2 id="image-dialog-title"></h2><button class="icon-button" id="close-image" aria-label="Закрыть скриншот">×</button></div><p id="image-dialog-note" class="caption"></p><div class="image-scroll"><img id="image-dialog-img" alt=""/></div><p class="caption">Сохранённый снимок интерфейса в исходном разрешении; при необходимости используйте прокрутку.</p></dialog>
-  <noscript><p class="wrap">Для переключения вкладок включите JavaScript.</p></noscript>
+        <div class="doc-note"><p><b>Общие границы.</b></p><ul>{general.map((g) => <li>{g}</li>)}</ul></div>
+      </section>
+
+      <footer class="doc-footer"><span>Подготовка производства · Общий план</span><span>Редакция от {edition}</span><a href="#top">Наверх ↑</a></footer>
+    </main>
+  </div>
+
+  <dialog id="image-dialog" class="image-viewer" aria-labelledby="image-dialog-title"><div class="viewer-top"><div class="viewer-heading"><h2 id="image-dialog-title"></h2><p id="image-dialog-note" class="caption"></p></div><div class="viewer-tools" role="toolbar" aria-label="Масштаб изображения"><button type="button" class="diagram-button" id="image-zoom-out" aria-label="Уменьшить">−</button><output id="image-zoom-label" aria-live="polite">100%</output><button type="button" class="diagram-button" id="image-zoom-in" aria-label="Увеличить">+</button><button type="button" class="diagram-button" id="image-fit">Вписать</button><button type="button" class="diagram-button" id="image-actual">1:1</button><button type="button" class="close-button" id="close-image" aria-label="Закрыть скриншот"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button></div></div><div class="viewer-stage" id="image-stage"><img id="image-dialog-img" alt="" draggable="false"/></div><p class="caption viewer-hint">Колёсико мыши — масштаб к курсору · левая кнопка — перемещение · двойной щелчок — вписать / 100% · щелчок по пустому месту или Esc — закрыть.</p></dialog>
   <script src="../scripts/plan.ts"></script>
 </body>
 </html>

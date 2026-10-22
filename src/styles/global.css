@@ -2398,3 +2398,188 @@ dialog::backdrop {
     font-size: 30px;
   }
 }
+
+/* C4 notation legend for the technical atlas. */
+.c4-legend i {
+  width: 14px;
+  height: 12px;
+  border-radius: 2px;
+  border: 1px solid #0003;
+}
+.c4-legend .lg-person { background: #08427b; }
+.c4-legend .lg-system { background: #1168bd; }
+.c4-legend .lg-container { background: #438dd5; }
+.c4-legend .lg-store { background: #438dd5; border-radius: 6px / 3px; }
+.c4-legend .lg-component { background: #85bbf0; }
+.c4-legend .lg-agent { background: #f4c27f; }
+.c4-legend .lg-external { background: #8a8f94; }
+.technical-page .atlas-body {
+  grid-template-columns: minmax(0, 1fr) 300px;
+}
+.technical-page .diagram-panel {
+  background: #f6f7f4;
+}
+.it-tag {
+  margin-left: 12px;
+  font-size: 14px;
+  padding: 2px 8px;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  font-weight: 400;
+}
+.cycle-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  margin-top: 36px;
+}
+.cycle-grid article {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  padding: 22px 24px;
+}
+.cycle-grid h3 {
+  font-size: 22px;
+  margin: 0 0 12px;
+}
+.cycle-grid .fact-list {
+  font-size: 17px;
+}
+@media (max-width: 980px) {
+  .cycle-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Zoomable screenshot viewer: fills the window, image fitted on open. */
+#image-dialog.image-viewer {
+  width: calc(100vw - 32px);
+  height: calc(100vh - 32px);
+  max-width: none;
+  max-height: none;
+  padding: 0;
+  overflow: hidden;
+}
+#image-dialog.image-viewer[open] {
+  display: flex;
+  flex-direction: column;
+}
+.viewer-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 14px 18px 10px;
+  border-bottom: 1px solid var(--line);
+}
+.viewer-heading {
+  min-width: 0;
+}
+.viewer-heading h2 {
+  font-size: 22px;
+  line-height: 1.25;
+  margin: 0;
+}
+#image-dialog .viewer-heading #image-dialog-note {
+  margin: 4px 0 0;
+  font-size: 15px;
+}
+.viewer-tools {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.viewer-tools .diagram-button {
+  min-width: 40px;
+  min-height: 40px;
+  padding: 6px 10px;
+}
+#image-zoom-label {
+  min-width: 56px;
+  text-align: center;
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+}
+.viewer-stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  background: #e4e3dc;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+.viewer-stage.dragging {
+  cursor: grabbing;
+}
+.viewer-stage img {
+  position: absolute;
+  left: 0;
+  top: 0;
+  max-width: none;
+  transform-origin: 0 0;
+  box-shadow: 0 2px 12px #262d2b33;
+  pointer-events: none;
+}
+.viewer-hint {
+  margin: 0;
+  padding: 8px 18px 10px;
+  border-top: 1px solid var(--line);
+  font-size: 14px;
+}
+@media (max-width: 760px) {
+  #image-dialog.image-viewer {
+    width: 100vw;
+    height: 100dvh;
+    padding: 0;
+  }
+  .viewer-top {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .viewer-heading h2 {
+    font-size: 18px;
+  }
+  #image-dialog .viewer-heading #image-dialog-note {
+    font-size: 13px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .viewer-tools #image-actual,
+  .viewer-hint {
+    display: none;
+  }
+}
+
+/* Close buttons of dialogs: thin cross, round hover. */
+.close-button {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--muted);
+  transition: background 0.15s, color 0.15s;
+}
+.close-button:hover {
+  background: var(--wash);
+  color: var(--ink);
+}
+.close-button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.viewer-tools .close-button {
+  margin-left: 6px;
+}
+.viewer-stage.can-close {
+  cursor: zoom-out;
+}

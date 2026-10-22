@@ -18,9 +18,25 @@ const manifest = JSON.parse(await readFile(".evidence/manifest.json", "utf8"));
 const read = (p) => readFile(".evidence/source/" + p, "utf8");
 const hash = (x) => createHash("sha256").update(x).digest("hex");
 const sources = {};
-for (const [id, [path, start, end, title]] of Object.entries(sourceSpecs)) {
+// A range is either absolute line numbers or text anchors that survive a new
+// snapshot: start = unique line text; end = following line text or line count.
+function resolveRange(id, lines, start, end) {
+  if (typeof start === "number") return [start, end];
+  const hits = lines.flatMap((l, i) => (l.includes(start) ? [i] : []));
+  if (hits.length !== 1)
+    throw Error(`Anchor for ${id} matched ${hits.length} lines: ${start}`);
+  const from = hits[0];
+  if (typeof end === "number") return [from + 1, from + end];
+  const to = lines.findIndex((l, i) => i >= from && l.includes(end));
+  if (to < 0) throw Error(`End anchor for ${id} not found: ${end}`);
+  return [from + 1, to + 1];
+}
+for (const [id, [path, startSpec, endSpec, title]] of Object.entries(
+  sourceSpecs,
+)) {
   const raw = await read(path);
   const lines = raw.split(/\r?\n/);
+  const [start, end] = resolveRange(id, lines, startSpec, endSpec);
   if (start < 1 || end > lines.length || end < start)
     throw Error("Invalid source range " + id + " " + lines.length);
   const captured = manifest.files.find((f) => f.path === path);
@@ -61,6 +77,11 @@ function block(text, start) {
 }
 const schemaFiles = [
   "mvp/src/metall_mvp/db/repository.py",
+  "mvp/src/metall_mvp/db/d001_cycle_schema.py",
+  "mvp/src/metall_mvp/db/recognition_states.py",
+  "mvp/src/metall_mvp/workflows/route_drafts.py",
+  "mvp/src/metall_mvp/workflows/route_time.py",
+  "mvp/src/metall_mvp/workflows/cycle_estimate.py",
   "mvp/src/metall_mvp/db/editable_nsi.py",
   "mvp/src/metall_mvp/db/tolerances.py",
   "mvp/src/metall_mvp/db/reference_catalog_parts/schema.py",

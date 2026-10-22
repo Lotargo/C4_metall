@@ -5,14 +5,13 @@
           <button role="tab" aria-selected="false" data-level="components" id="tab-components" aria-controls="diagram-panel" tabindex="-1"><span>C3</span> Компоненты</button>
           <button role="tab" aria-selected="false" data-level="code" id="tab-code" aria-controls="diagram-panel" tabindex="-1"><span>C4</span> Код и данные</button>
         </div><button class="icon-button" id="share-diagram" aria-label="Скопировать ссылку на выбранный блок" title="Ссылка на блок">↗</button></div>
-        <div class="component-selector" id="component-selector" hidden><span>Фокус:</span><button data-focus="recognition" aria-pressed="true">Распознавание</button><button data-focus="selection" aria-pressed="false">Подбор заготовки</button><button data-focus="routing" aria-pressed="false">Маршрут</button><button data-focus="materials" aria-pressed="false">Материалы</button></div>
+        <div class="component-selector" id="component-selector" hidden></div>
         <div class="atlas-body"><div class="diagram-panel" id="diagram-panel" role="tabpanel" aria-labelledby="tab-context">
           <div class="diagram-label"><span id="diagram-title">Контекст системы</span><span id="diagram-counter">C1 / 4</span></div>
-          <div class="diagram-stage" id="diagram-stage"><svg id="diagram-svg" viewBox="0 0 1020 665" role="img" aria-label="Интерактивная C4-диаграмма"><defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#68979b"/></marker></defs><g id="diagram-content"></g></svg></div>
+          <div class="diagram-stage" id="diagram-stage"><svg id="diagram-svg" viewBox="0 0 1160 560" role="img" aria-label="Интерактивная C4-диаграмма"><defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#555c64"/></marker></defs><g id="diagram-content"></g></svg></div>
           <div class="diagram-controls"><span>Выберите блок · перемещайте фон</span><div><button class="diagram-button" id="zoom-out" aria-label="Уменьшить масштаб">−</button><output id="zoom-label" aria-live="polite">100%</output><button class="diagram-button" id="zoom-in" aria-label="Увеличить масштаб">+</button><button class="diagram-button" id="zoom-fit" title="Вернуть исходный вид">Сброс</button><button class="diagram-button" id="download-svg" title="Скачать текущую схему">SVG ↓</button><button class="diagram-button" id="fullscreen" aria-label="Схема на весь экран">⤢</button></div></div>
-          <div class="diagram-legend"><span><i class="legend-code"></i> Код / система</span><span><i class="legend-agent"></i> Модель</span><span><i class="legend-store"></i> Хранилище</span><span class="optional-line">Условная связь</span></div>
+          <div class="diagram-legend c4-legend"><span><i class="lg-person"></i> Человек</span><span><i class="lg-system"></i> Система</span><span><i class="lg-container"></i> Контейнер</span><span><i class="lg-store"></i> Хранилище</span><span><i class="lg-component"></i> Компонент · код</span><span><i class="lg-agent"></i> Компонент · LLM</span><span><i class="lg-external"></i> Внешняя система</span><span class="optional-line">Условная связь</span></div>
         </div><aside class="inspector" id="inspector" aria-live="polite"></aside></div>
         <div class="node-index" id="node-index" aria-label="Блоки текущей схемы"></div>
         <p class="diagram-caption" id="diagram-caption"></p>
       </div>
-

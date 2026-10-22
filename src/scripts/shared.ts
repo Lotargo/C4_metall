@@ -58,7 +58,9 @@ all("[data-agent-filter]").forEach((button) =>
       if (!row.hidden) count++;
     });
     const counter = document.querySelector("#agent-count");
-    if (counter)
-      counter.textContent = count + (count === 2 ? " роли" : " ролей");
+    const tens = count % 100, ones = count % 10;
+    const word =
+      tens > 10 && tens < 20 ? "ролей" : ones === 1 ? "роль" : ones > 1 && ones < 5 ? "роли" : "ролей";
+    if (counter) counter.textContent = count + " " + word;
   }),
 );

@@ -1,0 +1,480 @@
+/* Logical flowcharts: swimlanes, shapes by participant, decision diamonds. */
+.flow {
+  --flow-human: #3f5f86;
+  --flow-human-soft: #e6ecf4;
+  --flow-model: #8a5f36;
+  --flow-model-soft: #f5ebdf;
+  --flow-code: #385d55;
+  --flow-code-soft: #e2ece5;
+  --flow-source: #6f7570;
+  --flow-source-soft: #f1f0ea;
+  --flow-result: #262d2b;
+  margin: 0;
+}
+.flow .kind-human { --k: var(--flow-human); --k-soft: var(--flow-human-soft); }
+.flow .kind-model { --k: var(--flow-model); --k-soft: var(--flow-model-soft); }
+.flow .kind-code { --k: var(--flow-code); --k-soft: var(--flow-code-soft); }
+.flow .kind-source { --k: var(--flow-source); --k-soft: var(--flow-source-soft); }
+.flow .kind-result { --k: var(--flow-result); --k-soft: var(--flow-result); }
+
+.flow-canvas {
+  overflow-x: auto;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  padding: 14px;
+}
+.flow-canvas svg {
+  display: block;
+  width: 100%;
+  min-width: var(--flow-min);
+  height: auto;
+  font-family: var(--font-sans);
+}
+.flow-lane rect {
+  fill: transparent;
+}
+.flow-lane.lane-1 > rect:first-child {
+  fill: #f6f5f0;
+}
+.flow-lane rect.flow-lane-head {
+  fill: #eeede7;
+}
+.flow-lane rect.flow-lane-mark {
+  fill: var(--k);
+}
+.flow-lane-label {
+  font-size: 15px;
+  font-weight: 500;
+  fill: var(--ink);
+}
+.flow-node path {
+  fill: var(--k-soft);
+  stroke: var(--k);
+  stroke-width: 1.6;
+}
+.flow-node text {
+  font-size: 15px;
+  text-anchor: middle;
+  fill: var(--ink);
+}
+.flow-node.shape-end text {
+  fill: #fff;
+  font-weight: 500;
+}
+.flow-node.shape-start path {
+  stroke-width: 2.4;
+}
+.flow-node.here path {
+  stroke-width: 3;
+  fill: #fff;
+}
+.flow-node.here text {
+  font-weight: 500;
+}
+.flow-edge path {
+  fill: none;
+  stroke: #858b86;
+  stroke-width: 1.6;
+}
+.flow-edge.dashed path {
+  stroke-dasharray: 5 4;
+}
+.flow-arrowhead {
+  fill: #858b86;
+}
+.flow-edge-label {
+  font-size: 13px;
+  fill: var(--muted);
+  paint-order: stroke;
+  stroke: var(--surface);
+  stroke-width: 4px;
+}
+
+/* Phone version: the same steps as a vertical list. */
+.flow-list {
+  display: none;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.flow-list li {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 14px;
+  background: var(--k-soft);
+  border: 1px solid var(--k);
+  border-left-width: 4px;
+}
+.flow-list li.decision {
+  border-style: dashed;
+  border-left-style: solid;
+}
+.flow-list li.here {
+  background: #fff;
+  border-width: 2px 2px 2px 5px;
+}
+.flow-list li + li {
+  margin-top: 26px;
+}
+.flow-list li + li::before {
+  content: "↓";
+  position: absolute;
+  top: -24px;
+  left: 18px;
+  color: var(--muted);
+}
+.flow-list .kind-result {
+  color: #fff;
+}
+.flow-list .kind-result .flow-list-who {
+  color: #d7dbd6;
+}
+.flow-list-who {
+  font-size: 14px;
+  color: var(--k);
+}
+.flow-list b {
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 1.35;
+}
+.flow-list-branch {
+  font-size: 15px;
+  color: var(--muted);
+}
+
+.flow-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 22px;
+  margin-top: 14px;
+  font-size: 15px;
+  color: var(--muted);
+}
+.flow-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.flow-legend i {
+  width: 22px;
+  height: 14px;
+  border-radius: 3px;
+  background: var(--k-soft);
+  border: 1.6px solid var(--k);
+}
+.flow-legend .legend-decision i {
+  width: 14px;
+  height: 14px;
+  border-radius: 0;
+  transform: rotate(45deg);
+  background: var(--surface);
+  border-color: #858b86;
+}
+.flow-legend .legend-dashed i {
+  height: 0;
+  border: 0;
+  border-top: 2px dashed #858b86;
+  background: none;
+  border-radius: 0;
+}
+
+@media (max-width: 760px) {
+  .flow-canvas {
+    display: none;
+  }
+  .flow-list {
+    display: block;
+  }
+}
+
+/* Page blocks around the diagrams. */
+.flow-note {
+  margin: 18px 0 0;
+  max-width: 96ch;
+  font-size: 17px;
+  color: var(--muted);
+}
+.process-steps {
+  margin-top: 56px;
+}
+.badge.who-human {
+  background: #e3e9f1;
+  color: #3f5f86;
+}
+.badge.who-model {
+  background: var(--model-soft);
+  color: var(--model);
+}
+.principles {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 28px 32px;
+  margin: 56px 0 64px;
+}
+.principles article {
+  border-top: 2px solid var(--line);
+  padding-top: 18px;
+}
+.principles h3 {
+  font-size: 22px;
+  line-height: 1.25;
+  margin: 8px 0 10px;
+}
+.principles p {
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--muted);
+  margin: 0;
+}
+.roster-title {
+  font-size: 30px;
+  margin-bottom: 20px;
+}
+.agent-body dl.role-facts {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+@media (max-width: 1190px) {
+  .principles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .agent-body dl.role-facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 760px) {
+  .principles,
+  .agent-body dl.role-facts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .principles {
+    gap: 22px;
+    margin: 40px 0 48px;
+  }
+  .process-steps {
+    margin-top: 40px;
+  }
+}
+
+/* Agent instructions chapter. */
+.instr-block {
+  margin-top: 64px;
+}
+.instr-block:first-of-type {
+  margin-top: 0;
+}
+.instr-block > h3 {
+  font-size: 32px;
+  line-height: 1.2;
+  margin: 0 0 20px;
+  padding-top: 26px;
+  border-top: 1px solid var(--line);
+}
+.instr-lead {
+  max-width: 92ch;
+  font-size: 19px;
+}
+.anatomy,
+.approaches {
+  display: grid;
+  gap: 24px;
+  margin-top: 26px;
+}
+.anatomy {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.anatomy article,
+.approaches article {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  padding: 20px 22px;
+}
+.anatomy h4,
+.approaches h4 {
+  font-size: 21px;
+  line-height: 1.3;
+  margin: 8px 0 10px;
+}
+.anatomy p,
+.approaches p {
+  font-size: 17px;
+  line-height: 1.5;
+  margin: 0;
+}
+.anatomy p {
+  color: var(--muted);
+}
+.instr-two {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: 40px;
+  margin-bottom: 26px;
+}
+.instr-two p {
+  font-size: 19px;
+  margin: 0 0 14px;
+}
+.instr-steps {
+  margin: 0;
+  padding-left: 24px;
+  font-size: 17px;
+  line-height: 1.5;
+}
+.instr-steps li + li {
+  margin-top: 10px;
+}
+.approaches {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-bottom: 18px;
+}
+.approaches p + p {
+  margin-top: 10px;
+}
+.approach-who {
+  color: var(--accent);
+  font-size: 16px !important;
+}
+.approach-why {
+  color: var(--muted);
+}
+.instr-block .flow {
+  margin-top: 18px;
+}
+.tradeoffs {
+  margin-top: 28px;
+  overflow-x: auto;
+}
+.tradeoffs table {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 640px;
+  font-size: 17px;
+  background: var(--surface);
+}
+.tradeoffs th,
+.tradeoffs td {
+  border: 1px solid var(--line);
+  padding: 12px 14px;
+  text-align: left;
+  vertical-align: top;
+}
+.tradeoffs thead th {
+  background: var(--accent-soft);
+  font-weight: 500;
+}
+.tradeoffs tbody th {
+  font-weight: 500;
+  background: var(--surface);
+}
+.skill-version {
+  display: block;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--muted);
+}
+.instr-list {
+  margin-top: 24px;
+}
+.badge.kind-composed {
+  background: var(--model-soft);
+  color: var(--model);
+}
+.badge.kind-pinned {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.badge.kind-single {
+  background: #e3e9f1;
+  color: #3f5f86;
+}
+.instr-facts {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  gap: 32px;
+  margin: 16px 0 22px;
+}
+.instr-facts dt {
+  color: var(--muted);
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+.instr-facts dd {
+  margin: 0;
+  font-size: 18px;
+}
+.instr-facts ul {
+  margin: 0;
+  padding-left: 20px;
+}
+.instr-facts li + li {
+  margin-top: 6px;
+}
+.instr-files {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+  align-items: center;
+}
+.instr-file {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.instr-file .secondary-button {
+  font-size: 16px;
+}
+.instr-file a {
+  font-size: 15px;
+}
+.text-dialog pre {
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: var(--mono);
+  font-size: 14px;
+  line-height: 1.55;
+  max-height: 62vh;
+  overflow: auto;
+  background: var(--wash);
+  border: 1px solid var(--line);
+  padding: 18px 20px;
+  margin: 0 0 14px;
+}
+@media (max-width: 1190px) {
+  .anatomy {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .instr-two {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+  }
+}
+@media (max-width: 760px) {
+  .instr-block > h3 {
+    font-size: 26px;
+  }
+  .anatomy,
+  .approaches,
+  .instr-facts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .instr-facts {
+    gap: 16px;
+  }
+  .text-dialog {
+    width: calc(100% - 16px);
+    padding: 18px 14px;
+  }
+  .text-dialog pre {
+    font-size: 13px;
+    padding: 12px;
+  }
+}
+.instr-block .flow-canvas svg {
+  max-width: 1080px;
+  margin-inline: auto;
+}
+.instr-block figure[aria-label*="закреплена"] svg {
+  max-width: 860px;
+}

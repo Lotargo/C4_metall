@@ -1,0 +1,203 @@
+{
+  "product_head": "1b5f2f8c",
+  "deep_skills": [
+    "engineering-drawing-vision",
+    "engineering-analysis"
+  ],
+  "skills": [
+    {
+      "id": "blueprint-reader",
+      "version": "1.1.0",
+      "description": "Read ESKD PDF and raster drawings using available PDF text/position evidence and targeted visual inspection for image regions, symbols and owners; extract literal dimensions, tolerances and requirements.",
+      "hash": "496bf64dc2ca0e4db1a148ee23bf8d79a28ac7fc39a4e4351ec98330202657dc"
+    },
+    {
+      "id": "engineering-analysis",
+      "version": "1.0.0",
+      "description": "Perform explicit, source-backed deep analysis of an engineering drawing and return operator-review proposals without changing authoritative passport or calculation state.",
+      "hash": "a3b259c980964643fb8c250470f7c3abf4d02d31e688a5e6f362a85c12efbc49"
+    },
+    {
+      "id": "engineering-drawing-vision",
+      "version": "1.1.0",
+      "description": "Read PDF and raster engineering drawings using indexed PDF text when available and source pixels for image areas, geometry and ambiguous marks; preserve provenance, conflicts and coverage.",
+      "hash": "f1260accc3c40369a9ecc54e16444011cde8278472f623f51ca09062c8544d17"
+    },
+    {
+      "id": "equipment-selection",
+      "version": "1.0.0",
+      "description": "Select optimal CNC and universal metalworking machines from the enterprise machine park based on part dimensions, workpiece mass, required operations, power, and tolerance classes using Machine Park MCP tools.",
+      "hash": "6c796b4a1e1c08ef4b7300cfa16045ba98dccf14b8d197eaf09c2c66c6e0dc69"
+    },
+    {
+      "id": "geometry-rotational",
+      "version": "1.0.1",
+      "description": "Инженерный скилл для анализа чертежей тел вращения (валы, оси, втулки, фланцы, штуцеры). Фокусируется на диаметрах, осевых длинах ступеней, резьбах, фасках и посадках.",
+      "hash": "c456b7f9198993c134a1b3f0612d15fb69a351a61d493a6ed854dc0102c81b9a"
+    },
+    {
+      "id": "geometry-sheet-metal",
+      "version": "1.0.1",
+      "description": "Инженерный скилл для анализа чертежей листовых деталей, плоских пластин и полос. Фокусируется на толщине листа, контурных размерах, радиусах скругления и очевидных геометрических зависимостях.",
+      "hash": "797d3ec04b5ac2c2a225c8688a77f1632c962b9e90d59e859923d4829f0612e4"
+    },
+    {
+      "id": "geometry-weldment",
+      "version": "1.0.0",
+      "description": "Инженерный скилл для анализа сварных узлов, кронштейнов, фасонок и металлоконструкций. Фокусируется на элементах узла, сварных швах и сборочных размерах.",
+      "hash": "509012200a35a0de8be256be78515166520995dec9b388ba4d21e3dd67db72d6"
+    },
+    {
+      "id": "materials-nsi",
+      "version": "1.0.0",
+      "description": "Identify, normalize, and match workpiece materials to standard Russian (ГОСТ) and international (AISI/DIN/EN) grades, resolve blank stock (круг, лист, труба) and calculate physical density and blank dimensions using Splav MCP tools.",
+      "hash": "d8bbcd8eb478fb83090541de7c8ea96a9c243dc057d809bab8d9788d989383b6"
+    },
+    {
+      "id": "process-routing",
+      "version": "1.0.0",
+      "description": "Synthesize operational technological manufacturing routes according to ЕСТД (ГОСТ 3.1118), generate operation step sequences, compute machining time (Tшт, Tпз), cutting parameters, and total piece cost.",
+      "hash": "ec3de447fda58ffa7de6c2b8e46294fe730bbfe6629560f16b9ec93a31d077b5"
+    },
+    {
+      "id": "splav-parser-integration",
+      "version": "1.0.0",
+      "description": "Query the authoritative .splav-parser microservice via MCP or REST API to fetch verified steel grade properties and match factory machines under workpiece dimensions.",
+      "hash": "37818015f7cf3d4bbb81b1d78f50fe12f5fa023badd6d3a5a219e7d3b712661d"
+    }
+  ],
+  "files": {
+    "reader-base": {
+      "file": "/instructions/reader-base.md",
+      "source": "mvp/src/metall_mvp/agents/prompts.py · AUTONOMOUS_ENGINEERING_AGENT_PROMPT",
+      "chars": 26476,
+      "sha256": "f5690aa3c9d48699f368e5015fc90d5480e892153effd5d61c872e5452a39ef2"
+    },
+    "reader-rules": {
+      "file": "/instructions/reader-rules.md",
+      "source": "mvp/src/metall_mvp/agents/prompts.py · SOURCE_READING_SCOPE_PROMPT",
+      "chars": 4930,
+      "sha256": "66ed07815cbf6ccbe7a9aba30c49cf30540e1a182c325c47cfbeb1be9ca3917b"
+    },
+    "reader-full": {
+      "file": "/instructions/reader-full.md",
+      "source": "собранная инструкция: базовая часть + три навыка + общие правила источника",
+      "chars": 36933,
+      "sha256": "4639d5769d7cd28804b36be365f4538ae61bf00932af4fed581bc484f6088a88"
+    },
+    "refiner": {
+      "file": "/instructions/refiner.md",
+      "source": "mvp/src/metall_mvp/agents/prompts.py · AGENT_TWO_ROLE_PROMPT",
+      "chars": 6799,
+      "sha256": "062a4bcd3bf26339a2ffa7986bb14a74765df5d2dd3add411a2f29616db41da1"
+    },
+    "material": {
+      "file": "/instructions/material.md",
+      "source": "mvp/src/metall_mvp/workflows/material_research.py",
+      "chars": 878,
+      "sha256": "e00d4d27e84880af74e2a8ba134a6677182368d305cc064fc377e9ce27f7b0f0"
+    },
+    "explanation": {
+      "file": "/instructions/explanation.md",
+      "source": "mvp/src/metall_mvp/workflows/stock_selection_explanation.py",
+      "chars": 11986,
+      "sha256": "70c04a84c31e2c64ed1db0c2106142ddb50a4303e57c9adcd8190e8d79c00d4e"
+    },
+    "deep": {
+      "file": "/instructions/deep.md",
+      "source": "mvp/src/metall_mvp/agents/definitions.py · DEEP_ANALYSIS_AGENT_DEFINITION",
+      "chars": 515,
+      "sha256": "79d374f2fd8bc922bc3bca8908f2ed2a29b7ee1ffba1f76836e1cdb91e07e8c2"
+    },
+    "route-planner": {
+      "file": "/instructions/route-planner.md",
+      "source": "mvp/instructions/d001/ROUTE_PLANNER.md",
+      "chars": 19330,
+      "sha256": "7f4199a6da624ed610e3d68ea00ae3d97da998ee7757b428cbbbc4ba4c3794d1"
+    },
+    "blank": {
+      "file": "/instructions/blank.md",
+      "source": "mvp/instructions/d001/BLANK_PREPARATION.md",
+      "chars": 19780,
+      "sha256": "68d022390866c915e87036d91c5d6cb4fcd4681c1ae27721ed7efe41c81ddcbc"
+    },
+    "turning": {
+      "file": "/instructions/turning.md",
+      "source": "mvp/instructions/d001/TURNING.md",
+      "chars": 2785,
+      "sha256": "8d7ded6b2d1a614bef2b5ea5c76f53e0d352e53c4195f23fc5cd59cc7e24d5bc"
+    },
+    "milling": {
+      "file": "/instructions/milling.md",
+      "source": "mvp/instructions/d001/MILLING_DRILLING.md",
+      "chars": 2737,
+      "sha256": "85d944b1eaa30d9ca8e88b87e4dc58ccfac2083873746922dafe8de7872ea2ec"
+    },
+    "time": {
+      "file": "/instructions/time.md",
+      "source": "mvp/instructions/d001/TIME_ESTIMATION.md",
+      "chars": 2169,
+      "sha256": "d8bf2e321f663c1eed30eb464e28ca472bf5f42db7cfc40a9dc983bed4241451"
+    },
+    "skill-blueprint-reader": {
+      "file": "/instructions/skill-blueprint-reader.md",
+      "source": "mvp/skills/blueprint-reader/SKILL.md",
+      "chars": 6950,
+      "sha256": "e149d8e9d7596867f15fe7ac2d70262ca96f74aa9d9c47fc0805cd06b1532171"
+    },
+    "skill-engineering-analysis": {
+      "file": "/instructions/skill-engineering-analysis.md",
+      "source": "mvp/skills/engineering-analysis/SKILL.md",
+      "chars": 1519,
+      "sha256": "d434e59c48e6d10bc067f039690c98666734e92969879d8b669327b9d40b1671"
+    },
+    "skill-engineering-drawing-vision": {
+      "file": "/instructions/skill-engineering-drawing-vision.md",
+      "source": "mvp/skills/engineering-drawing-vision/SKILL.md",
+      "chars": 2648,
+      "sha256": "08a333a01f9bc83f75467f041fea172a09ab8ccb8ca649eef0addd4ff36f563b"
+    },
+    "skill-equipment-selection": {
+      "file": "/instructions/skill-equipment-selection.md",
+      "source": "mvp/skills/equipment-selection/SKILL.md",
+      "chars": 2836,
+      "sha256": "71900917ce3193b61075a63837ca98570ef4feff24ed5a73fe3124cc777715fb"
+    },
+    "skill-geometry-rotational": {
+      "file": "/instructions/skill-geometry-rotational.md",
+      "source": "mvp/skills/geometry-rotational/SKILL.md",
+      "chars": 3289,
+      "sha256": "442d36c8856e2b7c683720373eda2b67d8a3c769654377c2dd5413d53778bf7d"
+    },
+    "skill-geometry-sheet-metal": {
+      "file": "/instructions/skill-geometry-sheet-metal.md",
+      "source": "mvp/skills/geometry-sheet-metal/SKILL.md",
+      "chars": 1614,
+      "sha256": "1069062287c045b0368a56bf2be5108e2d1c1c378b4ceb92f98f7a0583319d59"
+    },
+    "skill-geometry-weldment": {
+      "file": "/instructions/skill-geometry-weldment.md",
+      "source": "mvp/skills/geometry-weldment/SKILL.md",
+      "chars": 508,
+      "sha256": "cf30956c0b31de8c2bcc9cead115e1e89d8d11360eff737c1073fcd851cf8a83"
+    },
+    "skill-materials-nsi": {
+      "file": "/instructions/skill-materials-nsi.md",
+      "source": "mvp/skills/materials-nsi/SKILL.md",
+      "chars": 3331,
+      "sha256": "339487b86e469d8aaf539615e9be1077386096e79b3efecbc3bf13648a24faa8"
+    },
+    "skill-process-routing": {
+      "file": "/instructions/skill-process-routing.md",
+      "source": "mvp/skills/process-routing/SKILL.md",
+      "chars": 4268,
+      "sha256": "5f79e5de30fc2296674029e4d19c0f6a4b644e4c06d2ef4ca0c039b67d7e7b94"
+    },
+    "skill-splav-parser-integration": {
+      "file": "/instructions/skill-splav-parser-integration.md",
+      "source": "mvp/skills/splav-parser-integration/SKILL.md",
+      "chars": 4128,
+      "sha256": "7cc160f94486cfb3577d3979ec9e31bd98ef46a42f21bfe75a632cb5090f2352"
+    }
+  }
+}

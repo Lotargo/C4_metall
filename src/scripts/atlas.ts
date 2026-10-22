@@ -2,7 +2,17 @@ import "./shared";
 import data from "../data/evidence.json";
 import { tableMeanings } from "../data/presentation.mjs";
 const tableDescriptions: Record<string, string> = tableMeanings;
+type Kind =
+  | "person"
+  | "system"
+  | "external"
+  | "container"
+  | "store"
+  | "component"
+  | "agent"
+  | "code";
 type Detail = {
+  c4: Kind;
   title: string;
   type: string;
   sub: string;
@@ -12,13 +22,33 @@ type Detail = {
   sources: string[];
   storage?: string;
 };
+type Box = { id: string; x: number; y: number; w?: number; h?: number };
+type Edge = {
+  from: string;
+  to: string;
+  label: string;
+  tech: string;
+  optional?: boolean;
+  route?: "h" | "v";
+  via?: [number, number][];
+};
 type Graph = {
+  level: string;
+  focus?: string;
   title: string;
   caption: string;
-  nodes: { id: string; x: number; y: number }[];
-  edges: { from: string; to: string; label: string; optional: boolean }[];
-  boundary?: string;
-  note?: string;
+  width: number;
+  height: number;
+  boundaries?: {
+    label: string;
+    sub: string;
+    x: number;
+    y: number;
+    w: number;
+    h: number;
+  }[];
+  nodes: Box[];
+  edges: Edge[];
 };
 const nodes = data.nodes as Record<string, Detail>;
 const graphs = data.diagrams as unknown as Record<string, Graph>;
@@ -48,24 +78,28 @@ const esc = (s: string) =>
   );
 const sourceLinks = (ids: string[]) =>
   `<div class="source-links">${ids.map((id) => `<button type="button" data-source="${id}"><span aria-hidden="true">↗</span> ${esc(sources[id].title)}</button>`).join("")}</div>`;
+
+const levels = ["context", "containers", "components", "code"];
+const levelGraphs = (lvl: string) =>
+  Object.keys(graphs).filter((k) => graphs[k].level === lvl);
 let level = "context",
-  focus = "recognition",
   selected = "system",
   zoom = 1,
   panX = 0,
   panY = 0;
+const focusByLevel: Record<string, string> = {
+  components: "cycle",
+  code: "code",
+};
 const svg = $<SVGSVGElement>("#diagram-svg");
 const content = $<SVGGElement>("#diagram-content");
-const graphKey = () => (level === "components" ? focus : level);
-function wrapText(text: string, max = 25) {
+const graphKey = () => focusByLevel[level] ?? levelGraphs(level)[0];
+const graph = () => graphs[graphKey()];
+
+function wrapText(text: string, max: number) {
   const lines: string[] = [];
   let line = "";
-  const words = text
-    .split(" ")
-    .flatMap((w) =>
-      w.length > max ? w.replace(/([a-z])([A-Z])/g, "$1 $2").split(" ") : [w],
-    );
-  for (const word of words) {
+  for (const word of text.split(" ")) {
     if (line && (line + " " + word).length > max) {
       lines.push(line);
       line = word;
@@ -74,83 +108,266 @@ function wrapText(text: string, max = 25) {
   if (line) lines.push(line);
   return lines;
 }
-const diagramCss = `.node rect{fill:#fffefa;stroke:#9ca9a0;stroke-width:1}.node.selected rect{fill:#e2e9e2;stroke:#385d55;stroke-width:2}.node.agent rect{stroke:#a18a70}.node.store rect{stroke:#6b8a7e}.node text{font-family:Arial,sans-serif;pointer-events:none}.node .node-type{fill:#53665c;font-size:12px}.node .node-title{fill:#262d2b;font-size:20px;font-weight:500}.node .node-sub{fill:#53665c;font-size:12px}.node .node-corner{fill:#385d55;font-size:17px}.node.agent .node-type,.node.agent .node-corner{fill:#725840}.node:focus rect{stroke:#385d55;stroke-width:3}.edge{fill:none;stroke:#97a79b;stroke-width:1.2;marker-end:url(#arrow)}.edge.optional{stroke-dasharray:5 5}.edge.active{stroke:#385d55;stroke-width:1.8}.edge-label{fill:#4c6256;font:12px Arial,sans-serif;text-anchor:middle}.boundary{fill:none;stroke:#b4c0b4;stroke-dasharray:4 7;stroke-width:1}.boundary-label{fill:#53665c;font:11px Arial,sans-serif;letter-spacing:.4px}`;
+
+// C4 notation: people dark blue, the system blue, containers mid blue,
+// components light blue, externals grey; model-driven roles are amber.
+const diagramCss = `
+.c4-node{cursor:pointer}
+.c4-node .shape{stroke-width:1.5}
+.c4-node text{font-family:"IBM Plex Sans",Arial,sans-serif;pointer-events:none;text-anchor:middle}
+.c4-node .t-title{font-size:18px;font-weight:600}
+.c4-node .t-type{font-size:13px;opacity:.88}
+.c4-node .t-sub{font-size:13.5px}
+.k-person .shape{fill:#08427b;stroke:#052e56}.k-person text{fill:#fff}
+.k-system .shape{fill:#1168bd;stroke:#0b4884}.k-system text{fill:#fff}
+.k-external .shape{fill:#8a8f94;stroke:#6b7075}.k-external text{fill:#fff}
+.k-container .shape{fill:#438dd5;stroke:#2e6295}.k-container text{fill:#fff}
+.k-store .shape{fill:#438dd5;stroke:#2e6295}.k-store text{fill:#fff}
+.k-component .shape{fill:#85bbf0;stroke:#5d82a8}.k-component text{fill:#0b2340}
+.k-agent .shape{fill:#f4c27f;stroke:#b7792b}.k-agent text{fill:#3d2408}
+.k-code .shape{fill:#fffefa;stroke:#5d82a8}.k-code .band{fill:#dbe8f6}.k-code text{fill:#0b2340}
+.c4-node.selected .shape{stroke:#f2a516;stroke-width:4}
+.c4-node:focus{outline:none}.c4-node:focus .shape{stroke:#f2a516;stroke-width:4}
+.c4-edge path{fill:none;stroke:#6f7680;stroke-width:1.5;marker-end:url(#arrow)}
+.c4-edge.optional path{stroke-dasharray:6 5}
+.c4-edge.active path{stroke:#0b4884;stroke-width:2.4}
+.c4-edge .l-bg{fill:#f6f7f4;opacity:.94}
+.c4-edge text{font-family:"IBM Plex Sans",Arial,sans-serif;text-anchor:middle;fill:#2c3238}
+.c4-edge .l-main{font-size:12.5px;font-weight:500}.c4-edge .l-tech{font-size:11px;fill:#5e6670}
+.c4-edge.active text{fill:#0b4884}
+.c4-boundary rect{fill:none;stroke:#7b8590;stroke-width:1.4;stroke-dasharray:8 6}
+.c4-boundary text{font-family:"IBM Plex Sans",Arial,sans-serif;fill:#3f4850}
+.c4-boundary .b-title{font-size:14px;font-weight:600}.c4-boundary .b-sub{font-size:12px}
+`;
 const style = document.createElementNS("http://www.w3.org/2000/svg", "style");
 style.textContent = diagramCss;
 svg.insertBefore(style, svg.firstChild);
-function renderDiagram() {
-  const graph = graphs[graphKey()];
-  if (!graph.nodes.some((n) => n.id === selected)) selected = graph.nodes[0].id;
-  $("#diagram-title").textContent = graph.title;
-  $("#diagram-counter").textContent =
-    `C${{ context: 1, containers: 2, components: 3, code: 4 }[level]} / 4`;
-  $("#diagram-caption").textContent =
-    graph.caption + (graph.note ? " " + graph.note : "");
-  $("#diagram-panel").setAttribute("aria-labelledby", "tab-" + level);
-  svg.setAttribute(
-    "aria-label",
-    graph.title + ". Блоки можно выбрать клавишей Enter.",
-  );
-  const edgeMarkup = graph.edges
-    .map((e, i) => {
-      const a = graph.nodes.find((n) => n.id === e.from)!,
-        b = graph.nodes.find((n) => n.id === e.to)!;
-      let path = "",
-        lx = 0,
-        ly = 0;
-      if (a.y === b.y) {
-        const forward = b.x > a.x;
-        const ax = a.x + (forward ? 220 : 0),
-          bx = b.x + (forward ? 0 : 220),
-          y = a.y + 63;
-        path = `M${ax} ${y} H${bx}`;
-        lx = (ax + bx) / 2;
-        ly = y - 10;
+
+const size = (n: Box) => ({
+  w: n.w ?? 240,
+  h: n.h ?? 140,
+});
+const typeLine = (d: Detail) =>
+  "[" + d.type.replace(/^(Компонент|Контейнер|Код) · /, "") + "]";
+
+function shapeMarkup(d: Detail, w: number, h: number) {
+  if (d.c4 === "person")
+    return `<circle class="shape" cx="${w / 2}" cy="22" r="22"/><rect class="shape" y="36" width="${w}" height="${h - 36}" rx="26"/>`;
+  if (d.c4 === "store")
+    return `<path class="shape" d="M0 14 A${w / 2} 14 0 0 1 ${w} 14 V${h - 14} A${w / 2} 14 0 0 1 0 ${h - 14} Z"/><path class="shape" d="M0 14 A${w / 2} 14 0 0 0 ${w} 14" fill="none"/>`;
+  if (d.c4 === "code")
+    return `<rect class="shape" width="${w}" height="${h}" rx="3"/><rect class="band" x="1" y="1" width="${w - 2}" height="44"/>`;
+  return `<rect class="shape" width="${w}" height="${h}" rx="${d.c4 === "system" || d.c4 === "external" ? 8 : 6}"/>`;
+}
+
+function nodeMarkup(n: Box) {
+  const d = nodes[n.id],
+    { w, h } = size(n);
+  const top = d.c4 === "person" ? 52 : d.c4 === "store" ? 34 : 24;
+  const title = wrapText(d.title, Math.floor(w / 10.6));
+  const sub = wrapText(d.sub, Math.floor(w / 7.6)).slice(0, 2);
+  let y = top + 4;
+  const lines = [
+    ...title.map((t) => {
+      y += 20;
+      return `<text class="t-title" x="${w / 2}" y="${y}">${esc(t)}</text>`;
+    }),
+    (() => {
+      y += 18;
+      return `<text class="t-type" x="${w / 2}" y="${y}">${esc(typeLine(d))}</text>`;
+    })(),
+    ...sub.map((t, i) => {
+      y += i ? 16 : 21;
+      return `<text class="t-sub" x="${w / 2}" y="${y}">${esc(t)}</text>`;
+    }),
+  ];
+  return `<g class="c4-node k-${d.c4} ${n.id === selected ? "selected" : ""}" transform="translate(${n.x},${n.y})" role="button" tabindex="0" aria-label="${esc(d.title)}: ${esc(d.type)}" aria-pressed="${n.id === selected}" data-node="${n.id}">${shapeMarkup(d, w, h)}${lines.join("")}</g>`;
+}
+
+type Side = "top" | "bottom" | "left" | "right";
+type Rect = { x: number; y: number; w: number; h: number };
+const rectOf = (n: Box): Rect => ({ x: n.x, y: n.y, ...size(n) });
+const cx = (r: Rect) => r.x + r.w / 2;
+const cy = (r: Rect) => r.y + r.h / 2;
+
+// Edges between neighbours in a row or column run straight along the shared
+// centre line; others leave a side with an offset towards their target.
+function plan(g: Graph) {
+  const byId = Object.fromEntries(g.nodes.map((n) => [n.id, rectOf(n)]));
+  type Leg = { side: Side; other: number; edge: number; end: "a" | "b" };
+  const legs: Record<string, Leg[]> = {};
+  const routes = g.edges.map((e, i) => {
+    const a = byId[e.from],
+      b = byId[e.to];
+    if (e.via) return { kind: "via" as const, a, b };
+    const sameRow = Math.abs(cy(a) - cy(b)) < 2,
+      sameCol = Math.abs(cx(a) - cx(b)) < 2;
+    if (sameRow || sameCol) return { kind: "straight" as const, a, b, sameRow };
+    const vertical = e.route !== "h";
+    const sa: Side = vertical
+      ? cy(b) > cy(a)
+        ? "bottom"
+        : "top"
+      : cx(b) > cx(a)
+        ? "right"
+        : "left";
+    const sb: Side = vertical
+      ? cy(b) > cy(a)
+        ? "top"
+        : "bottom"
+      : cx(b) > cx(a)
+        ? "left"
+        : "right";
+    (legs[e.from + sa] ??= []).push({
+      side: sa,
+      other: vertical ? cx(b) : cy(b),
+      edge: i,
+      end: "a",
+    });
+    (legs[e.to + sb] ??= []).push({
+      side: sb,
+      other: vertical ? cx(a) : cy(a),
+      edge: i,
+      end: "b",
+    });
+    return { kind: "elbow" as const, a, b, vertical, sa, sb };
+  });
+  const offsets: Record<string, number> = {};
+  for (const [key, list] of Object.entries(legs)) {
+    const id = key.replace(/(top|bottom|left|right)$/, "");
+    const r = byId[id],
+      side = list[0].side;
+    const centre = side === "top" || side === "bottom" ? cx(r) : cy(r);
+    const before = list
+      .filter((l) => l.other < centre)
+      .sort((p, q) => q.other - p.other);
+    const after = list
+      .filter((l) => l.other >= centre)
+      .sort((p, q) => p.other - q.other);
+    before.forEach((l, k) => (offsets[l.edge + l.end] = centre - 40 * (k + 1)));
+    after.forEach((l, k) => (offsets[l.edge + l.end] = centre + 40 * (k + 1)));
+  }
+  return routes.map((r, i) => {
+    const e = g.edges[i];
+    let pts: [number, number][];
+    if (r.kind === "via") {
+      const toward = (rc: Rect, [px, py]: [number, number]): [number, number] =>
+        px > rc.x + rc.w
+          ? [rc.x + rc.w, py]
+          : px < rc.x
+            ? [rc.x, py]
+            : py < rc.y
+              ? [px, rc.y]
+              : [px, rc.y + rc.h];
+      const via = e.via!;
+      pts = [toward(r.a, via[0]), ...via, toward(r.b, via[via.length - 1])];
+    } else if (r.kind === "straight") {
+      const { a, b } = r;
+      if (r.sameRow) {
+        const y = cy(a),
+          fw = cx(b) > cx(a);
+        pts = [
+          [fw ? a.x + a.w : a.x, y],
+          [fw ? b.x : b.x + b.w, y],
+        ];
       } else {
-        const down = b.y > a.y,
-          ax = a.x + 110,
-          ay = a.y + (down ? 126 : 0),
-          bx = b.x + 110,
-          by = b.y + (down ? 0 : 126),
-          mid = (ay + by) / 2 + ((i % 3) - 1) * 15;
-        if (graphKey() === "containers" && b.y === 500) {
-          const gutter = b.x === 38 ? 320 : b.x === 383 ? 666 : 1003,
-            upper = 250 + (i - 5) * 15;
-          path = `M${ax} ${ay} V${upper} H${gutter} V460 H${bx} V${by}`;
-          lx = (gutter + bx) / 2;
-          ly = 451;
-        } else {
-          path = `M${ax} ${ay} V${mid} H${bx} V${by}`;
-          lx = ax === bx ? ax + 55 : (ax + bx) / 2;
-          ly = ax === bx ? (ay + by) / 2 : mid - 8;
-        }
+        const x = cx(a),
+          dn = cy(b) > cy(a);
+        pts = [
+          [x, dn ? a.y + a.h : a.y],
+          [x, dn ? b.y : b.y + b.h],
+        ];
       }
-      return `<path class="edge ${e.optional ? "optional" : ""} ${e.from === selected || e.to === selected ? "active" : ""}" d="${path}"/><rect x="${lx - e.label.length * 3.3 - 5}" y="${ly - 12}" width="${e.label.length * 6.6 + 10}" height="17" rx="2" fill="#f1f3ee"/><text class="edge-label" x="${lx}" y="${ly}">${esc(e.label)}</text>`;
-    })
+    } else {
+      const { a, b, vertical, sa, sb } = r;
+      const pa = offsets[i + "a"],
+        pb = offsets[i + "b"];
+      if (vertical) {
+        const ya = sa === "bottom" ? a.y + a.h : a.y,
+          yb = sb === "top" ? b.y : b.y + b.h,
+          mid = (ya + yb) / 2;
+        pts = [
+          [pa, ya],
+          [pa, mid],
+          [pb, mid],
+          [pb, yb],
+        ];
+      } else {
+        const xa = sa === "right" ? a.x + a.w : a.x,
+          xb = sb === "left" ? b.x : b.x + b.w,
+          mid = (xa + xb) / 2;
+        pts = [
+          [xa, pa],
+          [mid, pa],
+          [mid, pb],
+          [xb, pb],
+        ];
+      }
+    }
+    // Label on the longest segment.
+    let best = 0,
+      lx = 0,
+      ly = 0;
+    for (let k = 1; k < pts.length; k++) {
+      const len = Math.hypot(pts[k][0] - pts[k - 1][0], pts[k][1] - pts[k - 1][1]);
+      if (len > best) {
+        best = len;
+        lx = (pts[k][0] + pts[k - 1][0]) / 2;
+        ly = (pts[k][1] + pts[k - 1][1]) / 2;
+      }
+    }
+    return { pts, lx, ly };
+  });
+}
+
+function edgeMarkup(e: Edge, r: { pts: [number, number][]; lx: number; ly: number }) {
+  const d = "M" + r.pts.map(([x, y]) => `${x} ${y}`).join(" L");
+  const tech = e.tech ? `[${e.tech}]` : "";
+  const wide = Math.max(e.label.length * 6.9, tech.length * 6.1) + 14;
+  const tall = tech ? 34 : 20;
+  const active = e.from === selected || e.to === selected;
+  return `<g class="c4-edge ${e.optional ? "optional" : ""} ${active ? "active" : ""}"><path d="${d}"/>${
+    e.label
+      ? `<rect class="l-bg" x="${r.lx - wide / 2}" y="${r.ly - tall / 2}" width="${wide}" height="${tall}" rx="3"/><text class="l-main" x="${r.lx}" y="${r.ly + (tech ? -3 : 4)}">${esc(e.label)}</text>${tech ? `<text class="l-tech" x="${r.lx}" y="${r.ly + 12}">${esc(tech)}</text>` : ""}`
+      : ""
+  }</g>`;
+}
+
+function renderFocus() {
+  const keys = levelGraphs(level);
+  const box = $("#component-selector");
+  box.hidden = keys.length < 2;
+  box.innerHTML =
+    `<span>Фокус:</span>` +
+    keys
+      .map(
+        (k) =>
+          `<button type="button" data-focus="${k}" aria-pressed="${k === graphKey()}">${esc(graphs[k].focus ?? k)}</button>`,
+      )
+      .join("");
+}
+
+function renderDiagram() {
+  const g = graph();
+  if (!g.nodes.some((n) => n.id === selected)) selected = g.nodes[0].id;
+  $("#diagram-title").textContent = g.title;
+  $("#diagram-counter").textContent = `C${levels.indexOf(level) + 1} / 4`;
+  $("#diagram-caption").textContent = g.caption;
+  $("#diagram-panel").setAttribute("aria-labelledby", "tab-" + level);
+  svg.setAttribute("viewBox", `0 0 ${g.width} ${g.height}`);
+  svg.setAttribute("aria-label", g.title + ". Блоки можно выбрать клавишей Enter.");
+  const boundaries = (g.boundaries ?? [])
+    .map(
+      (bd) =>
+        `<g class="c4-boundary"><rect x="${bd.x}" y="${bd.y}" width="${bd.w}" height="${bd.h}" rx="10"/><text class="b-title" x="${bd.x + 16}" y="${bd.y + bd.h - 30}">${esc(bd.label)}</text><text class="b-sub" x="${bd.x + 16}" y="${bd.y + bd.h - 12}">[${esc(bd.sub)}]</text></g>`,
+    )
     .join("");
-  const nodeMarkup = graph.nodes
-    .map((n) => {
-      const d = nodes[n.id],
-        isAgent = /LLM|Vision|Внешняя система/.test(d.type),
-        isStore = /Хранилище/.test(d.type),
-        title = wrapText(d.title, 18),
-        sub = wrapText(d.sub, 29);
-      return `<g class="node ${isAgent ? "agent" : ""} ${isStore ? "store" : ""} ${n.id === selected ? "selected" : ""}" transform="translate(${n.x},${n.y})" role="button" tabindex="0" aria-label="${esc(d.title)}: ${esc(d.type)}" aria-pressed="${n.id === selected}" data-node="${n.id}" style="cursor:pointer"><rect width="220" height="126" rx="4"/><text class="node-type" x="16" y="23">${esc(d.type.replace("Компонент · ", "").replace("Контейнер · ", "").replace("Код · ", ""))}</text>${title.map((t, j) => `<text class="node-title" x="16" y="${52 + j * 23}">${esc(t)}</text>`).join("")}${sub
-        .slice(0, 2)
-        .map(
-          (t, j) =>
-            `<text class="node-sub" x="16" y="${title.length > 1 ? 98 + j * 13 : 85 + j * 13}">${esc(t)}</text>`,
-        )
-        .join("")}<text class="node-corner" x="194" y="24">↗</text></g>`;
-    })
-    .join("");
+  const routes = plan(g);
   content.innerHTML =
-    (graph.boundary
-      ? `<rect class="boundary" x="19" y="47" width="984" height="584" rx="7"/><text class="boundary-label" x="38" y="67">${esc(graph.boundary)}</text>`
-      : "") +
-    edgeMarkup +
-    nodeMarkup;
-  $("#node-index").innerHTML = graph.nodes
+    boundaries +
+    g.edges.map((e, i) => edgeMarkup(e, routes[i])).join("") +
+    g.nodes.map(nodeMarkup).join("");
+  $("#node-index").innerHTML = g.nodes
     .map(
       (n) =>
         `<button data-node="${n.id}" aria-pressed="${n.id === selected}">${esc(nodes[n.id].title)}</button>`,
@@ -162,10 +379,7 @@ function renderDiagram() {
     b.setAttribute("aria-selected", String(b.dataset.level === level));
     b.tabIndex = b.dataset.level === level ? 0 : -1;
   });
-  $("#component-selector").hidden = level !== "components";
-  $$("[data-focus]").forEach((b) =>
-    b.setAttribute("aria-pressed", String(b.dataset.focus === focus)),
-  );
+  renderFocus();
 }
 function renderInspector() {
   const d = nodes[selected];
@@ -173,13 +387,16 @@ function renderInspector() {
     `<p class="eyebrow">${esc(d.type)}</p><h3>${esc(d.title)}</h3><p class="inspector-description">${esc(d.description)}</p><dl><dt>НА ВХОДЕ</dt>${d.inputs.map((s) => `<dd>${esc(s)}</dd>`).join("")}<dt>НА ВЫХОДЕ</dt>${d.outputs.map((s) => `<dd>${esc(s)}</dd>`).join("")}</dl>${d.storage ? `<p class="storage-ref">${esc(d.storage)}</p>` : ""}<p class="eyebrow" style="margin:22px 0 0">ОСНОВАНИЕ В КОДЕ</p>${sourceLinks(d.sources)}`;
 }
 function updateTransform() {
+  const g = graph();
+  const mx = g.width / 2,
+    my = g.height / 2;
   content.setAttribute(
     "transform",
-    `translate(${panX} ${panY}) translate(510 332.5) scale(${zoom}) translate(-510 -332.5)`,
+    `translate(${panX} ${panY}) translate(${mx} ${my}) scale(${zoom}) translate(${-mx} ${-my})`,
   );
   $("#zoom-label").textContent = Math.round(zoom * 100) + "%";
   $("#zoom-out").toggleAttribute("disabled", zoom <= 0.6);
-  $("#zoom-in").toggleAttribute("disabled", zoom >= 2.2);
+  $("#zoom-in").toggleAttribute("disabled", zoom >= 2.4);
 }
 function resetView() {
   zoom = 1;
@@ -215,7 +432,7 @@ document.addEventListener("click", (e) => {
     updateUrl();
   }
   if (target.dataset.focus) {
-    focus = target.dataset.focus;
+    focusByLevel[level] = target.dataset.focus;
     resetView();
     renderDiagram();
     updateUrl();
@@ -242,7 +459,7 @@ svg.addEventListener("pointerdown", (e) => {
 });
 svg.addEventListener("pointermove", (e) => {
   if (!drag) return;
-  const scale = 1020 / svg.getBoundingClientRect().width;
+  const scale = graph().width / svg.getBoundingClientRect().width;
   panX = drag.px + (e.clientX - drag.x) * scale;
   panY = drag.py + (e.clientY - drag.y) * scale;
   updateTransform();
@@ -250,7 +467,7 @@ svg.addEventListener("pointermove", (e) => {
 svg.addEventListener("pointerup", () => (drag = null));
 svg.addEventListener("pointercancel", () => (drag = null));
 $("#zoom-in").addEventListener("click", () => {
-  zoom = Math.min(2.2, Math.round((zoom + 0.2) * 10) / 10);
+  zoom = Math.min(2.4, Math.round((zoom + 0.2) * 10) / 10);
   updateTransform();
 });
 $("#zoom-out").addEventListener("click", () => {
@@ -313,15 +530,16 @@ function download(blob: Blob, name: string) {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 $("#download-svg").addEventListener("click", () => {
+  const g = graph();
   const clone = svg.cloneNode(true) as SVGSVGElement;
   clone.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-  clone.setAttribute("width", "1020");
-  clone.setAttribute("height", "665");
+  clone.setAttribute("width", String(g.width));
+  clone.setAttribute("height", String(g.height));
   clone.querySelector("#diagram-content")?.removeAttribute("transform");
   const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-  rect.setAttribute("width", "1020");
-  rect.setAttribute("height", "665");
-  rect.setAttribute("fill", "#f1f3ee");
+  rect.setAttribute("width", String(g.width));
+  rect.setAttribute("height", String(g.height));
+  rect.setAttribute("fill", "#f6f7f4");
   clone.insertBefore(rect, clone.firstChild);
   download(
     new Blob([new XMLSerializer().serializeToString(clone)], {
@@ -381,9 +599,12 @@ function renderStorage() {
       "drawing_mass",
       "quality_control_ids",
       "drawing_quantity",
+      "envelope",
       "dimensions",
       "geometry_relations",
       "features",
+      "geometry_description",
+      "geometry_mentions",
       "views",
       "roughness",
       "general_tolerances",
@@ -503,10 +724,8 @@ function restoreUrl() {
   const params = new URLSearchParams(hash),
     key = params.get("c4");
   if (key && graphs[key]) {
-    if (["recognition", "selection", "routing", "materials"].includes(key)) {
-      level = "components";
-      focus = key;
-    } else level = key;
+    level = graphs[key].level;
+    if (levelGraphs(level).length > 1) focusByLevel[level] = key;
     const node = params.get("node");
     if (node && graphs[key].nodes.some((n) => n.id === node)) selected = node;
     resetView();
