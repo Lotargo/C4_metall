@@ -1,0 +1,33 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["commit_sha", "sites", "github"],
+  "properties": {
+    "commit_sha": { "type": ["string", "null"] },
+    "sites": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "commit_sha", "url", "version_id", "deployment_id", "error"],
+      "properties": {
+        "status": { "type": "string", "enum": ["succeeded", "failed", "pending", "skipped"] },
+        "commit_sha": { "type": ["string", "null"] },
+        "url": { "type": ["string", "null"] },
+        "version_id": { "type": ["string", "null"] },
+        "deployment_id": { "type": ["string", "null"] },
+        "error": { "type": ["string", "null"] }
+      }
+    },
+    "github": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "commit_sha", "url", "run_url", "error"],
+      "properties": {
+        "status": { "type": "string", "enum": ["succeeded", "failed", "pending", "skipped"] },
+        "commit_sha": { "type": ["string", "null"] },
+        "url": { "type": ["string", "null"] },
+        "run_url": { "type": ["string", "null"] },
+        "error": { "type": ["string", "null"] }
+      }
+    }
+  }
+}
