@@ -1,4 +1,5 @@
 ---
+import { sitePath } from '../utils/site-path.mjs';
 import screenshots from '../data/screenshots.json';
 import voksaScreens from '../data/voksa-screens.json';
 import { evidenceLevels, headlines, pipeline, knowledgeSources, roles, priceChecks, timeBranches, reviewNotes, shared, comparison, pairs, adoptStatus, adoption, notAdopted, roadmap, scope } from '../data/voksa.mjs';
@@ -26,15 +27,15 @@ const statusCount = (s) => adoption.filter((a) => a.status === s).length;
   <meta property="og:title" content="ВоксаТех под капотом — разбор и сравнение подходов" />
   <meta property="og:description" content="Как устроена ВоксаТех, чем отличается наш подход и что мы переносим к себе." />
   <meta property="og:type" content="website" />
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" type="image/svg+xml" href={sitePath('/favicon.svg')} />
 </head>
 <body class="voksa-page">
   <a class="skip-link" href="#main">Перейти к содержанию</a>
   <header class="site-header">
     <div class="wrap header-inner">
-      <a class="brand" href="/"><span class="brand-mark" aria-hidden="true">ПП</span><span>Подготовка<br/>производства</span></a>
+      <a class="brand" href={sitePath('/')}><span class="brand-mark" aria-hidden="true">ПП</span><span>Подготовка<br/>производства</span></a>
       <nav aria-label="Разделы разбора"><a href="#how">Устройство</a><a href="#roles">Модель и код</a><a href="#math">Расчёты</a><a href="#compare">Сравнение</a><a href="#adopt">Что перенять</a></nav>
-      <a class="audience-link" href="/">К презентации <span aria-hidden="true">↗</span></a>
+      <a class="audience-link" href={sitePath('/')}>К презентации <span aria-hidden="true">↗</span></a>
       <button class="secondary-button presentation-trigger" id="start-presentation" aria-pressed="false">Режим показа <span aria-hidden="true">↗</span></button>
     </div>
   </header>
@@ -51,7 +52,7 @@ const statusCount = (s) => adoption.filter((a) => a.status === s).length;
           </div>
           <figure class="hero-figure">
             <div class="figure-heading"><span>Кабинет ВоксаТех</span><span>Снимок от {hero.date}</span></div>
-            <button class="screenshot-button" data-image={hero.id} aria-label={'Увеличить скриншот: ' + hero.title}><img src={hero.file} width={hero.width} height={hero.height} alt="Паспорт детали в ВоксаТех: плитки типов обработки и заготовки, материал из штампа и мини-копия чертежа" fetchpriority="high" /></button>
+            <button class="screenshot-button" data-image={hero.id} aria-label={'Увеличить скриншот: ' + hero.title}><img src={sitePath(hero.file)} width={hero.width} height={hero.height} alt="Паспорт детали в ВоксаТех: плитки типов обработки и заготовки, материал из штампа и мини-копия чертежа" fetchpriority="high" /></button>
             <figcaption>Паспорт синтетического контрольного вала ждёт утверждения инженером. Тип обработки и заготовки выбирается плитками; материал взят из штампа.</figcaption>
           </figure>
         </div>
@@ -76,19 +77,19 @@ const statusCount = (s) => adoption.filter((a) => a.status === s).length;
         <article class="role-column code"><p class="eyebrow">Программа</p><h3>Разбирает, считает и выгружает</h3><ul>{roles.code.map((r) => <li>{r}</li>)}</ul></article>
       </div>
       <div class="boundary-note"><h3>Где граница размыта</h3><p>Код получает от модели способ установки, число переходов, инструмент и вид операции. В обычной станочной ветви итоговое штучное время — большее из расчёта кода и оценки модели. Шесть описанных стадий не означают шесть агентов: число агентов, модели и промпты не раскрыты.</p></div>
-      <figure class="inline-shot"><button class="screenshot-button" data-image="v-surfaces" aria-label={'Увеличить: ' + shots['v-surfaces'].title}><img src={shots['v-surfaces'].file} width={shots['v-surfaces'].width} height={shots['v-surfaces'].height} alt={shots['v-surfaces'].title} loading="lazy" /></button><figcaption><b>Как это видно в паспорте.</b> Координаты Z канавки на чертеже нет — модель пересчитала их из других размеров и пометила строку «расчёт» с пояснением. Инженеру предлагают сверить её с листом. Снимок от {shots['v-surfaces'].date}.</figcaption></figure>
+      <figure class="inline-shot"><button class="screenshot-button" data-image="v-surfaces" aria-label={'Увеличить: ' + shots['v-surfaces'].title}><img src={sitePath(shots['v-surfaces'].file)} width={shots['v-surfaces'].width} height={shots['v-surfaces'].height} alt={shots['v-surfaces'].title} loading="lazy" /></button><figcaption><b>Как это видно в паспорте.</b> Координаты Z канавки на чертеже нет — модель пересчитала их из других размеров и пометила строку «расчёт» с пояснением. Инженеру предлагают сверить её с листом. Снимок от {shots['v-surfaces'].date}.</figcaption></figure>
     </div></section>
 
     <section class="chapter section wash" id="math" data-chapter="Расчёты"><div class="wrap">
       <div class="section-heading"><div><p class="eyebrow">03 / Проверенная арифметика</p><h2>Числа сходятся.<br/>Основания — не всегда.</h2></div><p class="section-intro">Мы пересчитали массы, раскрой прутка, время партии и цену независимо от сервиса. Явных арифметических расхождений не нашли. Это проверка чисел при заданных предпосылках, а не технологии.</p></div>
       <div class="calc-layout">
         <div class="calc-sheet"><p class="eyebrow">Пример: заготовка из прутка</p><h3>Цена учитывает весь пруток, а не только отрезок.</h3><dl><div><dt>Пруток</dt><dd>Ø23 × 6000 мм · 19,569 кг</dd></div><div><dt>Отрезок и пропил</dt><dd>107 + 1,5 = 108,5 мм</dd></div><div><dt>Заготовок из прутка</dt><dd>⌊6000 / 108,5⌋ = 55</dd></div><div><dt>Некратный остаток</dt><dd>6000 − 55 × 108,5 = 32,5 мм</dd></div><div><dt>Металл в цене детали</dt><dd>19,569 / 55 ≈ 0,3558 кг</dd></div><div><dt>Масса самого отрезка</dt><dd>≈ 0,3490 кг</dd></div></dl><p class="caption">Пропил и остаток распределены на детали. Плотность 7850 кг/м³ восстановлена по числам ответа.</p></div>
-        <figure class="inline-shot"><button class="screenshot-button" data-image="v-stock" aria-label={'Увеличить: ' + shots['v-stock'].title}><img src={shots['v-stock'].file} width={shots['v-stock'].width} height={shots['v-stock'].height} alt={shots['v-stock'].title} loading="lazy" /></button><figcaption>Назначенная чертежом поковка Ø90 × 310 и рассчитанная альтернатива 87 × 87 × 315 стоят рядом. Назначение имеет приоритет. Снимок от {shots['v-stock'].date}.</figcaption></figure>
+        <figure class="inline-shot"><button class="screenshot-button" data-image="v-stock" aria-label={'Увеличить: ' + shots['v-stock'].title}><img src={sitePath(shots['v-stock'].file)} width={shots['v-stock'].width} height={shots['v-stock'].height} alt={shots['v-stock'].title} loading="lazy" /></button><figcaption>Назначенная чертежом поковка Ø90 × 310 и рассчитанная альтернатива 87 × 87 × 315 стоят рядом. Назначение имеет приоритет. Снимок от {shots['v-stock'].date}.</figcaption></figure>
       </div>
       <div class="table-scroll checks-table"><table><caption>Одиннадцать сверок: вход, ответ ВоксаТех и вывод нашей проверки</caption><thead><tr><th scope="col">Проверка</th><th scope="col">Ответ ВоксаТех</th><th scope="col">Что подтверждено</th></tr></thead><tbody>{priceChecks.map((r) => <tr><th scope="row">{r[0]}</th><td class="num" data-label="Ответ ВоксаТех">{r[1]}</td><td data-label="Что подтверждено">{r[2]}</td></tr>)}</tbody></table></div>
       <div class="formula-layout">
         <div><p class="eyebrow">Нормирование по руководству</p><h3>Время складывается из составляющих.</h3><div class="formula" role="group" aria-label="Формулы нормирования"><p>Тшт<sub>код</sub> = (То + Тв) × (1 + (a + b) / 100)</p><p>Тв = установка + смена инструмента + измерения + управление</p><p>Тшт = max(Тшт<sub>код</sub>, Тшт<sub>модели</sub>)</p><p>Работы = Σ ставка / 60 × (Тшт + Тпз / партия)</p><p>Время партии = партия × ΣТшт + ΣТпз</p></div><p class="caption">То — машинное время от модели; a и b — отдых и обслуживание в процентах. Формула с max относится к обычной станочной ветви.</p></div>
-        <figure class="inline-shot"><button class="screenshot-button" data-image="v-price" aria-label={'Увеличить: ' + shots['v-price'].title}><img src={shots['v-price'].file} width={shots['v-price'].width} height={shots['v-price'].height} alt={shots['v-price'].title} loading="lazy" /></button><figcaption>Готовый пример «Плита»: себестоимость, накладные 20 %, наценка 30 % и объяснение, как партия распределяет наладку. Снимок от {shots['v-price'].date}.</figcaption></figure>
+        <figure class="inline-shot"><button class="screenshot-button" data-image="v-price" aria-label={'Увеличить: ' + shots['v-price'].title}><img src={sitePath(shots['v-price'].file)} width={shots['v-price'].width} height={shots['v-price'].height} alt={shots['v-price'].title} loading="lazy" /></button><figcaption>Готовый пример «Плита»: себестоимость, накладные 20 %, наценка 30 % и объяснение, как партия распределяет наладку. Снимок от {shots['v-price'].date}.</figcaption></figure>
       </div>
       <details class="bounded-detail"><summary>Разные ветви нормирования <span aria-hidden="true">+</span></summary><div class="table-scroll"><table><caption>Формула выше не универсальна: у части операций время задаёт модель целиком.</caption><thead><tr><th scope="col">Ветвь</th><th scope="col">Роль модели и кода</th></tr></thead><tbody>{timeBranches.map((r) => <tr><th scope="row">{r[0]}</th><td>{r[1]}</td></tr>)}</tbody></table></div></details>
       <h3 class="subhead">Где арифметика верна, а основание спорно</h3>
@@ -102,7 +103,7 @@ const statusCount = (s) => adoption.filter((a) => a.status === s).length;
       <h3 class="subhead">Одна задача — два интерфейса</h3>
       <div class="pair-tabs tabs" role="tablist" aria-label="Сравнение экранов">{pairs.map((p, i) => <button role="tab" data-pair={p.id} aria-selected={i === 0 ? 'true' : 'false'} id={'pair-tab-' + p.id} aria-controls={'pair-panel-' + p.id} tabindex={i === 0 ? 0 : -1}>{p.label}</button>)}</div>
       {pairs.map((p, i) => <article class="pair-panel" id={'pair-panel-' + p.id} role="tabpanel" aria-labelledby={'pair-tab-' + p.id} hidden={i !== 0}>
-        {[['ВоксаТех', shots[p.voksaImage], p.voksa, 'voksa'], ['Подготовка производства', shots[p.oursImage], p.ours, 'ours']].map(([label, s, text, side]) => <figure class:list={['pair-side', side]}><figcaption class="pair-label">{label}</figcaption><button class="screenshot-button" data-image={s.id} aria-label={'Увеличить: ' + s.title}><img src={s.file} width={s.width} height={s.height} alt={s.title} loading="lazy" style={s.focusY ? 'object-position:center ' + s.focusY : undefined} /></button><p>{text}</p><p class="caption">Снимок от {s.date}. {s.note}</p></figure>)}
+        {[['ВоксаТех', shots[p.voksaImage], p.voksa, 'voksa'], ['Подготовка производства', shots[p.oursImage], p.ours, 'ours']].map(([label, s, text, side]) => <figure class:list={['pair-side', side]}><figcaption class="pair-label">{label}</figcaption><button class="screenshot-button" data-image={s.id} aria-label={'Увеличить: ' + s.title}><img src={sitePath(s.file)} width={s.width} height={s.height} alt={s.title} loading="lazy" style={s.focusY ? 'object-position:center ' + s.focusY : undefined} /></button><p>{text}</p><p class="caption">Снимок от {s.date}. {s.note}</p></figure>)}
       </article>)}
       <p class="chapter-footnote">Экраны относятся к разным чертежам: у ВоксаТех — контрольный вал и готовые примеры, у нас — рабочие запуски. Это сравнение представления данных, а не точности распознавания.</p>
     </div></section>
@@ -121,7 +122,7 @@ const statusCount = (s) => adoption.filter((a) => a.status === s).length;
         <div><h3>Что сделано в разведке</h3><ul class="fact-list">{scope.done.map((s) => <li>{s}</li>)}</ul></div>
         <div><h3>Чего мы не делали</h3><ul class="fact-list">{scope.notDone.map((s) => <li>{s}</li>)}</ul></div>
       </div>
-      <div class="business-conclusion"><h3>Итог</h3><p>ВоксаТех сильна полнотой коммерческого результата: технолог сразу видит переходы, нормы и цену. «Подготовка производства» сильнее в проверяемости исходных фактов и истории решений. Мы переносим механизмы, которые проходят нашу проверку пользы: явную структуру поверхностей, происхождение каждого числа, разложение времени и раздельный пересчёт цены.</p><p class="caption">Разбор по материалам 12–13 октября 2026 и плану внедрения на вечер 13 октября. Снимки ВоксаТех обрезаны до рабочей области: шапка аккаунта не публикуется, пиксели не ретушировались.</p><div class="conclusion-links"><a class="secondary-button" href="/">Презентация продукта ↗</a><a class="secondary-button" href="/it/" target="_blank" rel="noopener">Технический разбор для IT ↗</a></div></div>
+      <div class="business-conclusion"><h3>Итог</h3><p>ВоксаТех сильна полнотой коммерческого результата: технолог сразу видит переходы, нормы и цену. «Подготовка производства» сильнее в проверяемости исходных фактов и истории решений. Мы переносим механизмы, которые проходят нашу проверку пользы: явную структуру поверхностей, происхождение каждого числа, разложение времени и раздельный пересчёт цены.</p><p class="caption">Разбор по материалам 12–13 октября 2026 и плану внедрения на вечер 13 октября. Снимки ВоксаТех обрезаны до рабочей области: шапка аккаунта не публикуется, пиксели не ретушировались.</p><div class="conclusion-links"><a class="secondary-button" href={sitePath('/')}>Презентация продукта ↗</a><a class="secondary-button" href={sitePath('/it/')} target="_blank" rel="noopener">Технический разбор для IT ↗</a></div></div>
     </div></section>
   </main>
   <footer><div class="wrap footer-inner"><span>Подготовка производства / Разбор ВоксаТех</span><span>Материалы 12–13 октября 2026</span><a href="#top">Наверх ↑</a></div></footer>

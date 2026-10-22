@@ -1,4 +1,5 @@
 ---
+import { sitePath } from '../utils/site-path.mjs';
 import productScreens from '../data/screenshots.json';
 import cycleScreens from '../data/cycle-screens.json';
 import { recognitionPhases, geometryColumns } from '../data/presentation.mjs';
@@ -34,7 +35,7 @@ const skillChars = ['rotational', 'sheet-metal', 'weldment'].reduce((sum, k) => 
   <meta property="og:title" content="Подготовка производства — от чертежа до сметы" />
   <meta property="og:description" content="Команда ИИ-агентов читает чертёж, строит маршрут и оценивает время; программа проверяет ответы и считает смету; технолог принимает решения." />
   <meta property="og:type" content="website" />
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" type="image/svg+xml" href={sitePath('/favicon.svg')} />
 </head>
 <body>
   <a class="skip-link" href="#main">Перейти к содержанию</a>
@@ -42,9 +43,9 @@ const skillChars = ['rotational', 'sheet-metal', 'weldment'].reduce((sum, k) => 
     <div class="wrap header-inner">
       <a class="brand" href="#top"><span class="brand-mark" aria-hidden="true">ПП</span><span>Подготовка<br/>производства</span></a>
       <nav aria-label="Разделы"><a href="#pipeline">Процесс</a><a href="#agents">Агенты</a><a href="#instructions">Инструкции</a><a href="#recognition">Чтение</a><a href="#data">Данные</a></nav>
-      <a class="audience-link" href="/it/" target="_blank" rel="noopener" aria-label="Для IT-специалистов — в новой вкладке">Для IT <span aria-hidden="true">↗</span></a>
-      <a class="audience-link plan-link" href="/plan/" target="_blank" rel="noopener" aria-label="Общий план — в новой вкладке"><span class="wide-label">Общий </span>план <span aria-hidden="true">↗</span></a>
-      <a class="audience-link voksa-link" href="/voksa/" target="_blank" rel="noopener" aria-label="Разбор ВоксаТех — в новой вкладке"><span class="wide-label">Разбор </span>ВоксаТех <span aria-hidden="true">↗</span></a>
+      <a class="audience-link" href={sitePath('/it/')} target="_blank" rel="noopener" aria-label="Для IT-специалистов — в новой вкладке">Для IT <span aria-hidden="true">↗</span></a>
+      <a class="audience-link plan-link" href={sitePath('/plan/')} target="_blank" rel="noopener" aria-label="Общий план — в новой вкладке"><span class="wide-label">Общий </span>план <span aria-hidden="true">↗</span></a>
+      <a class="audience-link voksa-link" href={sitePath('/voksa/')} target="_blank" rel="noopener" aria-label="Разбор ВоксаТех — в новой вкладке"><span class="wide-label">Разбор </span>ВоксаТех <span aria-hidden="true">↗</span></a>
       <button class="secondary-button presentation-trigger" id="start-presentation" aria-pressed="false">Режим показа <span aria-hidden="true">↗</span></button>
     </div>
   </header>
@@ -61,7 +62,7 @@ const skillChars = ['rotational', 'sheet-metal', 'weldment'].reduce((sum, k) => 
           </div>
           <figure class="hero-figure">
             <div class="figure-heading"><span>Рабочий интерфейс</span><a href="#screens">{screenshots.length} экранов продукта <span aria-hidden="true">↗</span></a></div>
-            <button class="screenshot-button" data-image={hero.id} aria-label={'Увеличить скриншот: ' + hero.title}><img src={hero.file} width={hero.width} height={hero.height} alt="Рабочее пространство: исходный чертёж с зонами распознавания и инженерный паспорт рядом" fetchpriority="high" /></button>
+            <button class="screenshot-button" data-image={hero.id} aria-label={'Увеличить скриншот: ' + hero.title}><img src={sitePath(hero.file)} width={hero.width} height={hero.height} alt="Рабочее пространство: исходный чертёж с зонами распознавания и инженерный паспорт рядом" fetchpriority="high" /></button>
             <figcaption>{hero.title}: технолог сверяет паспорт с исходным листом. Скриншот интерфейса от {hero.date}.</figcaption>
           </figure>
         </div>
@@ -133,7 +134,7 @@ const skillChars = ['rotational', 'sheet-metal', 'weldment'].reduce((sum, k) => 
         <p class="instr-lead">Тексты скопированы из продукта без правок — именно их получают агенты. Часть написана на английском: модели одинаково понимают оба языка, а служебные правила по-английски короче. Для масштаба: страница книги — около 1 800 знаков.</p>
         <div class="agents-table instr-list">{instructions.map((it, i) => <details class="agent-row"><summary><span class="agent-number">{String(i + 1).padStart(2, '0')}</span><span class="agent-summary"><span class="agent-title">{it.agent}</span><span class="agent-name">{it.stage} · {kindLabel[it.kind]} · {chars(totalChars(it))} · {it.lang}</span></span><span class:list={['badge', 'kind-' + it.kind]}>{kindLabel[it.kind]}</span><span class="expand-mark" aria-hidden="true">+</span></summary><div class="agent-body">
           <dl class="instr-facts"><div><dt>Зачем нужна</dt><dd>{it.purpose}</dd></div><div><dt>Главные правила</dt><dd><ul>{it.rules.map((r) => <li>{r}</li>)}</ul></dd></div></dl>
-          <div class="instr-files"><span class="muted">Полный текст:</span>{it.files.map(([key, label]) => <span class="instr-file"><button type="button" class="secondary-button" data-instruction={key} data-label={it.agent + ' — ' + label}>{label} · {chars(files[key].chars)}</button><a href={files[key].file} download aria-label={'Скачать: ' + label}>Скачать</a></span>)}</div>
+          <div class="instr-files"><span class="muted">Полный текст:</span>{it.files.map(([key, label]) => <span class="instr-file"><button type="button" class="secondary-button" data-instruction={key} data-label={it.agent + ' — ' + label}>{label} · {chars(files[key].chars)}</button><a href={sitePath(files[key].file)} download aria-label={'Скачать: ' + label}>Скачать</a></span>)}</div>
         </div></details>)}</div>
       </div>
 
@@ -155,7 +156,7 @@ const skillChars = ['rotational', 'sheet-metal', 'weldment'].reduce((sum, k) => 
     <section class="chapter section wash" id="screens" data-chapter="Интерфейс"><div class="wrap">
       <div class="section-heading"><div><p class="eyebrow">05 / Интерфейс продукта</p><h2>Что видит<br/>технолог.</h2></div><p class="section-intro">Скриншоты реального интерфейса: паспорт, справочник, оборудование и цикл до сметы. Выберите экран и откройте его в полном размере.</p></div>
       <div class="screen-tabs tabs" role="tablist" aria-label="Скриншоты продукта">{screenshots.map((s, i) => <button role="tab" data-screen={s.id} aria-selected={i === 0 ? 'true' : 'false'} id={'screen-tab-' + s.id} aria-controls={'screen-panel-' + s.id} tabindex={i === 0 ? 0 : -1}>{s.title}</button>)}</div>
-      {screenshots.map((s, i) => <article class="screen-panel" id={'screen-panel-' + s.id} role="tabpanel" aria-labelledby={'screen-tab-' + s.id} hidden={i !== 0}><figure><button class:list={['screenshot-button', { 'crop-focus': !!s.focusY }]} data-image={s.id} aria-label={'Увеличить: ' + s.title}><img src={s.file} width={s.width} height={s.height} alt={s.title} loading="lazy" style={s.focusY ? 'object-position:center ' + s.focusY : undefined} /></button><figcaption>Скриншот от {s.date} · {s.note} <button class="text-button" data-image={s.id}>Открыть в полном размере ↗</button></figcaption></figure><div class="screen-story"><p class="eyebrow">Что здесь происходит</p><h3>{s.point}</h3><p>{s.text}</p></div></article>)}
+      {screenshots.map((s, i) => <article class="screen-panel" id={'screen-panel-' + s.id} role="tabpanel" aria-labelledby={'screen-tab-' + s.id} hidden={i !== 0}><figure><button class:list={['screenshot-button', { 'crop-focus': !!s.focusY }]} data-image={s.id} aria-label={'Увеличить: ' + s.title}><img src={sitePath(s.file)} width={s.width} height={s.height} alt={s.title} loading="lazy" style={s.focusY ? 'object-position:center ' + s.focusY : undefined} /></button><figcaption>Скриншот от {s.date} · {s.note} <button class="text-button" data-image={s.id}>Открыть в полном размере ↗</button></figcaption></figure><div class="screen-story"><p class="eyebrow">Что здесь происходит</p><h3>{s.point}</h3><p>{s.text}</p></div></article>)}
       <p class="chapter-footnote">Экраны скопированы из интерфейса продукта без редактирования. Паспорт — от 13 октября, справочник и оборудование — от 1 и 9 октября, цикл до сметы — от 22 октября, рабочая среда.</p>
     </div></section>
 
@@ -170,7 +171,7 @@ const skillChars = ['rotational', 'sheet-metal', 'weldment'].reduce((sum, k) => 
     <section class="chapter section wash" id="sources" data-chapter="Границы результата"><div class="wrap">
       <div class="section-heading"><div><p class="eyebrow">07 / Границы результата</p><h2>Система готовит смету.<br/>Технолог принимает решение.</h2></div><p class="section-intro">Цель цепочки — достаточная оценка, а не идеальная технология. Маршрут может быть неидеальным: его поправит технолог при производстве.</p></div>
       <div class="limits"><article><h3>Заготовка</h3><p>Назначение на чертеже, расчётная рекомендация и выбор технолога хранятся раздельно. Кривизна прутка — норматив стандарта, а не измерение конкретной партии. Основной сценарий — круглый прокат.</p></article><article><h3>Время и смета</h3><p>Время — расчётная оценка с обоснованием, а не цеховая норма. Цены и ставки задают люди. Если чего-то не хватает, смета частичная, а итог показан как «не определено».</p></article><article><h3>Качество чтения</h3><p>Паспорт помогает проверить результат по исходному листу. Неразборчивый чертёж — ограничение источника: такие места остаются неизвестными и правятся вручную.</p></article></div>
-      <div class="business-conclusion"><h3>Что получает заказчик</h3><p>Паспорт детали, обоснованный выбор заготовки, маршрут с проработкой операций, оценку времени и предварительную смету на деталь и партию. Каждая строка показывает, откуда она взялась; технолог может исправить любое звено, и история изменений сохранится.</p><p class="caption">Описание работы системы на 22 октября 2026. Скриншоты показывают интерфейс на подписанные даты. Производственная приёмка не заменяется автоматическим результатом.</p><div class="conclusion-links"><a class="secondary-button" href="/plan/" target="_blank" rel="noopener">Общий план: входящие данные ↗</a><a class="secondary-button" href="/it/" target="_blank" rel="noopener">Технический разбор для IT-специалистов ↗</a><a class="secondary-button" href="/voksa/" target="_blank" rel="noopener">Сравнение с ВоксаТех ↗</a></div></div>
+      <div class="business-conclusion"><h3>Что получает заказчик</h3><p>Паспорт детали, обоснованный выбор заготовки, маршрут с проработкой операций, оценку времени и предварительную смету на деталь и партию. Каждая строка показывает, откуда она взялась; технолог может исправить любое звено, и история изменений сохранится.</p><p class="caption">Описание работы системы на 22 октября 2026. Скриншоты показывают интерфейс на подписанные даты. Производственная приёмка не заменяется автоматическим результатом.</p><div class="conclusion-links"><a class="secondary-button" href={sitePath('/plan/')} target="_blank" rel="noopener">Общий план: входящие данные ↗</a><a class="secondary-button" href={sitePath('/it/')} target="_blank" rel="noopener">Технический разбор для IT-специалистов ↗</a><a class="secondary-button" href={sitePath('/voksa/')} target="_blank" rel="noopener">Сравнение с ВоксаТех ↗</a></div></div>
     </div></section>
   </main>
   <footer><div class="wrap footer-inner"><span>Подготовка производства</span><span>Описание работы · 22 октября 2026</span><a href="#top">Наверх ↑</a></div></footer>
@@ -178,7 +179,7 @@ const skillChars = ['rotational', 'sheet-metal', 'weldment'].reduce((sum, k) => 
   <dialog id="image-dialog" class="image-viewer" aria-labelledby="image-dialog-title"><div class="viewer-top"><div class="viewer-heading"><h2 id="image-dialog-title"></h2><p id="image-dialog-note" class="caption"></p></div><div class="viewer-tools" role="toolbar" aria-label="Масштаб изображения"><button type="button" class="diagram-button" id="image-zoom-out" aria-label="Уменьшить">−</button><output id="image-zoom-label" aria-live="polite">100%</output><button type="button" class="diagram-button" id="image-zoom-in" aria-label="Увеличить">+</button><button type="button" class="diagram-button" id="image-fit">Вписать</button><button type="button" class="diagram-button" id="image-actual">1:1</button><button type="button" class="close-button" id="close-image" aria-label="Закрыть скриншот"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button></div></div><div class="viewer-stage" id="image-stage"><img id="image-dialog-img" alt="" draggable="false"/></div><p class="caption viewer-hint">Колёсико мыши — масштаб к курсору · левая кнопка — перемещение · двойной щелчок — вписать / 100% · щелчок по пустому месту или Esc — закрыть.</p></dialog>
   <dialog id="text-dialog" class="text-dialog" aria-labelledby="text-dialog-title"><div class="dialog-top"><h2 id="text-dialog-title"></h2><button type="button" class="close-button" id="close-text" aria-label="Закрыть текст инструкции"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button></div><p id="text-dialog-note" class="caption"></p><pre id="text-dialog-body" tabindex="0"></pre><p class="caption"><a id="text-dialog-download" download>Скачать текст</a> · Текст показан без правок, в том виде, в каком его получает агент.</p></dialog>
   <div id="toast" role="status" aria-live="polite" hidden></div>
-  <noscript><p class="wrap">Для переключения шагов и скриншотов включите JavaScript. Технический разбор доступен на <a href="/it/">отдельной странице</a>.</p></noscript>
+  <noscript><p class="wrap">Для переключения шагов и скриншотов включите JavaScript. Технический разбор доступен на <a href={sitePath('/it/')}>отдельной странице</a>.</p></noscript>
   <script src="../scripts/presentation.ts"></script>
 </body>
 </html>

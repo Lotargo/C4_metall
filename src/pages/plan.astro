@@ -1,4 +1,5 @@
 ---
+import { sitePath } from '../utils/site-path.mjs';
 import planScreens from '../data/plan-screens.json';
 import { kinds, items, general } from '../data/plan.mjs';
 import Flow from '../components/Flow.astro';
@@ -33,16 +34,16 @@ const toc = { id: 'inputs', n: '1', title: 'Входящие данные', sub:
   <meta property="og:title" content="Общий план — входящие данные" />
   <meta property="og:description" content="Требования, поверхности, материал, заготовка, масса и база знаний «Станки»." />
   <meta property="og:type" content="website" />
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" type="image/svg+xml" href={sitePath('/favicon.svg')} />
 </head>
 <body class="plan-page">
   <a class="skip-link" href="#main">Перейти к содержанию</a>
   <header class="site-header">
     <div class="wrap header-inner">
-      <a class="brand" href="/"><span class="brand-mark" aria-hidden="true">ПП</span><span>Подготовка<br/>производства</span></a>
+      <a class="brand" href={sitePath('/')}><span class="brand-mark" aria-hidden="true">ПП</span><span>Подготовка<br/>производства</span></a>
       <span class="doc-header-title">Общий план · редакция от {edition}</span>
       <button class="secondary-button doc-print" id="print-doc" type="button">Печать / PDF</button>
-      <a class="audience-link" href="/">К презентации <span aria-hidden="true">↗</span></a>
+      <a class="audience-link" href={sitePath('/')}>К презентации <span aria-hidden="true">↗</span></a>
     </div>
   </header>
 
@@ -98,7 +99,7 @@ const toc = { id: 'inputs', n: '1', title: 'Входящие данные', sub:
           <ul class="result-list">{i.results.map((r) => <li>{r}</li>)}</ul>
 
           <h4>Как это выглядит</h4>
-          <div class="shot-grid">{i.shots.map((id, m) => { const s = shots[id]; return <figure class="plan-shot"><button class="screenshot-button" data-image={s.id} aria-label={'Увеличить скриншот: ' + s.title}><img src={s.file} width={s.width} height={s.height} alt={s.title} loading="lazy" /></button><figcaption><b>Рисунок {n}.{m + 1} — {s.title}.</b> {s.note} <span class="shot-date">Снимок от {s.date}.</span></figcaption></figure>; })}</div>
+          <div class="shot-grid">{i.shots.map((id, m) => { const s = shots[id]; return <figure class="plan-shot"><button class="screenshot-button" data-image={s.id} aria-label={'Увеличить скриншот: ' + s.title}><img src={sitePath(s.file)} width={s.width} height={s.height} alt={s.title} loading="lazy" /></button><figcaption><b>Рисунок {n}.{m + 1} — {s.title}.</b> {s.note} <span class="shot-date">Снимок от {s.date}.</span></figcaption></figure>; })}</div>
 
           <h4>Что не выполнено и почему</h4>
           <div class="doc-table-wrap">

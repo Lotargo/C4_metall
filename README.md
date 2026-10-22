@@ -93,9 +93,24 @@ Sites project ID сохранён в `.openai/hosting.json`; статическ�
 Токены публикации не сохраняются в репозитории. Исходники и пакет публикуются
 штатным Sites source helper, затем сохраняется версия и развёртывается лендинг.
 
-Перенос на другое статическое размещение требует только загрузки `dist/`.
-Для GitHub Pages на пути репозитория нужно настроить `base` в Astro и префикс
-публичных ссылок; для корня домена изменений не требуется.
+Второе размещение — [GitHub Pages](https://lotargo.github.io/C4_metall/).
+Workflow `.github/workflows/deploy-pages.yml` собирает и публикует `dist/`
+при push в `main`; доступен и ручной запуск через Actions. В настройках Pages
+выбран источник GitHub Actions. Workflow получает `SITE_URL` и `BASE_PATH`
+из настроек Pages; ссылки, изображения и загрузка инструкций используют этот путь.
+Без этих переменных сборка работает в корне домена, как на Sites.
+
+Для локальной сборки варианта GitHub Pages в PowerShell:
+
+```powershell
+$env:SITE_URL = 'https://lotargo.github.io'
+$env:BASE_PATH = '/C4_metall'
+npm run build
+Remove-Item Env:SITE_URL, Env:BASE_PATH
+```
+
+Перенос на другое статическое размещение требует загрузки `dist/`, собранной
+с нужными `SITE_URL` и `BASE_PATH`.
 
 ## Интерактивность
 

@@ -4,6 +4,7 @@ import voksaScreens from "../data/voksa-screens.json";
 import manifest from "../data/instructions-manifest.json";
 import "./shared";
 import { openImage } from "./image-viewer";
+import { sitePath } from "../utils/site-path.mjs";
 
 interface InstructionFile {
   file: string;
@@ -43,13 +44,13 @@ document.addEventListener("click", async (event) => {
   $("#text-dialog-title").textContent = button.dataset.label ?? "";
   $("#text-dialog-note").textContent =
     `${entry.chars.toLocaleString("ru-RU")} знаков · источник в продукте: ${entry.source}`;
-  $<HTMLAnchorElement>("#text-dialog-download").href = entry.file;
+  $<HTMLAnchorElement>("#text-dialog-download").href = sitePath(entry.file);
   const body = $("#text-dialog-body");
   body.textContent = "Загрузка…";
   textDialog.showModal();
   $("#close-text").focus();
   try {
-    const response = await fetch(entry.file);
+    const response = await fetch(sitePath(entry.file));
     if (!response.ok) throw new Error(String(response.status));
     body.textContent = await response.text();
     body.scrollTop = 0;

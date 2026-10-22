@@ -3,6 +3,8 @@
 // button pans a zoomed image, a double click toggles fit / 100%, and a click
 // on the empty area around the picture closes it.
 
+import { sitePath } from '../utils/site-path.mjs';
+
 export type ViewerImage = {
   file: string;
   title: string;
@@ -75,7 +77,7 @@ export function openImage(item: ViewerImage, from?: HTMLElement | null) {
   $("#image-dialog-title").textContent = item.title;
   $("#image-dialog-note").textContent =
     `Скриншот интерфейса от ${item.date}. ${item.note}`;
-  image.src = item.file;
+  image.src = sitePath(item.file);
   image.alt = item.title;
   image.width = item.width;
   image.height = item.height;
