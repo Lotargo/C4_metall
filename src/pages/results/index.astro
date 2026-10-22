@@ -1,0 +1,6 @@
+---
+import ResultsDocument from '../../components/ResultsDocument.astro';
+import { drawings } from '../../data/results.mjs';
+const drawing = drawings.find((entry) => entry.slug === 'drive-shaft') ?? drawings[0];
+---
+<ResultsDocument drawing={drawing} />

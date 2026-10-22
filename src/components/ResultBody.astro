@@ -1,0 +1,32 @@
+---
+import { sitePath } from '../utils/site-path.mjs';
+import { resultImageSize } from '../utils/results-images.mjs';
+const { content, tableName = 'Параметры' } = Astro.props;
+const hasTable = content.columns?.length && content.rows?.length;
+const longTable = hasTable && content.rows.length > 6;
+const TableWrapper = longTable ? 'details' : 'div';
+---
+{content.location && <p class="result-location">{content.location}</p>}
+{content.paragraphs?.map((paragraph) => <p>{paragraph}</p>)}
+{content.facts?.length > 0 && <dl class="result-facts">
+  {content.facts.map((fact) => <div><dt>{fact.label}</dt><dd><span class="fact-value">{fact.value}</span>{fact.note && <span class="fact-note">{fact.note}</span>}</dd></div>)}
+</dl>}
+{hasTable && <TableWrapper class="result-table-details">
+  {longTable && <summary>{`Все записи · ${content.rows.length}`}</summary>}
+  <div class="result-table-scroll" tabindex="0" role="region" aria-label={tableName}>
+    <table class="result-table">
+      <thead><tr>{content.columns.map((column) => <th scope="col">{column}</th>)}</tr></thead>
+      <tbody>{content.rows.map((row) => <tr>{row.map((cell, index) => index === 0 ? <th scope="row">{cell}</th> : <td>{cell}</td>)}</tr>)}</tbody>
+    </table>
+  </div>
+</TableWrapper>}
+{content.notes?.length > 0 && <ul class="result-notes">{content.notes.map((note) => <li>{note}</li>)}</ul>}
+{content.evidence?.length > 0 && <div class:list={['result-evidence', { 'evidence-pair': content.evidence.length === 2 }]}>
+  {content.evidence.map((evidence) => <figure>
+    <a class:list={['result-image-link', { 'preview-top': evidence.preview === 'top' }]} href={sitePath(evidence.src)} data-result-image data-caption={evidence.caption ?? evidence.alt} aria-label={'Увеличить: ' + evidence.alt}>
+      <img src={sitePath(evidence.src)} alt={evidence.alt} width={resultImageSize(evidence.src).width} height={resultImageSize(evidence.src).height} loading="lazy" decoding="async" />
+      <span class="result-image-hint" aria-hidden="true">Увеличить</span>
+    </a>
+    {evidence.caption && <figcaption>{evidence.caption}</figcaption>}
+  </figure>)}
+</div>}

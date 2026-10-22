@@ -1,0 +1,81 @@
+---
+import { sitePath } from '../utils/site-path.mjs';
+import { drawings, drawingPath } from '../data/results.mjs';
+import ResultBody from './ResultBody.astro';
+import '@fontsource/ibm-plex-sans/latin-400.css';
+import '@fontsource/ibm-plex-sans/latin-500.css';
+import '@fontsource/ibm-plex-sans/cyrillic-400.css';
+import '@fontsource/ibm-plex-sans/cyrillic-500.css';
+import '../styles/global.css';
+import '../styles/results.css';
+const { drawing } = Astro.props;
+---
+<!doctype html>
+<html lang="ru" class="results-document">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{drawing.title} — результаты чтения чертежа</title>
+  <meta name="description" content={drawing.summary} />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#f7f6f2" />
+  <link rel="icon" type="image/svg+xml" href={sitePath('/favicon.svg')} />
+</head>
+<body class="results-page">
+  <a class="skip-link" href="#main">Перейти к результату</a>
+  <header class="site-header results-header">
+    <div class="results-header-inner">
+      <a class="brand" href={sitePath('/')}><span class="brand-mark" aria-hidden="true">ПП</span><span>Подготовка<br/>производства</span></a>
+      <span class="results-header-title">Результаты чтения чертежей</span>
+      <a class="results-home" href={sitePath('/')}>К презентации</a>
+    </div>
+  </header>
+  <div class="results-layout">
+    <aside class="results-sidebar" aria-label="Навигация по результатам">
+      <details class="results-navigation" open>
+        <summary>Чертежи и содержание</summary>
+        <nav class="results-nav" aria-label="Чертежи">
+          <p class="results-nav-label">Чертежи</p>
+          <ul class="drawing-list">
+            {drawings.map((entry) => <li>
+              <a class:list={['drawing-link', { selected: entry.slug === drawing.slug }]} href={sitePath(drawingPath(entry))} aria-current={entry.slug === drawing.slug ? 'page' : undefined}>
+                <span>{entry.title}</span><small>{entry.designation}</small>
+              </a>
+              {entry.slug === drawing.slug && <ol class="result-toc">
+                {drawing.sections.map((section) => <li>
+                  <a href={'#' + section.id} data-result-toc={section.id}>{section.title}</a>
+                  {section.items?.length > 0 && <ol>{section.items.map((item) => <li><a href={'#' + item.id} data-result-toc={item.id}>{item.title}</a></li>)}</ol>}
+                </li>)}
+              </ol>}
+            </li>)}
+          </ul>
+        </nav>
+      </details>
+    </aside>
+    <main id="main" class="results-main">
+      <header class="result-title" id="top">
+        <p class="result-kicker">Результат чтения чертежа</p>
+        <h1>{drawing.title}</h1>
+        <p class="result-designation">{drawing.designation}</p>
+        <p class="result-intro">{drawing.summary}</p>
+      </header>
+      {drawing.sections.map((section) => <section class="result-section" id={section.id} data-result-anchor>
+        <h2>{section.title}</h2>
+        <ResultBody content={section} tableName={section.title} />
+        {section.items?.map((item) => <section class="result-item" id={item.id} data-result-anchor>
+          <h3>{item.title}</h3>
+          <ResultBody content={item} tableName={item.title} />
+        </section>)}
+      </section>)}
+      <footer class="results-footer"><a href="#top">К началу результата ↑</a></footer>
+    </main>
+  </div>
+  <dialog class="result-image-dialog" id="result-image-dialog" aria-labelledby="result-image-title" aria-describedby="result-image-caption">
+    <div class="result-image-toolbar"><h2 id="result-image-title">Изображение</h2><div class="result-image-sizing" aria-label="Размер изображения"><button type="button" id="result-image-fit" aria-pressed="true">Вписать</button><button type="button" id="result-image-width" aria-pressed="false">По ширине</button><button type="button" id="result-image-actual" aria-pressed="false">100%</button></div><button type="button" id="result-image-close" autofocus>Закрыть <span aria-hidden="true">×</span></button></div>
+    <p id="result-image-caption"></p>
+    <div class="result-image-stage"><img id="result-image-expanded" alt="" /></div>
+    <p class="result-image-help"><a id="result-image-original" href="" target="_blank" rel="noopener">Открыть изображение в отдельной вкладке ↗</a></p>
+  </dialog>
+  <script>import '../scripts/results.ts';</script>
+</body>
+</html>

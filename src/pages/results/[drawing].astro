@@ -1,0 +1,9 @@
+---
+import ResultsDocument from '../../components/ResultsDocument.astro';
+import { drawings } from '../../data/results.mjs';
+export function getStaticPaths() {
+  return drawings.map((drawing) => ({ params: { drawing: drawing.slug }, props: { drawing } }));
+}
+const { drawing } = Astro.props;
+---
+<ResultsDocument drawing={drawing} />
