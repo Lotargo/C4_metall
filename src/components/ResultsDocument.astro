@@ -2,6 +2,8 @@
 import { sitePath } from '../utils/site-path.mjs';
 import { drawings, drawingPath } from '../data/results.mjs';
 import ResultBody from './ResultBody.astro';
+import ThemeHead from './ThemeHead.astro';
+import ThemeToggle from './ThemeToggle.astro';
 import '@fontsource/ibm-plex-sans/latin-400.css';
 import '@fontsource/ibm-plex-sans/latin-500.css';
 import '@fontsource/ibm-plex-sans/cyrillic-400.css';
@@ -20,13 +22,16 @@ const { drawing } = Astro.props;
   <meta name="robots" content="noindex, nofollow" />
   <meta name="theme-color" content="#f7f6f2" />
   <link rel="icon" type="image/svg+xml" href={sitePath('/favicon.svg')} />
+  <ThemeHead />
 </head>
 <body class="results-page">
   <a class="skip-link" href="#main">Перейти к результату</a>
+  <ThemeToggle />
   <header class="site-header results-header">
     <div class="results-header-inner">
       <a class="brand" href={sitePath('/')}><span class="brand-mark" aria-hidden="true">ПП</span><span>Подготовка<br/>производства</span></a>
       <span class="results-header-title">Результаты чтения чертежей</span>
+      <a class="results-plan" href={sitePath('/implementation/')}>План реализации</a>
       <a class="results-home" href={sitePath('/')}>К презентации</a>
     </div>
   </header>

@@ -4,6 +4,8 @@ import data from '../data/evidence.json';
 import SourceLinks from '../components/SourceLinks.astro';
 import TechnicalAtlas from '../components/TechnicalAtlas.astro';
 import Flow from '../components/Flow.astro';
+import ThemeHead from '../components/ThemeHead.astro';
+import ThemeToggle from '../components/ThemeToggle.astro';
 import '@fontsource/ibm-plex-sans/latin-400.css';
 import '@fontsource/ibm-plex-sans/latin-500.css';
 import '@fontsource/ibm-plex-sans/cyrillic-400.css';
@@ -48,9 +50,11 @@ const lifecycle = {
   <meta name="description" content="Технический разбор: C4-архитектура, путь от загрузки до сметы, цикл D001, роли и инструкции, SQL-схемы и фрагменты исходников."/>
   <meta name="robots" content="noindex, nofollow"/><meta name="theme-color" content="#f7f6f2"/>
   <link rel="icon" type="image/svg+xml" href={sitePath('/favicon.svg')}/>
+  <ThemeHead />
 </head>
 <body class="technical-page">
   <a class="skip-link" href="#main">Перейти к содержанию</a>
+  <ThemeToggle />
   <header class="site-header"><div class="wrap header-inner"><a class="brand" href={sitePath('/')}><span class="brand-mark" aria-hidden="true">ПП</span><span>Подготовка<br/>производства</span></a><nav aria-label="Технические разделы"><a href="#architecture">C4</a><a href="#implementation">Исполнение</a><a href="#cycle">Цикл</a><a href="#agents">Роли</a><a href="#data">Данные</a></nav><a class="audience-link" href={sitePath('/')}>К презентации <span aria-hidden="true">↗</span></a></div></header>
   <main id="main">
     <section class="section"><div class="wrap"><p class="eyebrow">Для IT-специалистов</p><h1 class="technical-title">Реализация,<br/>данные и основания.</h1><p class="lead technical-lead">Схемы C4, путь исполнения от загрузки до сметы, контракты ролей, SQL-схемы и ссылки на точные фрагменты кода.</p><div class="audit-strip"><div><span>Снимок исходников</span><b>{date}</b></div><div><span>Ветка и коммит</span><b><code>{audit.branch} · {audit.head.slice(0,7)}</code></b></div><div><span>Доказательства</span><b>{audit.sourceCount} {plural(audit.sourceCount,'фрагмент','фрагмента','фрагментов')} · {audit.referencedFiles} {plural(audit.referencedFiles,'файл','файла','файлов')} · {tableCount} SQL-таблиц</b></div></div><p class="chapter-footnote">{audit.workingTree.startsWith('captured paths clean') ? 'Захваченные каталоги mvp/src/metall_mvp, mvp/instructions, mvp/skills, web/src и docs/agents совпадают с коммитом, незакоммиченных правок в них нет.' : 'Снимок включает незакоммиченные изменения.'} Описание подтверждает реализацию в коде; оно не является новым запуском модели, чтением рабочих баз или инженерной приёмкой.</p></div></section>

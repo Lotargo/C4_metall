@@ -1,0 +1,6 @@
+---
+import ImplementationDocument from '../../components/ImplementationDocument.astro';
+import { getImplementationDocuments } from '../../utils/documents';
+const documents = await getImplementationDocuments();
+---
+<ImplementationDocument documents={documents} document={documents[0]?.entry} />

@@ -1,0 +1,143 @@
+:root { color-scheme: light; }
+.theme-toggle {
+  position: fixed;
+  left: max(24px, env(safe-area-inset-left));
+  bottom: max(24px, env(safe-area-inset-bottom));
+  z-index: 50;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  min-height: 48px;
+  padding: 12px;
+  border: 1px solid var(--accent);
+  border-radius: 3px;
+  background: var(--surface);
+  color: var(--accent);
+  font-size: 15px;
+  line-height: 1.3;
+  box-shadow: 0 2px 12px rgb(38 45 43 / 12%);
+}
+.theme-toggle:hover { background: var(--accent-soft); }
+.theme-toggle svg { flex: none; }
+.theme-sun { display: none; }
+[data-theme='dark'] .theme-moon { display: none; }
+[data-theme='dark'] .theme-sun { display: block; }
+
+@media screen {
+  body { padding-bottom: 80px; }
+  :root[data-theme='dark'] {
+    color-scheme: dark;
+    --paper: #161d1a;
+    --surface: #1c2520;
+    --wash: #232e27;
+    --ink: #e6eae3;
+    --muted: #acb6ad;
+    --line: #435148;
+    --accent: #a3d1bc;
+    --accent-soft: #2a4034;
+    --model: #e0bb92;
+    --model-soft: #3a3025;
+    --c4-canvas: #19231e;
+    --c4-container: #2f6293;
+    --c4-external: #53616a;
+    --c4-component: #284764;
+    --c4-component-ink: #e0edf6;
+    --c4-agent: #593f24;
+    --c4-agent-ink: #f3d7b0;
+    --c4-code-band: #273f50;
+    --c4-edge: #96a4ad;
+    --c4-boundary: #9aa7b0;
+    --c4-active: #b4d3f3;
+  }
+  :root[data-theme='dark'] .theme-toggle,
+  :root[data-theme='dark'] dialog,
+  :root[data-theme='dark'] .doc-sheet,
+  :root[data-theme='dark'] .viewer-stage img,
+  :root[data-theme='dark'] .presentation-bar { box-shadow: none; }
+  :root[data-theme='dark'] .primary-button:hover { background: #bce0cf; color: var(--paper); }
+  :root[data-theme='dark'] :is(h1, h2, h3, h4, h5, h6) { color: var(--ink); }
+  :root[data-theme='dark'] .step-button:hover { background: var(--wash); }
+  :root[data-theme='dark'] .hero h1 span { color: var(--ink); }
+  :root[data-theme='dark'] .diagram-panel,
+  :root[data-theme='dark'] .technical-page .diagram-panel { background: var(--c4-canvas); }
+  :root[data-theme='dark'] .c4-legend :is(.lg-container, .lg-store) { background: var(--c4-container); }
+  :root[data-theme='dark'] .c4-legend .lg-component { background: var(--c4-component); }
+  :root[data-theme='dark'] .c4-legend .lg-agent { background: var(--c4-agent); }
+  :root[data-theme='dark'] .c4-legend .lg-external { background: var(--c4-external); }
+  :root[data-theme='dark'] .viewer-stage { background: var(--paper); }
+  :root[data-theme='dark'] .compare-table td:last-child { background: var(--wash); }
+  :root[data-theme='dark'] .presentation-bar { background: var(--surface); color: var(--ink); border: 1px solid var(--line); }
+  :root[data-theme='dark'] .presentation-bar button { border-color: var(--line); }
+  :root[data-theme='dark'] .presentation-bar button:hover { background: var(--wash); }
+  :root[data-theme='dark'] .presentation-bar button:focus-visible { outline-color: var(--accent); }
+
+  :root[data-theme='dark'] .flow {
+    --flow-human: #a7c3e6;
+    --flow-human-soft: #29384b;
+    --flow-model: #e0bb92;
+    --flow-model-soft: #3a3025;
+    --flow-code: #a3d1bc;
+    --flow-code-soft: #2a4034;
+    --flow-source: #b1bcb2;
+    --flow-source-soft: #303931;
+  }
+  :root[data-theme='dark'] .flow .kind-result { --k: var(--accent); --k-soft: var(--accent-soft); }
+  :root[data-theme='dark'] .flow-lane.lane-1 > rect:first-child { fill: var(--paper); }
+  :root[data-theme='dark'] .flow-lane rect.flow-lane-head { fill: var(--wash); }
+  :root[data-theme='dark'] .flow-node.here path { fill: var(--surface); }
+  :root[data-theme='dark'] .flow-node.shape-end text { fill: var(--ink); }
+  :root[data-theme='dark'] .flow-list li.here { background: var(--surface); }
+  :root[data-theme='dark'] .flow-list .kind-result { color: var(--ink); }
+  :root[data-theme='dark'] .flow-list .kind-result .flow-list-who { color: var(--accent); }
+  :root[data-theme='dark'] .badge.who-human,
+  :root[data-theme='dark'] .badge.kind-single { background: #29384b; color: #a7c3e6; }
+
+  :root[data-theme='dark'] .plan-page {
+    --human: #a7c3e6;
+    --result: var(--ink);
+    --doc-bg: var(--paper);
+    --sheet: var(--surface);
+    --rule: var(--line);
+    --head: var(--wash);
+  }
+  :root[data-theme='dark'] .plan-page .kind-source { --kind: var(--muted); }
+  :root[data-theme='dark'] .plan-page .box-done { --box: #a3d1bc; }
+  :root[data-theme='dark'] .plan-page .box-issue { --box: #e0bb92; }
+  :root[data-theme='dark'] .plan-page .box-next { --box: #a7c3e6; }
+  :root[data-theme='dark'] .plan-page .status-done { color: #a3d1bc; background: #2a4034; border-color: #607e6c; }
+  :root[data-theme='dark'] .plan-page .status-limited { color: #e0bb92; background: #3a3025; border-color: #8b7458; }
+  :root[data-theme='dark'] .plan-page .status-progress { color: #a7c3e6; background: #29384b; border-color: #677d98; }
+  :root[data-theme='dark'] .plan-page .status-planned { color: var(--muted); background: var(--wash); border-color: var(--line); }
+  :root[data-theme='dark'] .plan-page .status-open { color: #e8b3a8; background: #402e29; border-color: #916b60; }
+  :root[data-theme='dark'] .astro-code,
+  :root[data-theme='dark'] .astro-code span {
+    color: var(--shiki-dark, var(--ink)) !important;
+    background-color: var(--shiki-dark-bg, var(--wash)) !important;
+  }
+}
+@media screen and (min-width: 1001px) {
+  .results-page .results-sidebar, .implementation-page .implementation-sidebar, .plan-page .doc-toc { padding-bottom: 96px; }
+}
+@media screen and (max-width: 1000px) {
+  .results-page .results-nav, .implementation-page .implementation-nav, .plan-page .doc-toc-box > ol { padding-bottom: 80px; }
+  .presenting .presentation-bar { bottom: calc(84px + env(safe-area-inset-bottom)); }
+  .presenting .chapter.chapter-active { padding-bottom: 180px; }
+  #toast { bottom: calc(84px + env(safe-area-inset-bottom)); }
+}
+@media (max-width: 600px) {
+  .theme-toggle { left: max(16px, env(safe-area-inset-left)); bottom: max(16px, env(safe-area-inset-bottom)); width: 48px; height: 48px; padding: 12px; }
+}
+@media print {
+  .theme-toggle { display: none !important; }
+  .diagram-viewport .node :is(rect, circle, ellipse, polygon, path) { fill: var(--accent-soft) !important; stroke: var(--accent) !important; }
+  .diagram-viewport svg text { fill: var(--ink) !important; }
+  .diagram-viewport :is(.nodeLabel, .edgeLabel, .cluster-label) { color: var(--ink) !important; }
+  .diagram-viewport .edgeLabel .labelBkg { background: var(--surface) !important; }
+  .diagram-viewport .flowchart-link { stroke: var(--muted) !important; }
+  .diagram-viewport marker path { fill: var(--muted) !important; stroke: var(--muted) !important; }
+  .diagram-viewport .cluster rect { fill: var(--wash) !important; stroke: var(--line) !important; }
+}

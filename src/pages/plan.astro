@@ -3,6 +3,8 @@ import { sitePath } from '../utils/site-path.mjs';
 import planScreens from '../data/plan-screens.json';
 import { kinds, items, general } from '../data/plan.mjs';
 import Flow from '../components/Flow.astro';
+import ThemeHead from '../components/ThemeHead.astro';
+import ThemeToggle from '../components/ThemeToggle.astro';
 import '@fontsource/ibm-plex-sans/latin-400.css';
 import '@fontsource/ibm-plex-sans/latin-500.css';
 import '@fontsource/ibm-plex-sans/cyrillic-400.css';
@@ -35,9 +37,11 @@ const toc = { id: 'inputs', n: '1', title: 'Входящие данные', sub:
   <meta property="og:description" content="Требования, поверхности, материал, заготовка, масса и база знаний «Станки»." />
   <meta property="og:type" content="website" />
   <link rel="icon" type="image/svg+xml" href={sitePath('/favicon.svg')} />
+  <ThemeHead />
 </head>
 <body class="plan-page">
   <a class="skip-link" href="#main">Перейти к содержанию</a>
+  <ThemeToggle />
   <header class="site-header">
     <div class="wrap header-inner">
       <a class="brand" href={sitePath('/')}><span class="brand-mark" aria-hidden="true">ПП</span><span>Подготовка<br/>производства</span></a>

@@ -7,6 +7,8 @@ import { outcomes, steps, overallFlow, cycleFlow, principles, roles, destination
 import { anatomy, skillFlow, pinnedFlow, approaches, tradeoffs, instructions, kindLabel, skillUse } from '../data/instructions.mjs';
 import manifest from '../data/instructions-manifest.json';
 import Flow from '../components/Flow.astro';
+import ThemeHead from '../components/ThemeHead.astro';
+import ThemeToggle from '../components/ThemeToggle.astro';
 import '@fontsource/ibm-plex-sans/latin-400.css';
 import '@fontsource/ibm-plex-sans/latin-500.css';
 import '@fontsource/ibm-plex-sans/cyrillic-400.css';
@@ -36,13 +38,16 @@ const skillChars = ['rotational', 'sheet-metal', 'weldment'].reduce((sum, k) => 
   <meta property="og:description" content="Команда ИИ-агентов читает чертёж, строит маршрут и оценивает время; программа проверяет ответы и считает смету; технолог принимает решения." />
   <meta property="og:type" content="website" />
   <link rel="icon" type="image/svg+xml" href={sitePath('/favicon.svg')} />
+  <ThemeHead />
 </head>
 <body>
   <a class="skip-link" href="#main">Перейти к содержанию</a>
+  <ThemeToggle />
   <header class="site-header">
     <div class="wrap header-inner">
       <a class="brand" href="#top"><span class="brand-mark" aria-hidden="true">ПП</span><span>Подготовка<br/>производства</span></a>
-      <nav aria-label="Разделы"><a href="#pipeline">Процесс</a><a href="#agents">Агенты</a><a href="#instructions">Инструкции</a><a href="#recognition">Чтение</a><a href="#data">Данные</a><a href={sitePath('/results/')}>Результаты</a></nav>
+      <nav aria-label="Разделы"><a href="#pipeline">Процесс</a><a href="#agents">Агенты</a><a href="#instructions">Инструкции</a><a href="#recognition">Чтение</a><a href="#data">Данные</a><a href={sitePath('/results/')}>Результаты</a><a class="implementation-link" href={sitePath('/implementation/')}>План реализации</a></nav>
+      <a class="audience-link implementation-mobile-link" href={sitePath('/implementation/')}>План реализации</a>
       <a class="audience-link" href={sitePath('/it/')} target="_blank" rel="noopener" aria-label="Для IT-специалистов — в новой вкладке">Для IT <span aria-hidden="true">↗</span></a>
       <a class="audience-link plan-link" href={sitePath('/plan/')} target="_blank" rel="noopener" aria-label="Общий план — в новой вкладке"><span class="wide-label">Общий </span>план <span aria-hidden="true">↗</span></a>
       <a class="audience-link voksa-link" href={sitePath('/voksa/')} target="_blank" rel="noopener" aria-label="Разбор ВоксаТех — в новой вкладке"><span class="wide-label">Разбор </span>ВоксаТех <span aria-hidden="true">↗</span></a>
@@ -174,7 +179,7 @@ const skillChars = ['rotational', 'sheet-metal', 'weldment'].reduce((sum, k) => 
       <div class="business-conclusion"><h3>Что получает заказчик</h3><p>Паспорт детали, обоснованный выбор заготовки, маршрут с проработкой операций, оценку времени и предварительную смету на деталь и партию. Каждая строка показывает, откуда она взялась; технолог может исправить любое звено, и история изменений сохранится.</p><p class="caption">Описание работы системы на 22 октября 2026. Скриншоты показывают интерфейс на подписанные даты. Производственная приёмка не заменяется автоматическим результатом.</p><div class="conclusion-links"><a class="secondary-button" href={sitePath('/plan/')} target="_blank" rel="noopener">Общий план: входящие данные ↗</a><a class="secondary-button" href={sitePath('/it/')} target="_blank" rel="noopener">Технический разбор для IT-специалистов ↗</a><a class="secondary-button" href={sitePath('/voksa/')} target="_blank" rel="noopener">Сравнение с ВоксаТех ↗</a></div></div>
     </div></section>
   </main>
-  <footer><div class="wrap footer-inner"><span>Подготовка производства</span><span>Описание работы · 22 октября 2026</span><a href={sitePath('/results/')}>Результаты чертежей</a><a href="#top">Наверх ↑</a></div></footer>
+  <footer><div class="wrap footer-inner"><span>Подготовка производства</span><span>Описание работы · 22 октября 2026</span><a href={sitePath('/results/')}>Результаты чертежей</a><a href={sitePath('/implementation/')}>План реализации</a><a href="#top">Наверх ↑</a></div></footer>
   <div class="presentation-bar" id="presentation-bar" hidden><button id="chapter-prev" aria-label="Предыдущая глава">←</button><span id="chapter-status" aria-live="polite"></span><button id="chapter-next" aria-label="Следующая глава">→</button><button id="end-presentation">Завершить показ <span aria-hidden="true">×</span></button></div>
   <dialog id="image-dialog" class="image-viewer" aria-labelledby="image-dialog-title"><div class="viewer-top"><div class="viewer-heading"><h2 id="image-dialog-title"></h2><p id="image-dialog-note" class="caption"></p></div><div class="viewer-tools" role="toolbar" aria-label="Масштаб изображения"><button type="button" class="diagram-button" id="image-zoom-out" aria-label="Уменьшить">−</button><output id="image-zoom-label" aria-live="polite">100%</output><button type="button" class="diagram-button" id="image-zoom-in" aria-label="Увеличить">+</button><button type="button" class="diagram-button" id="image-fit">Вписать</button><button type="button" class="diagram-button" id="image-actual">1:1</button><button type="button" class="close-button" id="close-image" aria-label="Закрыть скриншот"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button></div></div><div class="viewer-stage" id="image-stage"><img id="image-dialog-img" alt="" draggable="false"/></div><p class="caption viewer-hint">Колёсико мыши — масштаб к курсору · левая кнопка — перемещение · двойной щелчок — вписать / 100% · щелчок по пустому месту или Esc — закрыть.</p></dialog>
   <dialog id="text-dialog" class="text-dialog" aria-labelledby="text-dialog-title"><div class="dialog-top"><h2 id="text-dialog-title"></h2><button type="button" class="close-button" id="close-text" aria-label="Закрыть текст инструкции"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button></div><p id="text-dialog-note" class="caption"></p><pre id="text-dialog-body" tabindex="0"></pre><p class="caption"><a id="text-dialog-download" download>Скачать текст</a> · Текст показан без правок, в том виде, в каком его получает агент.</p></dialog>

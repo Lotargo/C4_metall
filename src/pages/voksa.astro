@@ -1,5 +1,7 @@
 ---
 import { sitePath } from '../utils/site-path.mjs';
+import ThemeHead from '../components/ThemeHead.astro';
+import ThemeToggle from '../components/ThemeToggle.astro';
 import screenshots from '../data/screenshots.json';
 import voksaScreens from '../data/voksa-screens.json';
 import { evidenceLevels, headlines, pipeline, knowledgeSources, roles, priceChecks, timeBranches, reviewNotes, shared, comparison, pairs, adoptStatus, adoption, notAdopted, roadmap, scope } from '../data/voksa.mjs';
@@ -28,9 +30,11 @@ const statusCount = (s) => adoption.filter((a) => a.status === s).length;
   <meta property="og:description" content="Как устроена ВоксаТех, чем отличается наш подход и что мы переносим к себе." />
   <meta property="og:type" content="website" />
   <link rel="icon" type="image/svg+xml" href={sitePath('/favicon.svg')} />
+  <ThemeHead />
 </head>
 <body class="voksa-page">
   <a class="skip-link" href="#main">Перейти к содержанию</a>
+  <ThemeToggle />
   <header class="site-header">
     <div class="wrap header-inner">
       <a class="brand" href={sitePath('/')}><span class="brand-mark" aria-hidden="true">ПП</span><span>Подготовка<br/>производства</span></a>

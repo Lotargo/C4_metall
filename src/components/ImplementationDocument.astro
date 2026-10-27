@@ -1,0 +1,85 @@
+---
+import { render } from 'astro:content';
+import ThemeHead from './ThemeHead.astro';
+import ThemeToggle from './ThemeToggle.astro';
+import type { ImplementationDocument } from '../utils/documents';
+import { sitePath } from '../utils/site-path.mjs';
+import { implementationPath } from '../utils/document-path.mjs';
+import '@fontsource/ibm-plex-sans/latin-400.css';
+import '@fontsource/ibm-plex-sans/latin-500.css';
+import '@fontsource/ibm-plex-sans/cyrillic-400.css';
+import '@fontsource/ibm-plex-sans/cyrillic-500.css';
+import 'katex/dist/katex.min.css';
+import '../styles/global.css';
+import '../styles/implementation.css';
+
+interface Props {
+  documents: { entry: ImplementationDocument; title: string }[];
+  document?: ImplementationDocument;
+}
+const { documents, document } = Astro.props;
+const rendered = document ? await render(document) : undefined;
+const Content = rendered?.Content;
+const headings = rendered?.headings ?? [];
+const toc = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
+const title = documents.find(({ entry }) => entry.id === document?.id)?.title || 'План реализации';
+const description = document?.data.description || 'Документы плана реализации «Подготовки производства».';
+---
+<!doctype html>
+<html lang="ru" class="implementation-document">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{document ? `${title} · План реализации` : 'План реализации'}</title>
+  <meta name="description" content={description} />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#f7f6f2" />
+  <link rel="icon" type="image/svg+xml" href={sitePath('/favicon.svg')} />
+  <ThemeHead />
+</head>
+<body class="implementation-page">
+  <a class="skip-link" href="#main">Перейти к документу</a>
+  <ThemeToggle />
+  <header class="site-header implementation-header">
+    <div class="implementation-header-inner">
+      <a class="brand" href={sitePath('/')}><span class="brand-mark" aria-hidden="true">ПП</span><span>Подготовка<br/>производства</span></a>
+      <span class="implementation-header-title">План реализации</span>
+      <nav class="implementation-header-links" aria-label="Разделы проекта">
+        <a href={sitePath('/results/')}>Результаты</a>
+        <a href={sitePath('/')}>К презентации</a>
+      </nav>
+    </div>
+  </header>
+  <div class="implementation-layout">
+    <aside class="implementation-sidebar" aria-label="Навигация по плану реализации">
+      <details class="implementation-navigation" open>
+        <summary>Документы и содержание</summary>
+        <nav class="implementation-nav" aria-label="Документы плана">
+          <p class="implementation-nav-label">План реализации</p>
+          <ul class="document-list">
+            {documents.map(({ entry, title: entryTitle }, index) => <li>
+              <a class:list={['document-link', { selected: entry.id === document?.id }]} href={sitePath(implementationPath(entry.id))} aria-current={entry.id === document?.id ? 'page' : undefined}>
+                <span class="document-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span><span>{entryTitle}</span>
+              </a>
+              {entry.id === document?.id && toc.length > 0 && <ol class="document-toc">
+                {toc.map((heading) => <li class:list={{ 'toc-subheading': heading.depth === 3 }}>
+                  <a href={'#' + heading.slug} data-document-toc={heading.slug}>{heading.text}</a>
+                </li>)}
+              </ol>}
+            </li>)}
+          </ul>
+        </nav>
+      </details>
+    </aside>
+    <main id="main" class="implementation-main" tabindex="-1">
+      {Content && <div class="document-topline" id="top"><p>План реализации</p><button type="button" class="document-print" data-document-print hidden>Печать / PDF <span aria-hidden="true">↗</span></button></div>}
+      {Content ? <article class="markdown-document" aria-label={title}>
+        {!headings.some((heading) => heading.depth === 1) && <h1>{title}</h1>}
+        <Content />
+      </article> : <article class="markdown-document" id="top"><h1>План реализации</h1><p>Документы пока не добавлены.</p></article>}
+      <footer class="implementation-footer"><a href="#top">К началу документа ↑</a><a href={sitePath('/results/')}>Результаты</a><a href={sitePath('/')}>К презентации</a></footer>
+    </main>
+  </div>
+  <script>import '../scripts/implementation.ts';</script>
+</body>
+</html>

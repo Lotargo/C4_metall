@@ -1,0 +1,107 @@
+html.implementation-document { scroll-padding-top: 0; }
+.implementation-page { --body: 18px; }
+.implementation-header-inner { display: flex; align-items: center; gap: 32px; max-width: 1540px; margin: auto; padding: 16px 40px; min-height: 90px; }
+.implementation-header-title { color: var(--muted); font-size: 17px; }
+.implementation-header .implementation-header-links { display: flex; gap: 24px; margin-left: auto; font-size: 16px; }
+.implementation-header .implementation-header-links a { display: flex; align-items: center; min-height: 48px; white-space: normal; }
+.implementation-layout { max-width: 1540px; margin: auto; display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 64px; padding: 0 40px; }
+.implementation-sidebar { position: sticky; top: 90px; align-self: start; height: calc(100dvh - 90px); overflow-y: auto; scrollbar-width: thin; padding: 32px 8px 40px 0; overscroll-behavior: contain; }
+.implementation-navigation > summary { display: none; }
+.implementation-nav { display: block; margin: 0; font-size: 16px; }
+.implementation-nav a { white-space: normal; }
+.implementation-nav-label { color: var(--muted); margin: 0 0 16px 12px; font-size: 15px; }
+.document-list, .document-toc { list-style: none; margin: 0; padding: 0; }
+.document-list > li + li { margin-top: 8px; }
+.document-link { display: flex; gap: 12px; padding: 14px 12px; color: var(--ink); text-decoration: none; border-left: 3px solid transparent; line-height: 1.4; overflow-wrap: anywhere; }
+.document-number { flex: 0 0 auto; white-space: nowrap; color: var(--muted); font-size: 14px; padding-top: 2px; font-variant-numeric: tabular-nums; }
+.document-link:hover { background: var(--wash); }
+.document-link.selected { background: var(--accent-soft); border-left-color: var(--accent); }
+.document-toc { margin: 12px 0 24px 14px; border-left: 1px solid var(--line); }
+.document-toc a { display: block; padding: 8px 12px; font-size: 15px; line-height: 1.4; text-decoration: none; border-left: 2px solid transparent; margin-left: -1px; color: var(--muted); }
+.document-toc .toc-subheading a { padding-left: 24px; font-size: 14px; }
+.document-toc a:hover, .document-toc a.active { color: var(--accent); background: var(--accent-soft); border-left-color: var(--accent); }
+.implementation-main { min-width: 0; padding: 40px 0 0; }
+.document-topline { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 28px; color: var(--muted); font-size: 16px; scroll-margin-top: 120px; }
+.document-topline p { margin: 0; }
+.document-print { border: 0; background: transparent; color: var(--accent); padding: 12px 0 12px 12px; font-size: 16px; }
+.markdown-document { overflow-wrap: anywhere; }
+.markdown-document h1 { font-size: 56px; line-height: 1.1; margin: 0 0 28px; max-width: 20ch; }
+.markdown-document h2 { border-top: 1px solid var(--line); padding-top: 32px; margin: 44px 0 24px; font-size: 34px; line-height: 1.2; }
+.markdown-document h3 { margin: 32px 0 20px; font-size: 25px; line-height: 1.3; }
+.markdown-document h4, .markdown-document h5, .markdown-document h6 { margin: 28px 0 16px; font-size: 20px; }
+.markdown-document [id] { scroll-margin-top: 120px; }
+.markdown-document p { margin: 0 0 20px; max-width: 72ch; }
+.markdown-document h1 + p { color: var(--muted); font-size: 22px; line-height: 1.5; }
+.markdown-document :is(ul, ol) { margin: 20px 0; padding-left: 26px; }
+.markdown-document li + li { margin-top: 8px; }
+.markdown-document li > :is(ul, ol) { margin: 8px 0; }
+.markdown-document .contains-task-list { list-style: none; padding-left: 0; }
+.markdown-document .task-list-item input { margin-right: 8px; }
+.markdown-document blockquote { border-left: 3px solid var(--accent); background: var(--accent-soft); margin: 28px 0; padding: 20px 24px; }
+.markdown-document blockquote > :last-child { margin-bottom: 0; }
+.markdown-document strong { font-weight: 500; }
+.markdown-document hr { border: 0; border-top: 1px solid var(--line); margin: 36px 0; }
+.markdown-document code { font: .88em/1.5 var(--mono); background: var(--wash); padding: 2px 5px; border-radius: 2px; }
+.markdown-document pre { overflow-x: auto; padding: 20px; margin: 24px 0; font-size: 15px; line-height: 1.6; background: var(--wash); scrollbar-width: thin; }
+.markdown-document pre code { padding: 0; background: transparent; font-size: inherit; overflow-wrap: normal; }
+.markdown-document table { display: block; max-width: 100%; overflow-x: auto; border-collapse: collapse; margin: 28px 0; font-size: 16px; }
+.markdown-document table:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
+.markdown-document th, .markdown-document td { padding: 14px 20px 14px 0; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; min-width: 150px; }
+.markdown-document th { font-weight: 500; border-top: 1px solid var(--line); }
+.markdown-document img { height: auto; margin: 24px 0; }
+.markdown-document .katex-display { overflow-x: auto; overflow-y: hidden; padding: 12px 0; margin: 24px 0; }
+.markdown-document .katex { font-size: 1.1em; overflow-wrap: normal; }
+.document-diagram { margin: 28px 0; border: 1px solid var(--line); padding: 20px 24px; background: var(--surface); }
+.document-diagram figcaption { color: var(--muted); font-size: 15px; margin-bottom: 16px; }
+.diagram-viewport { overflow-x: auto; padding: 8px 0; }
+.diagram-viewport svg { max-width: none; height: auto; margin: auto; }
+.diagram-status { color: var(--muted); font-size: 16px; }
+.diagram-source { border-top: 1px solid var(--line); margin-top: 20px; font-size: 15px; }
+.diagram-source summary { cursor: pointer; color: var(--accent); padding: 12px 0; min-height: 48px; }
+.diagram-source pre { margin: 4px 0 0; }
+.implementation-footer { display: flex; flex-wrap: wrap; gap: 24px; justify-content: space-between; border-top: 1px solid var(--line); padding: 28px 0 48px; margin-top: 48px; font-size: 16px; }
+@media (max-width: 1200px) {
+  .implementation-layout { grid-template-columns: 260px minmax(0, 1fr); gap: 40px; padding-inline: 32px; }
+  .implementation-header-inner { padding-inline: 32px; }
+  .markdown-document h1 { font-size: 48px; }
+}
+@media (max-width: 1000px) {
+  .implementation-header-inner { min-height: 80px; gap: 20px; padding: 12px 24px; }
+  .implementation-header-title { display: none; }
+  .implementation-layout { display: block; padding: 0 24px; }
+  .implementation-sidebar { top: 80px; z-index: 12; height: auto; max-height: calc(100dvh - 80px); padding: 0; margin-inline: -24px; background: var(--paper); border-bottom: 1px solid var(--line); }
+  .implementation-navigation > summary { display: list-item; padding: 14px 24px; min-height: 52px; color: var(--accent); cursor: pointer; }
+  .implementation-nav { padding: 12px 24px 24px; }
+  .document-link, .document-toc a { min-height: 48px; }
+  .document-toc a, .document-toc .toc-subheading a { padding-top: 12px; padding-bottom: 12px; font-size: 16px; }
+  .implementation-main { padding-top: 24px; }
+  .markdown-document [id], .document-topline { scroll-margin-top: 155px; }
+  .markdown-document h1 { font-size: 42px; }
+}
+@media (max-width: 600px) {
+  .implementation-header-inner { padding-inline: 20px; gap: 12px; }
+  .implementation-header .brand { font-size: 15px; gap: 10px; }
+  .implementation-header .brand-mark { width: 38px; height: 38px; font-size: 17px; }
+  .implementation-header .implementation-header-links { font-size: 15px; gap: 12px; }
+  .implementation-header .implementation-header-links { overflow: visible; }
+  .implementation-header .implementation-header-links a:first-child { display: none; }
+  .implementation-header-links a { max-width: 100px; line-height: 1.3; }
+  .implementation-layout { padding-inline: 20px; }
+  .implementation-sidebar { margin-inline: -20px; }
+  .implementation-navigation > summary, .implementation-nav { padding-inline: 20px; }
+  .markdown-document h1 { font-size: 36px; }
+  .markdown-document h2 { font-size: 29px; margin-top: 32px; padding-top: 28px; }
+  .markdown-document h3 { font-size: 23px; }
+  .markdown-document h1 + p { font-size: 20px; }
+  .document-diagram { padding: 16px; }
+}
+@media (prefers-reduced-motion: reduce) { html.implementation-document { scroll-behavior: auto; } }
+@media print {
+  .implementation-header, .implementation-sidebar, .document-print, .implementation-footer, .diagram-source { display: none; }
+  .implementation-layout { display: block; padding: 0; }
+  .implementation-main { padding: 0; }
+  .markdown-document h1 { font-size: 32px; }
+  .markdown-document h2 { font-size: 24px; break-after: avoid; }
+  .markdown-document pre, .markdown-document table, .markdown-document .katex-display, .diagram-viewport { overflow: visible; }
+  .diagram-viewport svg { max-width: 100%; }
+}

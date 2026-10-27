@@ -120,23 +120,23 @@ const diagramCss = `
 .c4-node .t-sub{font-size:13.5px}
 .k-person .shape{fill:#08427b;stroke:#052e56}.k-person text{fill:#fff}
 .k-system .shape{fill:#1168bd;stroke:#0b4884}.k-system text{fill:#fff}
-.k-external .shape{fill:#8a8f94;stroke:#6b7075}.k-external text{fill:#fff}
-.k-container .shape{fill:#438dd5;stroke:#2e6295}.k-container text{fill:#fff}
-.k-store .shape{fill:#438dd5;stroke:#2e6295}.k-store text{fill:#fff}
-.k-component .shape{fill:#85bbf0;stroke:#5d82a8}.k-component text{fill:#0b2340}
-.k-agent .shape{fill:#f4c27f;stroke:#b7792b}.k-agent text{fill:#3d2408}
-.k-code .shape{fill:#fffefa;stroke:#5d82a8}.k-code .band{fill:#dbe8f6}.k-code text{fill:#0b2340}
+.k-external .shape{fill:var(--c4-external,#8a8f94);stroke:#6b7075}.k-external text{fill:#fff}
+.k-container .shape{fill:var(--c4-container,#438dd5);stroke:#2e6295}.k-container text{fill:#fff}
+.k-store .shape{fill:var(--c4-container,#438dd5);stroke:#2e6295}.k-store text{fill:#fff}
+.k-component .shape{fill:var(--c4-component,#85bbf0);stroke:#5d82a8}.k-component text{fill:var(--c4-component-ink,#0b2340)}
+.k-agent .shape{fill:var(--c4-agent,#f4c27f);stroke:#b7792b}.k-agent text{fill:var(--c4-agent-ink,#3d2408)}
+.k-code .shape{fill:var(--surface,#fffefa);stroke:#5d82a8}.k-code .band{fill:var(--c4-code-band,#dbe8f6)}.k-code text{fill:var(--c4-component-ink,#0b2340)}
 .c4-node.selected .shape{stroke:#f2a516;stroke-width:4}
 .c4-node:focus{outline:none}.c4-node:focus .shape{stroke:#f2a516;stroke-width:4}
-.c4-edge path{fill:none;stroke:#6f7680;stroke-width:1.5;marker-end:url(#arrow)}
+.c4-edge path{fill:none;stroke:var(--c4-edge,#6f7680);stroke-width:1.5;marker-end:url(#arrow)}
 .c4-edge.optional path{stroke-dasharray:6 5}
-.c4-edge.active path{stroke:#0b4884;stroke-width:2.4}
-.c4-edge .l-bg{fill:#f6f7f4;opacity:.94}
-.c4-edge text{font-family:"IBM Plex Sans",Arial,sans-serif;text-anchor:middle;fill:#2c3238}
-.c4-edge .l-main{font-size:12.5px;font-weight:500}.c4-edge .l-tech{font-size:11px;fill:#5e6670}
-.c4-edge.active text{fill:#0b4884}
-.c4-boundary rect{fill:none;stroke:#7b8590;stroke-width:1.4;stroke-dasharray:8 6}
-.c4-boundary text{font-family:"IBM Plex Sans",Arial,sans-serif;fill:#3f4850}
+.c4-edge.active path{stroke:var(--c4-active,#0b4884);stroke-width:2.4}
+.c4-edge .l-bg{fill:var(--c4-canvas,#f6f7f4);opacity:.94}
+.c4-edge text{font-family:"IBM Plex Sans",Arial,sans-serif;text-anchor:middle;fill:var(--ink,#2c3238)}
+.c4-edge .l-main{font-size:12.5px;font-weight:500}.c4-edge .l-tech{font-size:11px;fill:var(--muted,#5e6670)}
+.c4-edge.active text{fill:var(--c4-active,#0b4884)}
+.c4-boundary rect{fill:none;stroke:var(--c4-boundary,#7b8590);stroke-width:1.4;stroke-dasharray:8 6}
+.c4-boundary text{font-family:"IBM Plex Sans",Arial,sans-serif;fill:var(--muted,#3f4850)}
 .c4-boundary .b-title{font-size:14px;font-weight:600}.c4-boundary .b-sub{font-size:12px}
 `;
 const style = document.createElementNS("http://www.w3.org/2000/svg", "style");
@@ -539,7 +539,12 @@ $("#download-svg").addEventListener("click", () => {
   const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
   rect.setAttribute("width", String(g.width));
   rect.setAttribute("height", String(g.height));
-  rect.setAttribute("fill", "#f6f7f4");
+  rect.setAttribute("fill", getComputedStyle($("#diagram-panel")).backgroundColor);
+  const palette = getComputedStyle(svg);
+  for (const name of ['--surface', '--ink', '--muted', '--c4-canvas', '--c4-container', '--c4-external', '--c4-component', '--c4-component-ink', '--c4-agent', '--c4-agent-ink', '--c4-code-band', '--c4-edge', '--c4-boundary', '--c4-active']) {
+    const value = palette.getPropertyValue(name).trim();
+    if (value) clone.style.setProperty(name, value);
+  }
   clone.insertBefore(rect, clone.firstChild);
   download(
     new Blob([new XMLSerializer().serializeToString(clone)], {
