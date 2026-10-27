@@ -2,6 +2,12 @@
 import { render } from 'astro:content';
 import ThemeHead from './ThemeHead.astro';
 import ThemeToggle from './ThemeToggle.astro';
+import EditorControls from './EditorControls.astro';
+import EditorRecovery from './EditorRecovery.astro';
+import EditorMenu from './EditorMenu.astro';
+import { readFile } from 'node:fs/promises';
+import path from 'node:path';
+import { implementationSeed } from '../editor/seed.mjs';
 import type { ImplementationDocument } from '../utils/documents';
 import { sitePath } from '../utils/site-path.mjs';
 import { implementationPath } from '../utils/document-path.mjs';
@@ -12,6 +18,7 @@ import '@fontsource/ibm-plex-sans/cyrillic-500.css';
 import 'katex/dist/katex.min.css';
 import '../styles/global.css';
 import '../styles/implementation.css';
+import '../styles/document-editor.css';
 
 interface Props {
   documents: { entry: ImplementationDocument; title: string }[];
@@ -24,6 +31,14 @@ const headings = rendered?.headings ?? [];
 const toc = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
 const title = documents.find(({ entry }) => entry.id === document?.id)?.title || 'План реализации';
 const description = document?.data.description || 'Документы плана реализации «Подготовки производства».';
+const imageAssets = import.meta.glob('/documents/implementation/**/*.{avif,gif,jpeg,jpg,png,svg,webp}', { eager: true, query: '?url', import: 'default' });
+const seed = document ? implementationSeed({
+  id: document.id, markdown: await readFile(path.join(process.cwd(), 'documents/implementation', document.id + '.md'), 'utf8'),
+  documentIds: documents.map(({ entry }) => entry.id), title,
+  base: import.meta.env.BASE_URL.replace(/\/$/, ''),
+}) : undefined;
+if (seed) seed.imageAssets = Object.fromEntries(Object.entries(imageAssets).map(([file, url]) => [file.replace('/documents/implementation/', ''), url]));
+const seedJson = seed ? JSON.stringify(seed).replace(/</g, '\\u003c') : '';
 ---
 <!doctype html>
 <html lang="ru" class="implementation-document">
@@ -37,13 +52,14 @@ const description = document?.data.description || 'Документы плана
   <link rel="icon" type="image/svg+xml" href={sitePath('/favicon.svg')} />
   <ThemeHead />
 </head>
-<body class="implementation-page">
+<body class:list={['implementation-page', { 'implementation-editor-page': !!document }]}>
   <a class="skip-link" href="#main">Перейти к документу</a>
   <ThemeToggle />
   <header class="site-header implementation-header">
     <div class="implementation-header-inner">
       <a class="brand" href={sitePath('/')}><span class="brand-mark" aria-hidden="true">ПП</span><span>Подготовка<br/>производства</span></a>
       <span class="implementation-header-title">План реализации</span>
+      {document && <EditorControls />}
       <nav class="implementation-header-links" aria-label="Разделы проекта">
         <a href={sitePath('/results/')}>Результаты</a>
         <a href={sitePath('/')}>К презентации</a>
@@ -61,7 +77,7 @@ const description = document?.data.description || 'Документы плана
               <a class:list={['document-link', { selected: entry.id === document?.id }]} href={sitePath(implementationPath(entry.id))} aria-current={entry.id === document?.id ? 'page' : undefined}>
                 <span class="document-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span><span>{entryTitle}</span>
               </a>
-              {entry.id === document?.id && toc.length > 0 && <ol class="document-toc">
+              {entry.id === document?.id && <ol class="document-toc" data-editor-toc>
                 {toc.map((heading) => <li class:list={{ 'toc-subheading': heading.depth === 3 }}>
                   <a href={'#' + heading.slug} data-document-toc={heading.slug}>{heading.text}</a>
                 </li>)}
@@ -72,14 +88,33 @@ const description = document?.data.description || 'Документы плана
       </details>
     </aside>
     <main id="main" class="implementation-main" tabindex="-1">
-      {Content && <div class="document-topline" id="top"><p>План реализации</p><button type="button" class="document-print" data-document-print hidden>Печать / PDF <span aria-hidden="true">↗</span></button></div>}
-      {Content ? <article class="markdown-document" aria-label={title}>
+      {Content && <div class="document-topline" id="top"><p>План реализации</p><button type="button" class="document-print" data-document-print aria-label="Печать / PDF" title="Печать / PDF" hidden>
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+          <path d="M6 9V3h12v6M6 17H4a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2" />
+          <path d="M6 14h12v7H6zM17 12h1" />
+        </svg>
+      </button></div>}
+      {Content && <EditorRecovery />}
+      {Content ? <article id="editor" class="markdown-document editor-document" aria-label={title} aria-busy="true">
         {!headings.some((heading) => heading.depth === 1) && <h1>{title}</h1>}
         <Content />
       </article> : <article class="markdown-document" id="top"><h1>План реализации</h1><p>Документы пока не добавлены.</p></article>}
       <footer class="implementation-footer"><a href="#top">К началу документа ↑</a><a href={sitePath('/results/')}>Результаты</a><a href={sitePath('/')}>К презентации</a></footer>
     </main>
   </div>
+  {document && <>
+    <EditorMenu />
+    <script type="application/json" id="editor-seed" set:html={seedJson} />
+  </>}
   <script>import '../scripts/implementation.ts';</script>
+  <script>
+    if (document.getElementById('editor-seed')) {
+      void import('../scripts/document-editor').catch(() => {
+        const status = document.querySelector('[data-editor-status]');
+        if (status) status.textContent = 'Не удалось загрузить редактор. Обновите страницу.';
+        document.getElementById('editor')?.setAttribute('aria-busy', 'false');
+      });
+    }
+  </script>
 </body>
 </html>

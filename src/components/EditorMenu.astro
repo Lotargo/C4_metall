@@ -1,0 +1,28 @@
+<div class="editor-format-menu" id="format-menu" role="toolbar" aria-label="Форматирование выделения" aria-orientation="vertical" hidden>
+  <div class="editor-menu-row">
+    <button type="button" data-command="bold" aria-label="Полужирный" aria-pressed="false"><strong>Ж</strong></button>
+    <button type="button" data-command="italic" aria-label="Курсив" aria-pressed="false"><em>К</em></button>
+    <button type="button" data-command="underline" aria-label="Подчёркивание" aria-pressed="false"><u>Ч</u></button>
+    <button type="button" data-command="strike" aria-label="Зачёркивание" aria-pressed="false"><s>З</s></button>
+  </div>
+  <div class="editor-menu-row editor-block-options">
+    <button type="button" data-command="paragraph" aria-pressed="false">Текст</button>
+    <button type="button" data-command="h2" aria-pressed="false">Заголовок</button>
+    <button type="button" data-command="h3" aria-pressed="false">Подзаголовок</button>
+  </div>
+  <div role="group" aria-label="Цвет выделения" class="editor-menu-row">
+    <span>Выделение</span>
+    <button type="button" data-highlight="#ffe18c" aria-label="Жёлтое выделение" class="editor-swatch" style="--swatch:#ffe18c"></button>
+    <button type="button" data-highlight="#bce4c8" aria-label="Зелёное выделение" class="editor-swatch" style="--swatch:#bce4c8"></button>
+    <button type="button" data-highlight="#c4ddfa" aria-label="Синее выделение" class="editor-swatch" style="--swatch:#c4ddfa"></button>
+    <button type="button" data-command="unhighlight" aria-label="Убрать выделение">×</button>
+  </div>
+  <div role="group" aria-label="Цвет текста" class="editor-menu-row">
+    <span>Цвет текста</span>
+    <button type="button" data-color="var(--editor-red)" aria-label="Красный текст" class="editor-swatch" style="--swatch:var(--editor-red)"></button>
+    <button type="button" data-color="var(--editor-blue)" aria-label="Синий текст" class="editor-swatch" style="--swatch:var(--editor-blue)"></button>
+    <button type="button" data-color="var(--editor-green)" aria-label="Зелёный текст" class="editor-swatch" style="--swatch:var(--editor-green)"></button>
+    <button type="button" data-command="uncolor" aria-label="Обычный цвет текста">×</button>
+  </div>
+  <button type="button" data-command="clear" class="editor-menu-clear">Убрать оформление</button>
+</div>

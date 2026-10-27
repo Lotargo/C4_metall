@@ -5,7 +5,7 @@ html.implementation-document { scroll-padding-top: 0; }
 .implementation-header .implementation-header-links { display: flex; gap: 24px; margin-left: auto; font-size: 16px; }
 .implementation-header .implementation-header-links a { display: flex; align-items: center; min-height: 48px; white-space: normal; }
 .implementation-layout { max-width: 1540px; margin: auto; display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 64px; padding: 0 40px; }
-.implementation-sidebar { position: sticky; top: 90px; align-self: start; height: calc(100dvh - 90px); overflow-y: auto; scrollbar-width: thin; padding: 32px 8px 40px 0; overscroll-behavior: contain; }
+.implementation-sidebar { position: sticky; top: var(--implementation-header-height, 90px); align-self: start; height: calc(100dvh - var(--implementation-header-height, 90px)); overflow-y: auto; scrollbar-width: thin; padding: 32px 8px 40px 0; overscroll-behavior: contain; }
 .implementation-navigation > summary { display: none; }
 .implementation-nav { display: block; margin: 0; font-size: 16px; }
 .implementation-nav a { white-space: normal; }
@@ -23,7 +23,10 @@ html.implementation-document { scroll-padding-top: 0; }
 .implementation-main { min-width: 0; padding: 40px 0 0; }
 .document-topline { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 28px; color: var(--muted); font-size: 16px; scroll-margin-top: 120px; }
 .document-topline p { margin: 0; }
-.document-print { border: 0; background: transparent; color: var(--accent); padding: 12px 0 12px 12px; font-size: 16px; }
+.document-print { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; width: 44px; height: 44px; padding: 10px; border: 0; border-radius: 3px; background: transparent; color: var(--accent); cursor: pointer; }
+.document-print[hidden] { display: none; }
+.document-print:hover { background: var(--accent-soft); }
+.document-print:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .markdown-document { overflow-wrap: anywhere; }
 .markdown-document h1 { font-size: 56px; line-height: 1.1; margin: 0 0 28px; max-width: 20ch; }
 .markdown-document h2 { border-top: 1px solid var(--line); padding-top: 32px; margin: 44px 0 24px; font-size: 34px; line-height: 1.2; }
@@ -69,13 +72,13 @@ html.implementation-document { scroll-padding-top: 0; }
   .implementation-header-inner { min-height: 80px; gap: 20px; padding: 12px 24px; }
   .implementation-header-title { display: none; }
   .implementation-layout { display: block; padding: 0 24px; }
-  .implementation-sidebar { top: 80px; z-index: 12; height: auto; max-height: calc(100dvh - 80px); padding: 0; margin-inline: -24px; background: var(--paper); border-bottom: 1px solid var(--line); }
+  .implementation-sidebar { top: var(--implementation-header-height, 80px); z-index: 12; height: auto; max-height: calc(100dvh - var(--implementation-header-height, 80px)); padding: 0; margin-inline: -24px; background: var(--paper); border-bottom: 1px solid var(--line); }
   .implementation-navigation > summary { display: list-item; padding: 14px 24px; min-height: 52px; color: var(--accent); cursor: pointer; }
   .implementation-nav { padding: 12px 24px 24px; }
   .document-link, .document-toc a { min-height: 48px; }
   .document-toc a, .document-toc .toc-subheading a { padding-top: 12px; padding-bottom: 12px; font-size: 16px; }
   .implementation-main { padding-top: 24px; }
-  .markdown-document [id], .document-topline { scroll-margin-top: 155px; }
+  .markdown-document [id], .document-topline { scroll-margin-top: calc(var(--implementation-header-height, 80px) + 75px); }
   .markdown-document h1 { font-size: 42px; }
 }
 @media (max-width: 600px) {

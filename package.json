@@ -9,23 +9,37 @@
     "preview": "astro preview --host 127.0.0.1 --port 4326",
     "verify:evidence": "node scripts/verify-evidence.mjs",
     "typecheck": "tsc --project tsconfig.scripts.json",
+    "test:editor": "node --test scripts/test-editor.mjs",
     "deploy": "powershell -NoProfile -File scripts/deploy-both.ps1"
   },
   "dependencies": {
     "@astrojs/markdown-remark": "^7.3.4",
     "@fontsource/ibm-plex-sans": "^5.3.0",
+    "@tiptap/core": "3.32.0",
+    "@tiptap/extension-highlight": "3.32.0",
+    "@tiptap/extension-list": "3.32.0",
+    "@tiptap/extension-table": "3.32.0",
+    "@tiptap/extension-text-style": "3.32.0",
+    "@tiptap/pm": "3.32.0",
+    "@tiptap/starter-kit": "3.32.0",
     "astro": "7.3.8",
+    "firebase": "13.1.0",
     "katex": "^0.19.1",
     "mermaid": "^12.2.0",
     "rehype-katex": "^7.0.1",
+    "remark-gfm": "4.0.1",
     "remark-math": "^6.0.0",
+    "remark-parse": "11.0.0",
+    "unified": "11.0.5",
     "unist-util-visit": "^5.2.0"
   },
   "devDependencies": {
+    "temporal-spec": "1.0.1",
     "type-fest": "^5.10.0",
     "typescript": "^7.0.2"
   },
   "overrides": {
-    "katex": "$katex"
+    "katex": "$katex",
+    "@grpc/grpc-js": "1.14.6"
   }
 }

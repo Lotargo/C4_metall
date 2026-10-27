@@ -1,0 +1,6 @@
+{
+  "indexes": [],
+  "fieldOverrides": [
+    { "collectionGroup": "implementationDocuments", "fieldPath": "contentJson", "indexes": [] }
+  ]
+}

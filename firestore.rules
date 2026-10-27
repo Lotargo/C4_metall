@@ -1,0 +1,25 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function validDocument() {
+      let data = request.resource.data;
+      return data.keys().hasAll(['format', 'documentId', 'title', 'contentJson', 'etag', 'sourceSha256', 'updatedAt', 'updatedBy'])
+        && data.keys().hasOnly(['format', 'documentId', 'title', 'contentJson', 'etag', 'sourceSha256', 'updatedAt', 'updatedBy'])
+        && data.format == 1
+        && data.documentId is string && data.documentId.size() > 0 && data.documentId.size() <= 1000
+        && data.title is string && data.title.size() <= 300
+        && data.contentJson is string && data.contentJson.size() > 0 && data.contentJson.size() <= 900000
+        && data.etag is string && data.etag.matches('^[a-f0-9]{64}$')
+        && data.sourceSha256 is string && data.sourceSha256.matches('^[a-f0-9]{64}$')
+        && data.updatedBy == request.auth.uid && data.updatedAt == request.time;
+    }
+    match /implementationDocuments/{documentKey} {
+      allow get: if true;
+      allow list, delete: if false;
+      allow create: if documentKey.matches('^[a-f0-9]{64}$') && request.auth != null && validDocument();
+      allow update: if request.auth != null && validDocument()
+        && request.resource.data.documentId == resource.data.documentId
+        && request.resource.data.sourceSha256 == resource.data.sourceSha256;
+    }
+  }
+}

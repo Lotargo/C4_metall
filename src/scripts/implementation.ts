@@ -2,6 +2,12 @@ export {};
 
 const navigation = document.querySelector<HTMLDetailsElement>('.implementation-navigation');
 const mobile = window.matchMedia('(max-width: 1000px)');
+const header = document.querySelector<HTMLElement>('.implementation-header');
+if (header) {
+  const measureHeader = () => document.documentElement.style.setProperty('--implementation-header-height', `${Math.ceil(header.getBoundingClientRect().height)}px`);
+  measureHeader();
+  new ResizeObserver(measureHeader).observe(header);
+}
 const syncNavigation = () => { if (navigation) navigation.open = !mobile.matches; };
 syncNavigation();
 mobile.addEventListener('change', syncNavigation);
@@ -16,20 +22,22 @@ updateTableFocus();
 window.addEventListener('resize', updateTableFocus);
 
 // Keep anchors usable with native navigation, browser history and no JavaScript.
-document.querySelectorAll<HTMLAnchorElement>('[data-document-toc]').forEach((link) => {
-  link.addEventListener('click', () => {
+document.addEventListener('click', (event) => {
+  const link = (event.target as HTMLElement).closest<HTMLAnchorElement>('[data-document-toc]');
+  if (link) {
     if (mobile.matches && navigation) {
       navigation.open = false;
       const heading = document.getElementById(link.dataset.documentToc!);
       heading?.setAttribute('tabindex', '-1');
       heading?.focus({ preventScroll: true });
     }
-  });
+  }
 });
 
-const tocLinks = [...document.querySelectorAll<HTMLAnchorElement>('[data-document-toc]')];
 const updateToc = () => {
-  const offset = mobile.matches ? 160 : 120;
+  const tocLinks = [...document.querySelectorAll<HTMLAnchorElement>('[data-document-toc]')];
+  const headerHeight = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--implementation-header-height')) || 90;
+  const offset = headerHeight + (mobile.matches ? 65 : 30);
   let active: HTMLAnchorElement | undefined = tocLinks[0];
   for (const link of tocLinks) {
     const heading = document.getElementById(link.dataset.documentToc!);
@@ -51,6 +59,7 @@ window.addEventListener('scroll', () => {
 }, { passive: true });
 updateToc();
 window.addEventListener('resize', updateToc);
+window.addEventListener('documentcontentchange', () => { updateTableFocus(); updateToc(); });
 
 const printButton = document.querySelector<HTMLButtonElement>('[data-document-print]');
 if (printButton) {
@@ -122,6 +131,9 @@ async function renderDiagrams() {
 }
 // Serialize Mermaid work so quick theme switches cannot overwrite a newer render.
 let diagramRendering = Promise.resolve();
-const queueDiagrams = () => { diagramRendering = diagramRendering.then(renderDiagrams); };
+const queueDiagrams = () => {
+  // The editor owns Mermaid node views; don't render detached fallback figures.
+  if (!document.getElementById('editor-seed')) diagramRendering = diagramRendering.then(renderDiagrams);
+};
 window.addEventListener('themechange', queueDiagrams);
 queueDiagrams();
