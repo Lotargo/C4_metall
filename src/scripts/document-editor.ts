@@ -10,7 +10,7 @@ import firebaseConfig from '../data/firebase.json';
 import { createFirebaseStore } from '../editor/firebase-store.mjs';
 import { DocumentConflict, DocumentAccessDenied } from '../editor/cloud-document.mjs';
 
-type Snapshot = { documentId: string; title: string; imageAssets?: Record<string, string>; document: JSONContent; etag: string; sourceSha256: string; savedAt: string | null };
+type Snapshot = { documentId: string; storageId?: string; title: string; imageAssets?: Record<string, string>; document: JSONContent; etag: string; sourceSha256: string; savedAt: string | null };
 type Draft = { document: JSONContent; etag?: string; sourceSha256: string };
 const host = document.querySelector<HTMLElement>('#editor')!;
 const status = document.querySelector<HTMLElement>('[data-editor-status]')!;
@@ -21,7 +21,7 @@ const recovery = document.querySelector<HTMLElement>('[data-editor-recovery]')!;
 const toc = document.querySelector<HTMLElement>('[data-editor-toc]')!;
 const seed: Snapshot = JSON.parse(document.querySelector('#editor-seed')!.textContent!);
 const endpoint = sitePath('/api/implementation/document') + '?id=' + encodeURIComponent(seed.documentId);
-let draftKey = `pp-implementation-editor-v1:${sitePath('/')}:${seed.documentId}`;
+let draftKey = `pp-implementation-editor-v1:${sitePath('/')}:${seed.storageId || seed.documentId}`;
 let cloud: Awaited<ReturnType<typeof createFirebaseStore>> | undefined;
 let canEdit = false;
 let loaded = false;
@@ -305,7 +305,7 @@ async function start() {
       cloud = await createFirebaseStore(firebaseConfig, seed, sitePath('/').replace(/\/$/, ''));
       canEdit = cloud.access.canEdit;
       const initialAccess = { ...cloud.access };
-      draftKey = `pp-firebase-editor-v1:${firebaseConfig.projectId}:${seed.documentId}:${initialAccess.uid || 'reader'}`;
+      draftKey = `pp-firebase-editor-v1:${firebaseConfig.projectId}:${seed.storageId || seed.documentId}:${initialAccess.uid || 'reader'}`;
       cloud.onAccess((next: { uid: string; canEdit: boolean }) => {
         if (next.uid === initialAccess.uid && next.canEdit === initialAccess.canEdit) return;
         if (dirty) {

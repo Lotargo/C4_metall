@@ -13,6 +13,10 @@ export function implementationSeed({ id, markdown, documentIds, base = '', title
   const known = new Set(documentIds);
   const { content, frontmatter } = parseFrontmatter(markdown);
   const resolvedTitle = title || frontmatter.title || id.split('/').pop();
+  // Source-owned releases get independent shared drafts; preserve older cloud
+  // records, and use the same key on Windows, Linux, root and Pages builds.
+  const storageId = frontmatter.editorRevision === 'source'
+    ? `${id}@${createHash('sha256').update(content.replaceAll('\r\n', '\n')).digest('hex')}` : id;
   const imported = importMarkdown(content, { resolveLink: (url) => {
     if (/^(?:https?:|mailto:|#)/i.test(url)) return url;
     if (url.startsWith('/')) return base + url;
@@ -30,7 +34,7 @@ export function implementationSeed({ id, markdown, documentIds, base = '', title
   });
   const document = validateDocument(imported);
   return {
-    format: 1, documentId: id, title: resolvedTitle,
+    format: 1, documentId: id, storageId, title: resolvedTitle,
     sourceFile: `documents/implementation/${id}.md`,
     sourceSha256: createHash('sha256').update(markdown).digest('hex'),
     originalMarkdown: markdown, savedAt: null, document, etag: contentTag(document),

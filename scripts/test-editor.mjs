@@ -28,6 +28,18 @@ const originalBytes = await readFile(path.join(root, sourceFile));
 const seed = await initialTestDocument(root);
 const protectedBefore = preservedContent(seed.document);
 
+test('source releases isolate older shared drafts and keep the same storage key on both hosts', () => {
+  const markdown = '---\ntitle: UI/UX\neditorRevision: source\n---\n# План\n\n## Примеры\n\nТекущая редакция.\n';
+  const current = implementationSeed({ id: 'workspace-uiux', markdown, documentIds: ['workspace-uiux'], base: '' });
+  const pages = implementationSeed({ id: 'workspace-uiux', markdown: markdown.replaceAll('\n', '\r\n'), documentIds: ['workspace-uiux'], base: '/C4_metall' });
+  assert.equal(current.storageId, pages.storageId, 'line endings and host prefixes do not split a release');
+  assert.notEqual(current.storageId, current.documentId, 'a legacy cloud record cannot replace the new source release');
+  const next = implementationSeed({ id: 'workspace-uiux', markdown: markdown + '\nНовый пример.\n', documentIds: ['workspace-uiux'] });
+  assert.notEqual(current.storageId, next.storageId, 'later source changes receive a separate shared draft');
+  const legacy = implementationSeed({ id: 'other-plan', markdown: '# План\n', documentIds: ['other-plan'] });
+  assert.equal(legacy.storageId, legacy.documentId, 'documents without source releases retain their shared records');
+});
+
 test('attachment previews preserve the saved document and render every workbook sheet on both site bases', async () => {
   const markdown = await readFile(path.join(root, 'documents/implementation/general-plan.md'), 'utf8');
   for (const base of ['', '/C4_metall']) {
@@ -54,9 +66,10 @@ test('attachment previews preserve the saved document and render every workbook 
     const uiuxMarkdown = await readFile(path.join(root, 'documents/implementation/workspace-uiux.md'), 'utf8');
     const uiux = implementationSeed({ id: 'workspace-uiux', markdown: uiuxMarkdown, documentIds: ['workspace-uiux', 'operator-review'], base });
     const uiuxDoc = schema.nodeFromJSON(uiux.document);
-    assert.equal(attachmentPreviewEntries(uiuxDoc).length, 10, 'all ten unique supplied screenshots appear inline');
+    assert.equal(attachmentPreviewEntries(uiuxDoc).length, 22, 'all 22 unique supplied screenshots appear inline');
     const uiuxState = EditorState.create({ schema, doc: uiuxDoc, plugins: [createAttachmentPreviewPlugin({ base })] });
     assert.deepEqual(uiuxState.doc.toJSON(), uiuxDoc.toJSON(), 'screenshots do not change the saved source');
+    await encodeCloudDocument(uiuxDoc.toJSON(), base);
   }
 });
 
@@ -279,7 +292,7 @@ test('all original requirements, statuses and separately marked addenda remain v
   }
   assert.equal(sha(bodies.get('general-plan')), 'a83260ec8218cdad8e4d36a84f07de4bed93404e4beee94d244d823261da907e');
   assert.equal(sha(bodies.get('operator-review')), 'f19e73a084d1aca40cc6f306cabe1fe0440fc9dcbc3e0be34db1a43709d6b86f');
-  assert.equal(sha(bodies.get('workspace-uiux')), '459ae7d07c8d7e565fdf81f1e0bef976d1091f683f666261d0337c3b0bad16bb');
+  assert.equal(sha(bodies.get('workspace-uiux')), '804718d3c72c2b140addfaffbe88ab002609961845ebe13df689eafd50e2f3c2');
   const engineering = bodies.get('engineering-calculations')
     .replace('# Этап 3. Инженерные расчёты', '# 16 · Этап 3. Инженерные расчёты');
   assert.equal(sha(engineering), '0dff8d7ada089a975e66ec71895c57aee24b56871a6bb51eb841ac5936c49358');

@@ -8,7 +8,7 @@ export async function createFirebaseStore(config, seed, base = '') {
   const auth = getAuth(app);
   auth.languageCode = 'ru';
   const database = getFirestore(app);
-  const reference = doc(database, 'implementationDocuments', await sha256(seed.documentId));
+  const reference = doc(database, 'implementationDocuments', await sha256(seed.storageId || seed.documentId));
   const accessListeners = new Set();
   await auth.authStateReady();
   // Every visitor receives a session automatically. No email, password, popup,

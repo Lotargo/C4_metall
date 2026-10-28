@@ -1898,6 +1898,78 @@
       "kind": "image",
       "width": 1720,
       "height": 942
+    },
+    "14-workspace-uiux-val-2026-10-28/01-val-overview.png": {
+      "sha256": "2aee824962222a43a66edf80dfa67a9f12ee8208bf21b1aed5b5d0fd8246a2e9",
+      "kind": "image",
+      "width": 1720,
+      "height": 943
+    },
+    "14-workspace-uiux-val-2026-10-28/02-val-continuation.png": {
+      "sha256": "3ea22e03ec2182249eac1f9d8e48df0c8a047340f3b5ef872c55eba1e106aa58",
+      "kind": "image",
+      "width": 1720,
+      "height": 939
+    },
+    "14-workspace-uiux-val-2026-10-28/03-val-title-fields.png": {
+      "sha256": "37680f3d964e65e0e695dd9ab0ea80eb921d010becc87ef6a12c0bbfc433c530",
+      "kind": "image",
+      "width": 1718,
+      "height": 943
+    },
+    "14-workspace-uiux-val-2026-10-28/04-val-dimensions.png": {
+      "sha256": "d4206d65e6fb86c58115ccb9e3d5e880063aa105d6af6fd91ac1be0f67653d99",
+      "kind": "image",
+      "width": 1720,
+      "height": 943
+    },
+    "14-workspace-uiux-val-2026-10-28/05-val-axial-description.png": {
+      "sha256": "927f5b2bdec47a5ef8440461902066f2ab5b8b3bcba880a38d236615319c9e62",
+      "kind": "image",
+      "width": 1720,
+      "height": 941
+    },
+    "14-workspace-uiux-val-2026-10-28/06-val-left-end.png": {
+      "sha256": "eaa5e0dc267cc72b858a5597334e06f114e75096f4196d634bf3d254c76caea9",
+      "kind": "image",
+      "width": 1720,
+      "height": 944
+    },
+    "14-workspace-uiux-val-2026-10-28/07-val-chamfers.png": {
+      "sha256": "d47e6b25b7ce934480dd65cbd3abb91a8768792c65ce17d87c9f63b1fac05c89",
+      "kind": "image",
+      "width": 1720,
+      "height": 943
+    },
+    "14-workspace-uiux-val-2026-10-28/08-val-short-cylinder.png": {
+      "sha256": "55fe5dda58491babf24e00d6180cf111d1180d9114c330a9a051cb613371aa71",
+      "kind": "image",
+      "width": 1719,
+      "height": 942
+    },
+    "14-workspace-uiux-val-2026-10-28/09-val-groove.png": {
+      "sha256": "a7c766efa4405d79a6b26da59a33188323b7471bf7da58c60713365129c3b249",
+      "kind": "image",
+      "width": 1720,
+      "height": 942
+    },
+    "14-workspace-uiux-val-2026-10-28/10-val-neck-uncertainty.png": {
+      "sha256": "8809b427292923bf5bd10d35d4fcee4bc624b7d18276058ceafd284de95dfc92",
+      "kind": "image",
+      "width": 1719,
+      "height": 941
+    },
+    "14-workspace-uiux-val-2026-10-28/11-val-stock-selection.png": {
+      "sha256": "91c08b61cd9d25ac9af1fdd41e7581999b1f826b2b4d233bd252b1d0cee6efc3",
+      "kind": "image",
+      "width": 1719,
+      "height": 942
+    },
+    "14-workspace-uiux-val-2026-10-28/12-val-material-properties.png": {
+      "sha256": "4485251c0b298d4e430d0483f93a53beedf859b815ab41974f0ce89bb4d430fd",
+      "kind": "image",
+      "width": 1719,
+      "height": 943
     }
   }
 }
