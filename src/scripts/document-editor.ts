@@ -2,6 +2,8 @@ import { Editor, type JSONContent } from '@tiptap/core';
 import katex from 'katex';
 import { editorExtensions } from '../editor/schema.mjs';
 import { headingSlug } from '../editor/heading.mjs';
+import { renderDocumentToc } from '../utils/document-toc.mjs';
+import { createAttachmentPreviewPlugin } from '../editor/attachment-previews.mjs';
 import { sitePath } from '../utils/site-path.mjs';
 import { EditorState } from '@tiptap/pm/state';
 import firebaseConfig from '../data/firebase.json';
@@ -125,7 +127,7 @@ async function save() {
 }
 
 function updateToc() {
-  const fragment = document.createDocumentFragment();
+  const headings: { depth: number; slug: string; text: string }[] = [];
   const used = new Set<string>();
   let transaction = editor.state.tr;
   editor.state.doc.descendants((node, position) => {
@@ -140,16 +142,9 @@ function updateToc() {
     }
     used.add(id);
     if (node.attrs.level !== 2 && node.attrs.level !== 3) return;
-    const item = document.createElement('li');
-    if (node.attrs.level === 3) item.className = 'toc-subheading';
-    const link = document.createElement('a');
-    link.href = `#${id}`;
-    link.dataset.documentToc = id;
-    link.textContent = node.textContent;
-    item.append(link);
-    fragment.append(item);
+    headings.push({ depth: node.attrs.level, slug: id, text: node.textContent });
   });
-  toc.replaceChildren(fragment);
+  renderDocumentToc(toc, headings);
   window.dispatchEvent(new Event('documentcontentchange'));
   if (transaction.docChanged) editor.view.dispatch(transaction);
 }
@@ -389,6 +384,7 @@ async function start() {
     },
     onTransaction: updateHistoryButtons,
   });
+  editor.registerPlugin(createAttachmentPreviewPlugin({ base: sitePath('/') }));
   updateToc();
   host.setAttribute('aria-busy', 'false');
   updateHistoryButtons();

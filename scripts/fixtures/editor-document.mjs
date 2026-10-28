@@ -6,7 +6,7 @@ import { validateDocument } from '../../src/editor/schema.mjs';
 import { createDocumentStore } from '../document-store.mjs';
 
 // Test-only rich content. Not imported by the app, Vite plugin or document catalogue.
-export const sourceFile = 'documents/implementation/16-ПЛАН_ИНЖЕНЕРНЫХ_РАСЧЁТОВ_2026-10-27.md';
+export const sourceFile = 'scripts/fixtures/engineering-source.md';
 const formulas = '\n\n---\n\n## Контрольные формулы\n\nКонтрольная формула: $v = \\pi d n / 1000$.\n\n$$\nt = \\frac{L}{n \\cdot f}\n$$\n';
 const contentTag = (document) => createHash('sha256').update(JSON.stringify(document)).digest('hex');
 

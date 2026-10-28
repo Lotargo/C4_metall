@@ -1,0 +1,1903 @@
+{
+  "version": 1,
+  "assets": {
+    "00-general-plan-2026-10-27/drawing-dimensions.png": {
+      "sha256": "379c1e51390520ac16742ffc9d9225df73042852d47797ed711c2054e8b8e335",
+      "kind": "image",
+      "width": 2340,
+      "height": 1646
+    },
+    "00-general-plan-2026-10-27/drawing-requirements.png": {
+      "sha256": "da4b43285daaf7be493241b8b8d134ae1eb8b63ea9ed1754b2da1a0b06096ab4",
+      "kind": "image",
+      "width": 2344,
+      "height": 1661
+    },
+    "00-general-plan-2026-10-27/drawing-title-block.png": {
+      "sha256": "ed3575ee1427e8cd7569e011364cdf976aaf440d4580160ebb5d16797c5e92d9",
+      "kind": "image",
+      "width": 2365,
+      "height": 1704
+    },
+    "00-general-plan-2026-10-27/machines.xlsx": {
+      "sha256": "9ff8b609b3b99a37d81e973b3305d28e290c979be083b367215e6ec83f57af1c",
+      "kind": "workbook",
+      "sheets": [
+        {
+          "name": "Лист1",
+          "range": "A3:I18",
+          "rows": [
+            [
+              {
+                "value": "№ п/п",
+                "text": "№ п/п",
+                "format": "General"
+              },
+              {
+                "value": "Название ",
+                "text": "Название ",
+                "format": "General"
+              },
+              {
+                "value": "Тип Станка ",
+                "text": "Тип Станка ",
+                "format": "General"
+              },
+              {
+                "value": "Максимальыне габариты , мм",
+                "text": "Максимальыне габариты , мм",
+                "format": "General"
+              },
+              {
+                "value": "Максимальная толщина, мм",
+                "text": "Максимальная толщина, мм",
+                "format": "General"
+              },
+              {
+                "value": "Материалы обработки",
+                "text": "Материалы обработки",
+                "format": "General"
+              },
+              {
+                "value": "Максимальный вес, кг ",
+                "text": "Максимальный вес, кг ",
+                "format": "General"
+              },
+              {
+                "value": "Класс точности ",
+                "text": "Класс точности ",
+                "format": "General"
+              },
+              {
+                "value": "Стоимоть 1 часа станка, руб с НДС",
+                "text": "Стоимоть 1 часа станка, руб с НДС",
+                "format": "General"
+              }
+            ],
+            [
+              {
+                "value": 1,
+                "text": "1",
+                "format": "General"
+              },
+              {
+                "value": "CY-K 510n/2000",
+                "text": "CY-K 510n/2000",
+                "format": "General"
+              },
+              {
+                "value": "Токарный станок",
+                "text": "Токарный станок",
+                "format": "General"
+              },
+              {
+                "value": "ф300 х 2000",
+                "text": "ф300 х 2000",
+                "format": "General"
+              },
+              {
+                "value": null,
+                "text": ""
+              },
+              {
+                "value": "Сталь, нержавеющая сталь, чугун, цветные металлы, жаропрочные стали, закаленная сталь, пластик",
+                "text": "Сталь, нержавеющая сталь, чугун, цветные металлы, жаропрочные стали, закаленная сталь, пластик",
+                "format": "General"
+              },
+              {
+                "value": 1000,
+                "text": "1000",
+                "format": "General"
+              },
+              {
+                "value": "П",
+                "text": "П",
+                "format": "General"
+              },
+              {
+                "value": 1700,
+                "text": "1 700",
+                "format": "#,##0"
+              }
+            ],
+            [
+              {
+                "value": 2,
+                "text": "2",
+                "format": "General"
+              },
+              {
+                "value": "РТ755",
+                "text": "РТ755",
+                "format": "General"
+              },
+              {
+                "value": "Токарный станок",
+                "text": "Токарный станок",
+                "format": "General"
+              },
+              {
+                "value": "ф1060х 3000",
+                "text": "ф1060х 3000",
+                "format": "General"
+              },
+              {
+                "value": null,
+                "text": ""
+              },
+              {
+                "value": "Сталь, нержавеющая сталь, чугун, цветные металлы, жаропрочные стали, закаленная сталь, пластик",
+                "text": "Сталь, нержавеющая сталь, чугун, цветные металлы, жаропрочные стали, закаленная сталь, пластик",
+                "format": "General"
+              },
+              {
+                "value": 3000,
+                "text": "3000",
+                "format": "General"
+              },
+              {
+                "value": "П",
+                "text": "П",
+                "format": "General"
+              },
+              {
+                "value": 2500,
+                "text": "2 500",
+                "format": "#,##0"
+              }
+            ],
+            [
+              {
+                "value": 3,
+                "text": "3",
+                "format": "General"
+              },
+              {
+                "value": "TOS-HOSTIVAR",
+                "text": "TOS-HOSTIVAR",
+                "format": "General"
+              },
+              {
+                "value": "Круглошлифовальный станок ",
+                "text": "Круглошлифовальный станок ",
+                "format": "General"
+              },
+              {
+                "value": "ф500 х 3000",
+                "text": "ф500 х 3000",
+                "format": "General"
+              },
+              {
+                "value": null,
+                "text": ""
+              },
+              {
+                "value": "Сталь, нержавеющая сталь, чугун, цветные металлы, жаропрочные стали, закаленная сталь",
+                "text": "Сталь, нержавеющая сталь, чугун, цветные металлы, жаропрочные стали, закаленная сталь",
+                "format": "General"
+              },
+              {
+                "value": 600,
+                "text": "600",
+                "format": "General"
+              },
+              {
+                "value": "В",
+                "text": "В",
+                "format": "General"
+              },
+              {
+                "value": 2000,
+                "text": "2 000",
+                "format": "#,##0"
+              }
+            ],
+            [
+              {
+                "value": 4,
+                "text": "4",
+                "format": "General"
+              },
+              {
+                "value": "CHENLONG  G4240/70",
+                "text": "CHENLONG  G4240/70",
+                "format": "General"
+              },
+              {
+                "value": "Ленточно-пильный станок",
+                "text": "Ленточно-пильный станок",
+                "format": "General"
+              },
+              {
+                "value": "ф400",
+                "text": "ф400",
+                "format": "General"
+              },
+              {
+                "value": null,
+                "text": ""
+              },
+              {
+                "value": "Сталь, нержавеющая сталь, чугун, цветные металлы, жаропрочные стали, закаленная сталь, пластик",
+                "text": "Сталь, нержавеющая сталь, чугун, цветные металлы, жаропрочные стали, закаленная сталь, пластик",
+                "format": "General"
+              },
+              {
+                "value": 2000,
+                "text": "2000",
+                "format": "General"
+              },
+              {
+                "value": "Н",
+                "text": "Н",
+                "format": "General"
+              },
+              {
+                "value": 1500,
+                "text": "1 500",
+                "format": "#,##0"
+              }
+            ],
+            [
+              {
+                "value": 5,
+                "text": "5",
+                "format": "General"
+              },
+              {
+                "value": "2М55",
+                "text": "2М55",
+                "format": "General"
+              },
+              {
+                "value": "Радиально-сверлильный станок",
+                "text": "Радиально-сверлильный станок",
+                "format": "General"
+              },
+              {
+                "value": "2000х3000х1500",
+                "text": "2000х3000х1500",
+                "format": "General"
+              },
+              {
+                "value": null,
+                "text": ""
+              },
+              {
+                "value": "Сталь, нержавеющая сталь, чугун, цветные металлы, жаропрочные стали, пластик",
+                "text": "Сталь, нержавеющая сталь, чугун, цветные металлы, жаропрочные стали, пластик",
+                "format": "General"
+              },
+              {
+                "value": "нет ограничений",
+                "text": "нет ограничений",
+                "format": "General"
+              },
+              {
+                "value": "Н",
+                "text": "Н",
+                "format": "General"
+              },
+              {
+                "value": 1500,
+                "text": "1 500",
+                "format": "#,##0"
+              }
+            ],
+            [
+              {
+                "value": 6,
+                "text": "6",
+                "format": "General"
+              },
+              {
+                "value": "KVL1361",
+                "text": "KVL1361",
+                "format": "General"
+              },
+              {
+                "value": "Фрезерный станок",
+                "text": "Фрезерный станок",
+                "format": "General"
+              },
+              {
+                "value": "1300х610х630",
+                "text": "1300х610х630",
+                "format": "General"
+              },
+              {
+                "value": null,
+                "text": ""
+              },
+              {
+                "value": "Сталь, нержавеющая сталь, чугун, цветные металлы, жаропрочные стали, закаленная сталь, пластик",
+                "text": "Сталь, нержавеющая сталь, чугун, цветные металлы, жаропрочные стали, закаленная сталь, пластик",
+                "format": "General"
+              },
+              {
+                "value": 800,
+                "text": "800",
+                "format": "General"
+              },
+              {
+                "value": "П",
+                "text": "П",
+                "format": "General"
+              },
+              {
+                "value": 2000,
+                "text": "2 000",
+                "format": "#,##0"
+              }
+            ],
+            [
+              {
+                "value": 7,
+                "text": "7",
+                "format": "General"
+              },
+              {
+                "value": "MM-430",
+                "text": "MM-430",
+                "format": "General"
+              },
+              {
+                "value": "Фрезерный станок",
+                "text": "Фрезерный станок",
+                "format": "General"
+              },
+              {
+                "value": "900х400х390",
+                "text": "900х400х390",
+                "format": "General"
+              },
+              {
+                "value": null,
+                "text": ""
+              },
+              {
+                "value": "Сталь, нержавеющая сталь, чугун, цветные металлы, жаропрочные стали, закаленная сталь, пластик",
+                "text": "Сталь, нержавеющая сталь, чугун, цветные металлы, жаропрочные стали, закаленная сталь, пластик",
+                "format": "General"
+              },
+              {
+                "value": 500,
+                "text": "500",
+                "format": "General"
+              },
+              {
+                "value": "П",
+                "text": "П",
+                "format": "General"
+              },
+              {
+                "value": 2000,
+                "text": "2 000",
+                "format": "#,##0"
+              }
+            ],
+            [
+              {
+                "value": 8,
+                "text": "8",
+                "format": "General"
+              },
+              {
+                "value": "65А90пмф4",
+                "text": "65А90пмф4",
+                "format": "General"
+              },
+              {
+                "value": "Фрезерный станок",
+                "text": "Фрезерный станок",
+                "format": "General"
+              },
+              {
+                "value": "2500х1000х1500",
+                "text": "2500х1000х1500",
+                "format": "General"
+              },
+              {
+                "value": null,
+                "text": ""
+              },
+              {
+                "value": "Сталь, нержавеющая сталь, чугун, цветные металлы, жаропрочные стали, закаленная сталь, пластик",
+                "text": "Сталь, нержавеющая сталь, чугун, цветные металлы, жаропрочные стали, закаленная сталь, пластик",
+                "format": "General"
+              },
+              {
+                "value": 10000,
+                "text": "10000",
+                "format": "General"
+              },
+              {
+                "value": "П",
+                "text": "П",
+                "format": "General"
+              },
+              {
+                "value": 3000,
+                "text": "3 000",
+                "format": "#,##0"
+              }
+            ],
+            [
+              {
+                "value": 9,
+                "text": "9",
+                "format": "General"
+              },
+              {
+                "value": "TIG 500 P AC/DC",
+                "text": "TIG 500 P AC/DC",
+                "format": "General"
+              },
+              {
+                "value": "Аргонно-дуговая сварка",
+                "text": "Аргонно-дуговая сварка",
+                "format": "General"
+              },
+              {
+                "value": null,
+                "text": ""
+              },
+              {
+                "value": null,
+                "text": ""
+              },
+              {
+                "value": "Сталь, нержавеющая сталь, чугун, цветные металлы, жаропрочные стали, закаленная сталь",
+                "text": "Сталь, нержавеющая сталь, чугун, цветные металлы, жаропрочные стали, закаленная сталь",
+                "format": "General"
+              },
+              {
+                "value": "нет ограничений",
+                "text": "нет ограничений",
+                "format": "General"
+              },
+              {
+                "value": null,
+                "text": ""
+              },
+              {
+                "value": 1500,
+                "text": "1 500",
+                "format": "#,##0"
+              }
+            ],
+            [
+              {
+                "value": 10,
+                "text": "10",
+                "format": "General"
+              },
+              {
+                "value": "MIG 3500",
+                "text": "MIG 3500",
+                "format": "General"
+              },
+              {
+                "value": "Полуавтоматическая сварка ",
+                "text": "Полуавтоматическая сварка ",
+                "format": "General"
+              },
+              {
+                "value": null,
+                "text": ""
+              },
+              {
+                "value": null,
+                "text": ""
+              },
+              {
+                "value": "Сталь, нержавеющая сталь, чугун, цветные металлы, жаропрочные стали, закаленная сталь",
+                "text": "Сталь, нержавеющая сталь, чугун, цветные металлы, жаропрочные стали, закаленная сталь",
+                "format": "General"
+              },
+              {
+                "value": "нет ограничений",
+                "text": "нет ограничений",
+                "format": "General"
+              },
+              {
+                "value": null,
+                "text": ""
+              },
+              {
+                "value": 1500,
+                "text": "1 500",
+                "format": "#,##0"
+              }
+            ],
+            [
+              {
+                "value": 11,
+                "text": "11",
+                "format": "General"
+              },
+              {
+                "value": "F3015T6",
+                "text": "F3015T6",
+                "format": "General"
+              },
+              {
+                "value": "Станок лазерной резки",
+                "text": "Станок лазерной резки",
+                "format": "General"
+              },
+              {
+                "value": "1500х3000",
+                "text": "1500х3000",
+                "format": "General"
+              },
+              {
+                "value": 25,
+                "text": "25",
+                "format": "General"
+              },
+              {
+                "value": "Сталь, нержавеющая сталь",
+                "text": "Сталь, нержавеющая сталь",
+                "format": "General"
+              },
+              {
+                "value": 1000,
+                "text": "1000",
+                "format": "General"
+              },
+              {
+                "value": "+-0,2мм",
+                "text": "+-0,2мм",
+                "format": "@"
+              },
+              {
+                "value": 15000,
+                "text": "15 000",
+                "format": "#,##0"
+              }
+            ],
+            [
+              {
+                "value": 12,
+                "text": "12",
+                "format": "General"
+              },
+              {
+                "value": "CUT",
+                "text": "CUT",
+                "format": "General"
+              },
+              {
+                "value": "Станок газовой резки",
+                "text": "Станок газовой резки",
+                "format": "General"
+              },
+              {
+                "value": "1500х3000",
+                "text": "1500х3000",
+                "format": "General"
+              },
+              {
+                "value": 130,
+                "text": "130",
+                "format": "General"
+              },
+              {
+                "value": "Сталь",
+                "text": "Сталь",
+                "format": "General"
+              },
+              {
+                "value": 2000,
+                "text": "2000",
+                "format": "General"
+              },
+              {
+                "value": "+-2мм",
+                "text": "+-2мм",
+                "format": "@"
+              },
+              {
+                "value": 10000,
+                "text": "10 000",
+                "format": "#,##0"
+              }
+            ],
+            [
+              {
+                "value": 13,
+                "text": "13",
+                "format": "General"
+              },
+              {
+                "value": "TK-C50-L4020-3D",
+                "text": "TK-C50-L4020-3D",
+                "format": "General"
+              },
+              {
+                "value": "Станок гидроабразивной резки",
+                "text": "Станок гидроабразивной резки",
+                "format": "General"
+              },
+              {
+                "value": "2000х4000",
+                "text": "2000х4000",
+                "format": "General"
+              },
+              {
+                "value": 80,
+                "text": "80",
+                "format": "General"
+              },
+              {
+                "value": "Сталь, нержавеющая сталь, чугун, цветные металлы, жаропрочные стали, закаленная сталь, пластик, керамика, стекло",
+                "text": "Сталь, нержавеющая сталь, чугун, цветные металлы, жаропрочные стали, закаленная сталь, пластик, керамика, стекло",
+                "format": "General"
+              },
+              {
+                "value": 3000,
+                "text": "3000",
+                "format": "General"
+              },
+              {
+                "value": "+-0,5мм",
+                "text": "+-0,5мм",
+                "format": "@"
+              },
+              {
+                "value": 4500,
+                "text": "4 500",
+                "format": "#,##0"
+              }
+            ],
+            [
+              {
+                "value": 14,
+                "text": "14",
+                "format": "General"
+              },
+              {
+                "value": "F3015T6 труб",
+                "text": "F3015T6 труб",
+                "format": "General"
+              },
+              {
+                "value": "Лазерный труборез",
+                "text": "Лазерный труборез",
+                "format": "General"
+              },
+              {
+                "value": "ф230 х 6000",
+                "text": "ф230 х 6000",
+                "format": "General"
+              },
+              {
+                "value": 12,
+                "text": "12",
+                "format": "General"
+              },
+              {
+                "value": "Сталь, нержавеющая сталь",
+                "text": "Сталь, нержавеющая сталь",
+                "format": "General"
+              },
+              {
+                "value": 500,
+                "text": "500",
+                "format": "General"
+              },
+              {
+                "value": "+-0,2мм",
+                "text": "+-0,2мм",
+                "format": "@"
+              },
+              {
+                "value": 15000,
+                "text": "15 000",
+                "format": "#,##0"
+              }
+            ],
+            [
+              {
+                "value": 15,
+                "text": "15",
+                "format": "General"
+              },
+              {
+                "value": "Магма ТРП-6000",
+                "text": "Магма ТРП-6000",
+                "format": "General"
+              },
+              {
+                "value": "Плазменный труборуез",
+                "text": "Плазменный труборуез",
+                "format": "General"
+              },
+              {
+                "value": "ф400 х 8000",
+                "text": "ф400 х 8000",
+                "format": "General"
+              },
+              {
+                "value": 20,
+                "text": "20",
+                "format": "General"
+              },
+              {
+                "value": "Сталь, нержавеющая сталь",
+                "text": "Сталь, нержавеющая сталь",
+                "format": "General"
+              },
+              {
+                "value": 800,
+                "text": "800",
+                "format": "General"
+              },
+              {
+                "value": "+-1мм",
+                "text": "+-1мм",
+                "format": "@"
+              },
+              {
+                "value": 10000,
+                "text": "10 000",
+                "format": "#,##0"
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    "00-general-plan-2026-10-27/materials.xlsx": {
+      "sha256": "f62105a6cc6b745ee0384111c4adbb87a3dc6015406aeb1e1fc9788155cb47ce",
+      "kind": "workbook",
+      "sheets": [
+        {
+          "name": "Лист1",
+          "range": "A2:G14",
+          "rows": [
+            [
+              {
+                "value": "Материал ",
+                "text": "Материал ",
+                "format": "General"
+              },
+              {
+                "value": "Заменители",
+                "text": "Заменители",
+                "format": "General"
+              },
+              {
+                "value": "Форма заготовки ",
+                "text": "Форма заготовки ",
+                "format": "General"
+              },
+              {
+                "value": "Свариваемость",
+                "text": "Свариваемость",
+                "format": "General"
+              },
+              {
+                "value": "Твердость ",
+                "text": "Твердость ",
+                "format": "General"
+              },
+              {
+                "value": "Плотность ",
+                "text": "Плотность ",
+                "format": "General"
+              },
+              {
+                "value": "Самозакаливаемость ",
+                "text": "Самозакаливаемость ",
+                "format": "General"
+              }
+            ],
+            [
+              {
+                "value": "Ст45",
+                "text": "Ст45",
+                "format": "General"
+              },
+              {
+                "value": "40Х, 50, 50Г2",
+                "text": "40Х, 50, 50Г2",
+                "format": "General"
+              },
+              {
+                "value": "Прокат круглый",
+                "text": "Прокат круглый",
+                "format": "General"
+              },
+              {
+                "value": "трудносвариваемая",
+                "text": "трудносвариваемая",
+                "format": "General"
+              },
+              {
+                "value": 207,
+                "text": "207",
+                "format": "General"
+              },
+              {
+                "value": 7826,
+                "text": "7826",
+                "format": "General"
+              },
+              {
+                "value": "нет ",
+                "text": "нет ",
+                "format": "General"
+              }
+            ],
+            [
+              {
+                "value": "Ст45",
+                "text": "Ст45",
+                "format": "General"
+              },
+              {
+                "value": "40Х, 50, 50Г2",
+                "text": "40Х, 50, 50Г2",
+                "format": "General"
+              },
+              {
+                "value": "Прокат квадратный ",
+                "text": "Прокат квадратный ",
+                "format": "General"
+              },
+              {
+                "value": "трудносвариваемая",
+                "text": "трудносвариваемая",
+                "format": "General"
+              },
+              {
+                "value": 207,
+                "text": "207",
+                "format": "General"
+              },
+              {
+                "value": 7826,
+                "text": "7826",
+                "format": "General"
+              },
+              {
+                "value": "нет ",
+                "text": "нет ",
+                "format": "General"
+              }
+            ],
+            [
+              {
+                "value": "Ст45",
+                "text": "Ст45",
+                "format": "General"
+              },
+              {
+                "value": "40Х, 50, 50Г2",
+                "text": "40Х, 50, 50Г2",
+                "format": "General"
+              },
+              {
+                "value": "Прокат шестигранный",
+                "text": "Прокат шестигранный",
+                "format": "General"
+              },
+              {
+                "value": "трудносвариваемая",
+                "text": "трудносвариваемая",
+                "format": "General"
+              },
+              {
+                "value": 207,
+                "text": "207",
+                "format": "General"
+              },
+              {
+                "value": 7826,
+                "text": "7826",
+                "format": "General"
+              },
+              {
+                "value": "нет ",
+                "text": "нет ",
+                "format": "General"
+              }
+            ],
+            [
+              {
+                "value": "Ст45",
+                "text": "Ст45",
+                "format": "General"
+              },
+              {
+                "value": "40Х, 50, 50Г2",
+                "text": "40Х, 50, 50Г2",
+                "format": "General"
+              },
+              {
+                "value": "Прокат листовой",
+                "text": "Прокат листовой",
+                "format": "General"
+              },
+              {
+                "value": "трудносвариваемая",
+                "text": "трудносвариваемая",
+                "format": "General"
+              },
+              {
+                "value": 207,
+                "text": "207",
+                "format": "General"
+              },
+              {
+                "value": 7826,
+                "text": "7826",
+                "format": "General"
+              },
+              {
+                "value": "нет ",
+                "text": "нет ",
+                "format": "General"
+              }
+            ],
+            [
+              {
+                "value": "Ст45",
+                "text": "Ст45",
+                "format": "General"
+              },
+              {
+                "value": "40Х, 50, 50Г2",
+                "text": "40Х, 50, 50Г2",
+                "format": "General"
+              },
+              {
+                "value": "Труба круглая бесшовная ",
+                "text": "Труба круглая бесшовная ",
+                "format": "General"
+              },
+              {
+                "value": "трудносвариваемая",
+                "text": "трудносвариваемая",
+                "format": "General"
+              },
+              {
+                "value": 207,
+                "text": "207",
+                "format": "General"
+              },
+              {
+                "value": 7826,
+                "text": "7826",
+                "format": "General"
+              },
+              {
+                "value": "нет ",
+                "text": "нет ",
+                "format": "General"
+              }
+            ],
+            [
+              {
+                "value": "Ст45",
+                "text": "Ст45",
+                "format": "General"
+              },
+              {
+                "value": "40Х, 50, 50Г2",
+                "text": "40Х, 50, 50Г2",
+                "format": "General"
+              },
+              {
+                "value": "Поковка",
+                "text": "Поковка",
+                "format": "General"
+              },
+              {
+                "value": "трудносвариваемая",
+                "text": "трудносвариваемая",
+                "format": "General"
+              },
+              {
+                "value": 207,
+                "text": "207",
+                "format": "General"
+              },
+              {
+                "value": 7826,
+                "text": "7826",
+                "format": "General"
+              },
+              {
+                "value": "нет ",
+                "text": "нет ",
+                "format": "General"
+              }
+            ],
+            [
+              {
+                "value": "Ст65Г",
+                "text": "Ст65Г",
+                "format": "General"
+              },
+              {
+                "value": "70, У8А, 70Г, 60С2А, 9ХС, 50ХФА, 60С2, 55С2",
+                "text": "70, У8А, 70Г, 60С2А, 9ХС, 50ХФА, 60С2, 55С2",
+                "format": "General"
+              },
+              {
+                "value": "Прокат круглый",
+                "text": "Прокат круглый",
+                "format": "General"
+              },
+              {
+                "value": "не применяется для сварных конструкций.",
+                "text": "не применяется для сварных конструкций.",
+                "format": "General"
+              },
+              {
+                "value": 217,
+                "text": "217",
+                "format": "General"
+              },
+              {
+                "value": 7850,
+                "text": "7850",
+                "format": "General"
+              },
+              {
+                "value": "да",
+                "text": "да",
+                "format": "General"
+              }
+            ],
+            [
+              {
+                "value": "Ст65Г",
+                "text": "Ст65Г",
+                "format": "General"
+              },
+              {
+                "value": "70, У8А, 70Г, 60С2А, 9ХС, 50ХФА, 60С2, 55С2",
+                "text": "70, У8А, 70Г, 60С2А, 9ХС, 50ХФА, 60С2, 55С2",
+                "format": "General"
+              },
+              {
+                "value": "Прокат квадратный ",
+                "text": "Прокат квадратный ",
+                "format": "General"
+              },
+              {
+                "value": "не применяется для сварных конструкций.",
+                "text": "не применяется для сварных конструкций.",
+                "format": "General"
+              },
+              {
+                "value": 217,
+                "text": "217",
+                "format": "General"
+              },
+              {
+                "value": 7850,
+                "text": "7850",
+                "format": "General"
+              },
+              {
+                "value": "да",
+                "text": "да",
+                "format": "General"
+              }
+            ],
+            [
+              {
+                "value": "Ст65Г",
+                "text": "Ст65Г",
+                "format": "General"
+              },
+              {
+                "value": "70, У8А, 70Г, 60С2А, 9ХС, 50ХФА, 60С2, 55С2",
+                "text": "70, У8А, 70Г, 60С2А, 9ХС, 50ХФА, 60С2, 55С2",
+                "format": "General"
+              },
+              {
+                "value": "Прокат шестигранный",
+                "text": "Прокат шестигранный",
+                "format": "General"
+              },
+              {
+                "value": "не применяется для сварных конструкций.",
+                "text": "не применяется для сварных конструкций.",
+                "format": "General"
+              },
+              {
+                "value": 217,
+                "text": "217",
+                "format": "General"
+              },
+              {
+                "value": 7850,
+                "text": "7850",
+                "format": "General"
+              },
+              {
+                "value": "да",
+                "text": "да",
+                "format": "General"
+              }
+            ],
+            [
+              {
+                "value": "Ст65Г",
+                "text": "Ст65Г",
+                "format": "General"
+              },
+              {
+                "value": "70, У8А, 70Г, 60С2А, 9ХС, 50ХФА, 60С2, 55С2",
+                "text": "70, У8А, 70Г, 60С2А, 9ХС, 50ХФА, 60С2, 55С2",
+                "format": "General"
+              },
+              {
+                "value": "Прокат листовой",
+                "text": "Прокат листовой",
+                "format": "General"
+              },
+              {
+                "value": "не применяется для сварных конструкций.",
+                "text": "не применяется для сварных конструкций.",
+                "format": "General"
+              },
+              {
+                "value": 217,
+                "text": "217",
+                "format": "General"
+              },
+              {
+                "value": 7850,
+                "text": "7850",
+                "format": "General"
+              },
+              {
+                "value": "да",
+                "text": "да",
+                "format": "General"
+              }
+            ],
+            [
+              {
+                "value": "Ст65Г",
+                "text": "Ст65Г",
+                "format": "General"
+              },
+              {
+                "value": "70, У8А, 70Г, 60С2А, 9ХС, 50ХФА, 60С2, 55С2",
+                "text": "70, У8А, 70Г, 60С2А, 9ХС, 50ХФА, 60С2, 55С2",
+                "format": "General"
+              },
+              {
+                "value": "Труба круглая",
+                "text": "Труба круглая",
+                "format": "General"
+              },
+              {
+                "value": "не применяется для сварных конструкций.",
+                "text": "не применяется для сварных конструкций.",
+                "format": "General"
+              },
+              {
+                "value": 217,
+                "text": "217",
+                "format": "General"
+              },
+              {
+                "value": 7850,
+                "text": "7850",
+                "format": "General"
+              },
+              {
+                "value": "да",
+                "text": "да",
+                "format": "General"
+              }
+            ],
+            [
+              {
+                "value": "Ст65Г",
+                "text": "Ст65Г",
+                "format": "General"
+              },
+              {
+                "value": "70, У8А, 70Г, 60С2А, 9ХС, 50ХФА, 60С2, 55С2",
+                "text": "70, У8А, 70Г, 60С2А, 9ХС, 50ХФА, 60С2, 55С2",
+                "format": "General"
+              },
+              {
+                "value": "Поковка",
+                "text": "Поковка",
+                "format": "General"
+              },
+              {
+                "value": "не применяется для сварных конструкций.",
+                "text": "не применяется для сварных конструкций.",
+                "format": "General"
+              },
+              {
+                "value": 217,
+                "text": "217",
+                "format": "General"
+              },
+              {
+                "value": 7850,
+                "text": "7850",
+                "format": "General"
+              },
+              {
+                "value": "да",
+                "text": "да",
+                "format": "General"
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    "00-general-plan-2026-10-27/stock-forms.xlsx": {
+      "sha256": "b6347077b77d1cc88933a1e169e81d07c03ee331d4556be5756f191d25a6e43b",
+      "kind": "workbook",
+      "sheets": [
+        {
+          "name": "Квадратный прокат",
+          "range": "A2:D6",
+          "rows": [
+            [
+              {
+                "value": "Номинальный размер",
+                "text": "Номинальный размер",
+                "format": "General"
+              },
+              {
+                "value": "Отклонение по сечению",
+                "text": "Отклонение по сечению",
+                "format": "General"
+              },
+              {
+                "value": "Кривизна от длины",
+                "text": "Кривизна от длины",
+                "format": "General"
+              },
+              {
+                "value": "Длина ",
+                "text": "Длина ",
+                "format": "General"
+              }
+            ],
+            [
+              {
+                "value": 5,
+                "text": "5",
+                "format": "General"
+              },
+              {
+                "value": "±0,4",
+                "text": "±0,4",
+                "format": "General"
+              },
+              {
+                "value": 0.005,
+                "text": "0,50%",
+                "format": "0.00%"
+              },
+              {
+                "value": 6,
+                "text": "6",
+                "format": "General"
+              }
+            ],
+            [
+              {
+                "value": 5,
+                "text": "5",
+                "format": "General"
+              },
+              {
+                "value": "±0,4",
+                "text": "±0,4",
+                "format": "General"
+              },
+              {
+                "value": 0.005,
+                "text": "0,50%",
+                "format": "0.00%"
+              },
+              {
+                "value": 12,
+                "text": "12",
+                "format": "General"
+              }
+            ],
+            [
+              {
+                "value": 5.5,
+                "text": "5,5",
+                "format": "General"
+              },
+              {
+                "value": "±0,4",
+                "text": "±0,4",
+                "format": "General"
+              },
+              {
+                "value": 0.005,
+                "text": "0,50%",
+                "format": "0.00%"
+              },
+              {
+                "value": 6,
+                "text": "6",
+                "format": "General"
+              }
+            ],
+            [
+              {
+                "value": 6,
+                "text": "6",
+                "format": "General"
+              },
+              {
+                "value": "±0,4",
+                "text": "±0,4",
+                "format": "General"
+              },
+              {
+                "value": 0.005,
+                "text": "0,50%",
+                "format": "0.00%"
+              },
+              {
+                "value": null,
+                "text": ""
+              }
+            ]
+          ]
+        },
+        {
+          "name": "Листовой прокат",
+          "range": "A2:E5",
+          "rows": [
+            [
+              {
+                "value": "Номинальный толщина ",
+                "text": "Номинальный толщина ",
+                "format": "General"
+              },
+              {
+                "value": "Отклонение по сечению",
+                "text": "Отклонение по сечению",
+                "format": "General"
+              },
+              {
+                "value": "Кривизна от длины",
+                "text": "Кривизна от длины",
+                "format": "General"
+              },
+              {
+                "value": "Ширина",
+                "text": "Ширина",
+                "format": "General"
+              },
+              {
+                "value": "Длина ",
+                "text": "Длина ",
+                "format": "General"
+              }
+            ],
+            [
+              {
+                "value": 5,
+                "text": "5",
+                "format": "General"
+              },
+              {
+                "value": "±0,4",
+                "text": "±0,4",
+                "format": "General"
+              },
+              {
+                "value": 0.005,
+                "text": "0,50%",
+                "format": "0.00%"
+              },
+              {
+                "value": 1000,
+                "text": "1000",
+                "format": "General"
+              },
+              {
+                "value": 2000,
+                "text": "2000",
+                "format": "General"
+              }
+            ],
+            [
+              {
+                "value": 5.5,
+                "text": "5,5",
+                "format": "General"
+              },
+              {
+                "value": "±0,4",
+                "text": "±0,4",
+                "format": "General"
+              },
+              {
+                "value": 0.005,
+                "text": "0,50%",
+                "format": "0.00%"
+              },
+              {
+                "value": 1500,
+                "text": "1500",
+                "format": "General"
+              },
+              {
+                "value": 3000,
+                "text": "3000",
+                "format": "General"
+              }
+            ],
+            [
+              {
+                "value": 6,
+                "text": "6",
+                "format": "General"
+              },
+              {
+                "value": "±0,4",
+                "text": "±0,4",
+                "format": "General"
+              },
+              {
+                "value": 0.005,
+                "text": "0,50%",
+                "format": "0.00%"
+              },
+              {
+                "value": null,
+                "text": ""
+              },
+              {
+                "value": null,
+                "text": ""
+              }
+            ]
+          ]
+        },
+        {
+          "name": "Шестигранный прокат",
+          "range": "A2:D6",
+          "rows": [
+            [
+              {
+                "value": "Номинальный размер",
+                "text": "Номинальный размер",
+                "format": "General"
+              },
+              {
+                "value": "Отклонение по сечению",
+                "text": "Отклонение по сечению",
+                "format": "General"
+              },
+              {
+                "value": "Кривизна от длины",
+                "text": "Кривизна от длины",
+                "format": "General"
+              },
+              {
+                "value": "Длина ",
+                "text": "Длина ",
+                "format": "General"
+              }
+            ],
+            [
+              {
+                "value": 5,
+                "text": "5",
+                "format": "General"
+              },
+              {
+                "value": "±0,4",
+                "text": "±0,4",
+                "format": "General"
+              },
+              {
+                "value": 0.005,
+                "text": "0,50%",
+                "format": "0.00%"
+              },
+              {
+                "value": 6,
+                "text": "6",
+                "format": "General"
+              }
+            ],
+            [
+              {
+                "value": 5,
+                "text": "5",
+                "format": "General"
+              },
+              {
+                "value": "±0,4",
+                "text": "±0,4",
+                "format": "General"
+              },
+              {
+                "value": 0.005,
+                "text": "0,50%",
+                "format": "0.00%"
+              },
+              {
+                "value": 12,
+                "text": "12",
+                "format": "General"
+              }
+            ],
+            [
+              {
+                "value": 5.5,
+                "text": "5,5",
+                "format": "General"
+              },
+              {
+                "value": "±0,4",
+                "text": "±0,4",
+                "format": "General"
+              },
+              {
+                "value": 0.005,
+                "text": "0,50%",
+                "format": "0.00%"
+              },
+              {
+                "value": 6,
+                "text": "6",
+                "format": "General"
+              }
+            ],
+            [
+              {
+                "value": 6,
+                "text": "6",
+                "format": "General"
+              },
+              {
+                "value": "±0,4",
+                "text": "±0,4",
+                "format": "General"
+              },
+              {
+                "value": 0.005,
+                "text": "0,50%",
+                "format": "0.00%"
+              },
+              {
+                "value": null,
+                "text": ""
+              }
+            ]
+          ]
+        },
+        {
+          "name": "Круглый прокат",
+          "range": "A2:D6",
+          "rows": [
+            [
+              {
+                "value": "Номинальный диаметр ",
+                "text": "Номинальный диаметр ",
+                "format": "General"
+              },
+              {
+                "value": "Отклонение по сечению",
+                "text": "Отклонение по сечению",
+                "format": "General"
+              },
+              {
+                "value": "Кривизна от длины",
+                "text": "Кривизна от длины",
+                "format": "General"
+              },
+              {
+                "value": "Длина ",
+                "text": "Длина ",
+                "format": "General"
+              }
+            ],
+            [
+              {
+                "value": 5,
+                "text": "5",
+                "format": "General"
+              },
+              {
+                "value": "±0,4",
+                "text": "±0,4",
+                "format": "General"
+              },
+              {
+                "value": 0.005,
+                "text": "0,50%",
+                "format": "0.00%"
+              },
+              {
+                "value": 6,
+                "text": "6",
+                "format": "General"
+              }
+            ],
+            [
+              {
+                "value": 5,
+                "text": "5",
+                "format": "General"
+              },
+              {
+                "value": "±0,4",
+                "text": "±0,4",
+                "format": "General"
+              },
+              {
+                "value": 0.005,
+                "text": "0,50%",
+                "format": "0.00%"
+              },
+              {
+                "value": 12,
+                "text": "12",
+                "format": "General"
+              }
+            ],
+            [
+              {
+                "value": 5.5,
+                "text": "5,5",
+                "format": "General"
+              },
+              {
+                "value": "±0,4",
+                "text": "±0,4",
+                "format": "General"
+              },
+              {
+                "value": 0.005,
+                "text": "0,50%",
+                "format": "0.00%"
+              },
+              {
+                "value": 6,
+                "text": "6",
+                "format": "General"
+              }
+            ],
+            [
+              {
+                "value": 6,
+                "text": "6",
+                "format": "General"
+              },
+              {
+                "value": "±0,4",
+                "text": "±0,4",
+                "format": "General"
+              },
+              {
+                "value": 0.005,
+                "text": "0,50%",
+                "format": "0.00%"
+              },
+              {
+                "value": null,
+                "text": ""
+              }
+            ]
+          ]
+        },
+        {
+          "name": "Прокта труба бесшовная ",
+          "range": "A2:E5",
+          "rows": [
+            [
+              {
+                "value": "Номинальный диаметр ",
+                "text": "Номинальный диаметр ",
+                "format": "General"
+              },
+              {
+                "value": "Толщина стенки ",
+                "text": "Толщина стенки ",
+                "format": "General"
+              },
+              {
+                "value": "Отклонение по сечению",
+                "text": "Отклонение по сечению",
+                "format": "General"
+              },
+              {
+                "value": "Кривизна от длины",
+                "text": "Кривизна от длины",
+                "format": "General"
+              },
+              {
+                "value": "Длина ",
+                "text": "Длина ",
+                "format": "General"
+              }
+            ],
+            [
+              {
+                "value": 20,
+                "text": "20",
+                "format": "General"
+              },
+              {
+                "value": 2.5,
+                "text": "2,5",
+                "format": "General"
+              },
+              {
+                "value": "±0,4",
+                "text": "±0,4",
+                "format": "General"
+              },
+              {
+                "value": 0.005,
+                "text": "0,50%",
+                "format": "0.00%"
+              },
+              {
+                "value": 6,
+                "text": "6",
+                "format": "General"
+              }
+            ],
+            [
+              {
+                "value": 20,
+                "text": "20",
+                "format": "General"
+              },
+              {
+                "value": 2.6,
+                "text": "2,6",
+                "format": "General"
+              },
+              {
+                "value": "±0,4",
+                "text": "±0,4",
+                "format": "General"
+              },
+              {
+                "value": 0.005,
+                "text": "0,50%",
+                "format": "0.00%"
+              },
+              {
+                "value": 12,
+                "text": "12",
+                "format": "General"
+              }
+            ],
+            [
+              {
+                "value": 20,
+                "text": "20",
+                "format": "General"
+              },
+              {
+                "value": 2.8,
+                "text": "2,8",
+                "format": "General"
+              },
+              {
+                "value": "±0,4",
+                "text": "±0,4",
+                "format": "General"
+              },
+              {
+                "value": 0.005,
+                "text": "0,50%",
+                "format": "0.00%"
+              },
+              {
+                "value": 6,
+                "text": "6",
+                "format": "General"
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    "14-workspace-uiux-2026-10-28/01-overview-report.png": {
+      "sha256": "a6717e91965b3a9c23511e980759e8549eae15c7e2afb141c0bc9fbb59e1120c",
+      "kind": "image",
+      "width": 1719,
+      "height": 944
+    },
+    "14-workspace-uiux-2026-10-28/02-overview-questions.png": {
+      "sha256": "0a2cd26a4c07b5d9bd1e9ecbe9f2cf37eb677ac342eb524f4e730af51bb02265",
+      "kind": "image",
+      "width": 1718,
+      "height": 942
+    },
+    "14-workspace-uiux-2026-10-28/03-overview-continuation.png": {
+      "sha256": "4a8e881231ab39510fd0db5a5a908101df7aa09f16684d795f57711d76cfba3e",
+      "kind": "image",
+      "width": 1721,
+      "height": 943
+    },
+    "14-workspace-uiux-2026-10-28/04-overview-open-questions.png": {
+      "sha256": "b7272db2ea54e95eb6412b47380d0325bd6cb5104f8c0da25014878756990a37",
+      "kind": "image",
+      "width": 1720,
+      "height": 942
+    },
+    "14-workspace-uiux-2026-10-28/05-passport-title-fields.png": {
+      "sha256": "e790d22da09559057053b7b320392f2dd7b6ef040eb6c079c781e2720df64f5c",
+      "kind": "image",
+      "width": 1718,
+      "height": 943
+    },
+    "14-workspace-uiux-2026-10-28/06-passport-dimensions.png": {
+      "sha256": "19e0895dfd92dbee14fb24a17000dc3f97d9b44247fd39abf366d87aed565472",
+      "kind": "image",
+      "width": 1719,
+      "height": 943
+    },
+    "14-workspace-uiux-2026-10-28/07-passport-explanations.png": {
+      "sha256": "261a8792c0e0b5ed2df1f6cf45cbaf9c145f91b0a1ebdd424e38bbe0747cae9b",
+      "kind": "image",
+      "width": 1719,
+      "height": 944
+    },
+    "14-workspace-uiux-2026-10-28/08-surface-left-neck.png": {
+      "sha256": "5a69e7ade475f2e42ceb18f912c8574c662ddcf88061f7a0494c7f22f6a31879",
+      "kind": "image",
+      "width": 1719,
+      "height": 943
+    },
+    "14-workspace-uiux-2026-10-28/09-surface-second-step.png": {
+      "sha256": "056ea7262e549b474974c83e8673b89d6ebdd72b328133c6fdf563319b5a8d8a",
+      "kind": "image",
+      "width": 1720,
+      "height": 942
+    },
+    "14-workspace-uiux-2026-10-28/10-surface-transition.png": {
+      "sha256": "7db2f727cb6bde257426f84130f734493349e4c116cc666251484b1c1ae0d6cd",
+      "kind": "image",
+      "width": 1720,
+      "height": 942
+    }
+  }
+}

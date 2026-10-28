@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile, mkdtemp, mkdir, readdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import { createHash } from 'node:crypto';
 import { getSchema } from '@tiptap/core';
 import { EditorState } from '@tiptap/pm/state';
 import { closeHistory } from '@tiptap/pm/history';
@@ -17,11 +18,47 @@ import { createImplementationStores, implementationFiles } from './implementatio
 import { implementationSeed } from '../src/editor/seed.mjs';
 import { readDocumentRequest, DocumentTooLarge } from './editor-request.mjs';
 import { encodeCloudDocument, decodeCloudDocument, assertCurrentDocument, DocumentConflict } from '../src/editor/cloud-document.mjs';
+import { groupDocumentHeadings } from '../src/utils/document-toc.mjs';
+import { attachmentPreviewEntries, createAttachmentPreviewPlugin } from '../src/editor/attachment-previews.mjs';
+import { attachmentPreviewHtml } from '../src/utils/attachment-previews.mjs';
+import remarkDocuments from '../src/utils/remark-documents.mjs';
 
 const root = process.cwd();
 const originalBytes = await readFile(path.join(root, sourceFile));
 const seed = await initialTestDocument(root);
 const protectedBefore = preservedContent(seed.document);
+
+test('attachment previews preserve the saved document and render every workbook sheet on both site bases', async () => {
+  const markdown = await readFile(path.join(root, 'documents/implementation/general-plan.md'), 'utf8');
+  for (const base of ['', '/C4_metall']) {
+    const snapshot = implementationSeed({ id: 'general-plan', markdown, documentIds: ['general-plan', 'operator-review', 'engineering-calculations'], base });
+    const schema = getSchema(editorExtensions());
+    const doc = schema.nodeFromJSON(snapshot.document);
+    const before = doc.toJSON();
+    const plugin = createAttachmentPreviewPlugin({ base });
+    const state = EditorState.create({ schema, doc, plugins: [plugin] });
+    assert.equal(plugin.getState(state).find().length, 6);
+    assert.deepEqual(state.doc.toJSON(), before);
+    assert.equal(attachmentPreviewEntries(doc).length, 6, 'duplicate source references do not repeat previews');
+    const stock = attachmentPreviewHtml('00-general-plan-2026-10-27/stock-forms.xlsx', 'Формы и размеры');
+    assert.equal((stock.match(/<details /g) || []).length, 5);
+    assert.match(stock, /0,50%/);
+    assert.match(stock, /Прокта труба бесшовная /);
+    const image = attachmentPreviewHtml('00-general-plan-2026-10-27/drawing-title-block.png', '<рамка>', base);
+    assert.ok(image.includes(`src="${base}/documents/implementation/`));
+    assert.ok(image.includes('&lt;рамка&gt;'));
+    const processor = unified().use(remarkParse).use(remarkGfm).use(remarkDocuments);
+    const tree = await processor.run(processor.parse(markdown), { path: path.join(root, 'documents/implementation/general-plan.md') });
+    const rendered = JSON.stringify(tree);
+    assert.equal((rendered.match(/data-attachment-preview=/g) || []).length, 6, 'SSR also displays all six attachments');
+    const uiuxMarkdown = await readFile(path.join(root, 'documents/implementation/workspace-uiux.md'), 'utf8');
+    const uiux = implementationSeed({ id: 'workspace-uiux', markdown: uiuxMarkdown, documentIds: ['workspace-uiux', 'operator-review'], base });
+    const uiuxDoc = schema.nodeFromJSON(uiux.document);
+    assert.equal(attachmentPreviewEntries(uiuxDoc).length, 10, 'all ten unique supplied screenshots appear inline');
+    const uiuxState = EditorState.create({ schema, doc: uiuxDoc, plugins: [createAttachmentPreviewPlugin({ base })] });
+    assert.deepEqual(uiuxState.doc.toJSON(), uiuxDoc.toJSON(), 'screenshots do not change the saved source');
+  }
+});
 
 test('cloud JSON survives UTF-8 transport and both site bases with all rich document structures intact', async () => {
   const rootSeed = implementationSeed({ id: '16-ПЛАН_ИНЖЕНЕРНЫХ_РАСЧЁТОВ_2026-10-27', markdown: originalBytes.toString('utf8'),
@@ -170,9 +207,10 @@ test('typing groups into an action, metadata does not consume an action, and und
   assert.deepEqual(preservedContent(validateDocument(state.doc.toJSON())), protectedBefore);
 });
 
-test('the main plan imports the actual source, without trial text or test formulas', async () => {
+test('the rich editor fixture stays outside the published catalogue and imports without test formulas', async () => {
   const files = await implementationFiles(root);
   const id = path.basename(sourceFile, '.md');
+  assert.equal(files.has(id), false);
   const main = implementationSeed({ id, markdown: originalBytes.toString('utf8'), documentIds: [...files.keys()] });
   assert.equal(main.documentId, id);
   assert.equal(main.originalMarkdown, originalBytes.toString('utf8'));
@@ -186,6 +224,84 @@ test('the main plan imports the actual source, without trial text or test formul
   assert.equal(plain.document.content[0].type, 'heading');
   assert.equal(plain.document.content[0].content[0].text, 'Без заголовка');
   assert.equal(plain.document.content[1].content[0].text, 'Обычный текст.');
+});
+
+test('customer documents replace the trial catalogue and all links resolve at either site base', async () => {
+  const files = await implementationFiles(root);
+  assert.deepEqual([...files.keys()].sort(), ['engineering-calculations', 'general-plan', 'operator-review', 'workspace-uiux']);
+  const expectedTitles = { 'general-plan': 'Общий план', 'operator-review': 'Проверка оператором перед планированием и перед задачами операций', 'engineering-calculations': 'Инженерные расчёты', 'workspace-uiux': 'UI/UX рабочего пространства' };
+  for (const base of ['', '/C4_metall']) {
+    const documents = new Map();
+    for (const [id, filename] of files) {
+      const markdown = await readFile(filename, 'utf8');
+      const current = implementationSeed({ id, markdown, documentIds: [...files.keys()], base });
+      assert.equal(current.title, expectedTitles[id]);
+      const anchors = new Set();
+      const walk = (node) => {
+        if (node.attrs?.id) anchors.add(node.attrs.id);
+        if (node.attrs?.anchor) anchors.add(node.attrs.anchor);
+        node.content?.forEach(walk);
+      };
+      walk(current.document);
+      documents.set(id, { ...current, anchors });
+    }
+    assert.ok(preservedContent(documents.get('operator-review').document).links.some((link) => link.href === base + '/implementation/workspace-uiux/'));
+    assert.ok(preservedContent(documents.get('workspace-uiux').document).links.some((link) => link.href === base + '/implementation/operator-review/'));
+    for (const [id, current] of documents) {
+      for (const link of preservedContent(current.document).links) {
+        if (!link.href) {
+          // Preserved plans keep their non-public source references as text;
+          // repository-only files are not exposed as broken public links.
+          assert.doesNotMatch(link.originalHref, /^(?:https?:|#)/);
+          continue;
+        }
+        if (/^https?:/.test(link.href)) continue;
+        if (link.href.startsWith(base + '/documents/implementation/')) {
+          await readFile(path.join(root, 'public', decodeURIComponent(link.href.slice(base.length))));
+          continue;
+        }
+        const local = link.href.startsWith('#');
+        const [, target, fragment] = local ? [null, id, link.href.slice(1)]
+          : link.href.match(/\/implementation\/([^/]+)\/(?:#(.*))?$/) || [];
+        assert.ok(documents.has(target), `${id}: missing document ${link.href}`);
+        if (fragment) assert.ok(documents.get(target).anchors.has(decodeURIComponent(fragment)), `${id}: missing anchor ${link.href}`);
+      }
+    }
+  }
+});
+
+test('all original requirements, statuses and separately marked addenda remain verbatim', async () => {
+  const sha = (text) => createHash('sha256').update(text).digest('hex');
+  const bodies = new Map();
+  for (const id of ['general-plan', 'operator-review', 'engineering-calculations', 'workspace-uiux']) {
+    const markdown = (await readFile(path.join(root, `documents/implementation/${id}.md`), 'utf8')).replaceAll('\r\n', '\n');
+    bodies.set(id, markdown.replace(/^---\n[\s\S]*?\n---\n/, ''));
+  }
+  assert.equal(sha(bodies.get('general-plan')), 'a83260ec8218cdad8e4d36a84f07de4bed93404e4beee94d244d823261da907e');
+  assert.equal(sha(bodies.get('operator-review')), 'f19e73a084d1aca40cc6f306cabe1fe0440fc9dcbc3e0be34db1a43709d6b86f');
+  assert.equal(sha(bodies.get('workspace-uiux')), '459ae7d07c8d7e565fdf81f1e0bef976d1091f683f666261d0337c3b0bad16bb');
+  const engineering = bodies.get('engineering-calculations')
+    .replace('# Этап 3. Инженерные расчёты', '# 16 · Этап 3. Инженерные расчёты');
+  assert.equal(sha(engineering), '0dff8d7ada089a975e66ec71895c57aee24b56871a6bb51eb841ac5936c49358');
+  for (let number = 1; number <= 13; number++) {
+    assert.match(engineering, new RegExp(`### ДОПОЛНЕНИЕ D${String(number).padStart(2, '0')}\\.`));
+  }
+});
+
+test('document navigation groups subsections without mixing documents or losing an orphan heading', () => {
+  const headings = [
+    { depth: 1, slug: 'title', text: 'Название' },
+    { depth: 3, slug: 'first', text: 'Первый' },
+    { depth: 2, slug: 'section', text: 'Раздел' },
+    { depth: 3, slug: 'child', text: 'Подраздел' },
+    { depth: 4, slug: 'detail', text: 'Подробность' },
+    { depth: 2, slug: 'last', text: 'Итог' },
+  ];
+  assert.deepEqual(groupDocumentHeadings(headings), [
+    { heading: headings[1], children: [] },
+    { heading: headings[2], children: [headings[3]] },
+    { heading: headings[5], children: [] },
+  ]);
 });
 
 test('main documents have independent saved contents, preserve rich formats and resolve nested links on either base path', async () => {

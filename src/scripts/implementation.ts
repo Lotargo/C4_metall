@@ -1,4 +1,5 @@
 export {};
+import { initializeDocumentToc, setTocExpanded } from '../utils/document-toc.mjs';
 
 const navigation = document.querySelector<HTMLDetailsElement>('.implementation-navigation');
 const mobile = window.matchMedia('(max-width: 1000px)');
@@ -8,9 +9,17 @@ if (header) {
   measureHeader();
   new ResizeObserver(measureHeader).observe(header);
 }
+const summary = navigation?.querySelector('summary');
+if (summary) {
+  const measureSummary = () => document.documentElement.style.setProperty('--implementation-navigation-summary-height', `${Math.ceil(summary.getBoundingClientRect().height)}px`);
+  measureSummary();
+  new ResizeObserver(measureSummary).observe(summary);
+}
 const syncNavigation = () => { if (navigation) navigation.open = !mobile.matches; };
 syncNavigation();
 mobile.addEventListener('change', syncNavigation);
+const toc = document.querySelector<HTMLElement>('[data-editor-toc]');
+if (toc) initializeDocumentToc(toc);
 
 const updateTableFocus = () => {
   document.querySelectorAll<HTMLTableElement>('.markdown-document table').forEach((table) => {
@@ -23,21 +32,43 @@ window.addEventListener('resize', updateTableFocus);
 
 // Keep anchors usable with native navigation, browser history and no JavaScript.
 document.addEventListener('click', (event) => {
+  const imageSize = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-attachment-size]');
+  if (imageSize) {
+    const original = imageSize.getAttribute('aria-pressed') !== 'true';
+    imageSize.setAttribute('aria-pressed', String(original));
+    imageSize.textContent = original ? 'По ширине документа' : 'Исходный размер';
+    imageSize.closest('[data-attachment-preview]')?.querySelector('.attachment-image-viewport')?.classList.toggle('original-size', original);
+    return;
+  }
+  const toggle = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-toc-toggle]');
+  if (toggle) {
+    setTocExpanded(toggle, toggle.getAttribute('aria-expanded') !== 'true');
+    return;
+  }
   const link = (event.target as HTMLElement).closest<HTMLAnchorElement>('[data-document-toc]');
   if (link) {
     if (mobile.matches && navigation) {
       navigation.open = false;
-      const heading = document.getElementById(link.dataset.documentToc!);
-      heading?.setAttribute('tabindex', '-1');
-      heading?.focus({ preventScroll: true });
+      // Move focus into the reading area without mutating editable headings.
+      requestAnimationFrame(() => {
+        document.querySelector<HTMLElement>('.implementation-main')?.focus({ preventScroll: true });
+      });
     }
   }
 });
 
+navigation?.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && mobile.matches && navigation.open) {
+    navigation.open = false;
+    navigation.querySelector('summary')?.focus();
+  }
+});
+
+let lastActiveId: string | undefined;
 const updateToc = () => {
   const tocLinks = [...document.querySelectorAll<HTMLAnchorElement>('[data-document-toc]')];
   const headerHeight = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--implementation-header-height')) || 90;
-  const offset = headerHeight + (mobile.matches ? 65 : 30);
+  const offset = headerHeight + (mobile.matches ? (summary?.getBoundingClientRect().height || 78) + 14 : 30);
   let active: HTMLAnchorElement | undefined = tocLinks[0];
   for (const link of tocLinks) {
     const heading = document.getElementById(link.dataset.documentToc!);
@@ -50,6 +81,22 @@ const updateToc = () => {
     if (selected) link.setAttribute('aria-current', 'location');
     else link.removeAttribute('aria-current');
   }
+  if (active) {
+    const group = active.closest<HTMLElement>('[data-toc-group]');
+    const button = group?.querySelector<HTMLButtonElement>('[data-toc-toggle]');
+    if (button && (active.dataset.documentToc !== lastActiveId || active.closest('[data-toc-children]')?.hasAttribute('hidden'))) {
+      // Open the section being read, including a direct link to a subsection.
+      setTocExpanded(button, true);
+    }
+    const scroll = document.querySelector<HTMLElement>('[data-toc-scroll]');
+    if (scroll && active.dataset.documentToc !== lastActiveId && (!mobile.matches || navigation?.open)) {
+      const bounds = scroll.getBoundingClientRect();
+      const rect = active.getBoundingClientRect();
+      if (rect.top < bounds.top) scroll.scrollTop -= bounds.top - rect.top + 8;
+      else if (rect.bottom > bounds.bottom) scroll.scrollTop += rect.bottom - bounds.bottom + 8;
+    }
+    lastActiveId = active.dataset.documentToc;
+  }
 };
 let ticking = false;
 window.addEventListener('scroll', () => {
@@ -59,6 +106,8 @@ window.addEventListener('scroll', () => {
 }, { passive: true });
 updateToc();
 window.addEventListener('resize', updateToc);
+window.addEventListener('hashchange', () => requestAnimationFrame(updateToc));
+navigation?.addEventListener('toggle', () => { lastActiveId = undefined; updateToc(); });
 window.addEventListener('documentcontentchange', () => { updateTableFocus(); updateToc(); });
 
 const printButton = document.querySelector<HTMLButtonElement>('[data-document-print]');
@@ -97,12 +146,15 @@ async function renderDiagrams() {
     });
     await document.fonts.ready;
     for (const [index, figure] of figures.entries()) {
+      if (!figure.isConnected) continue;
       const code = figure.querySelector('code')?.textContent || '';
       const viewport = figure.querySelector<HTMLElement>('.diagram-viewport')!;
       const status = figure.querySelector<HTMLElement>('.diagram-status')!;
       try {
         const { svg, bindFunctions } = await mermaid.render(`implementation-diagram-${index}-${pass}`, code);
         if (document.documentElement.dataset.theme !== theme) return;
+        if (!figure.isConnected) continue;
+        viewport.hidden = false;
         viewport.innerHTML = svg;
         // Preserve Mermaid's own accessible title/description if supplied.
         const diagram = viewport.querySelector('svg');
@@ -132,8 +184,9 @@ async function renderDiagrams() {
 // Serialize Mermaid work so quick theme switches cannot overwrite a newer render.
 let diagramRendering = Promise.resolve();
 const queueDiagrams = () => {
-  // The editor owns Mermaid node views; don't render detached fallback figures.
-  if (!document.getElementById('editor-seed')) diagramRendering = diagramRendering.then(renderDiagrams);
+  // A seed does not mean the editor loaded. Keep the server-rendered diagrams
+  // usable while it loads or if its module fails; mounted node views own theirs.
+  if (!document.querySelector('#editor .tiptap')) diagramRendering = diagramRendering.then(renderDiagrams);
 };
 window.addEventListener('themechange', queueDiagrams);
 queueDiagrams();

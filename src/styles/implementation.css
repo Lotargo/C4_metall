@@ -5,20 +5,34 @@ html.implementation-document { scroll-padding-top: 0; }
 .implementation-header .implementation-header-links { display: flex; gap: 24px; margin-left: auto; font-size: 16px; }
 .implementation-header .implementation-header-links a { display: flex; align-items: center; min-height: 48px; white-space: normal; }
 .implementation-layout { max-width: 1540px; margin: auto; display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 64px; padding: 0 40px; }
-.implementation-sidebar { position: sticky; top: var(--implementation-header-height, 90px); align-self: start; height: calc(100dvh - var(--implementation-header-height, 90px)); overflow-y: auto; scrollbar-width: thin; padding: 32px 8px 40px 0; overscroll-behavior: contain; }
+.implementation-sidebar { position: sticky; top: var(--implementation-header-height, 90px); align-self: start; height: calc(100dvh - var(--implementation-header-height, 90px)); padding: 28px 0 24px; min-height: 0; }
+.implementation-navigation[open] { height: 100%; }
+.implementation-navigation-body { display: flex; flex-direction: column; height: 100%; min-height: 0; }
 .implementation-navigation > summary { display: none; }
-.implementation-nav { display: block; margin: 0; font-size: 16px; }
+.implementation-nav { display: block; margin: 0; font-size: 16px; flex-shrink: 0; overflow: visible; }
 .implementation-nav a { white-space: normal; }
 .implementation-nav-label { color: var(--muted); margin: 0 0 16px 12px; font-size: 15px; }
-.document-list, .document-toc { list-style: none; margin: 0; padding: 0; }
-.document-list > li + li { margin-top: 8px; }
-.document-link { display: flex; gap: 12px; padding: 14px 12px; color: var(--ink); text-decoration: none; border-left: 3px solid transparent; line-height: 1.4; overflow-wrap: anywhere; }
-.document-number { flex: 0 0 auto; white-space: nowrap; color: var(--muted); font-size: 14px; padding-top: 2px; font-variant-numeric: tabular-nums; }
+.document-list, .document-toc, .document-toc ol { list-style: none; margin: 0; padding: 0; }
+.document-list > li + li { margin-top: 4px; }
+.document-link { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 48px; padding: 12px; color: var(--ink); text-decoration: none; border-left: 3px solid transparent; line-height: 1.4; overflow-wrap: anywhere; }
+.document-current-mark { color: var(--accent); }
 .document-link:hover { background: var(--wash); }
 .document-link.selected { background: var(--accent-soft); border-left-color: var(--accent); }
-.document-toc { margin: 12px 0 24px 14px; border-left: 1px solid var(--line); }
-.document-toc a { display: block; padding: 8px 12px; font-size: 15px; line-height: 1.4; text-decoration: none; border-left: 2px solid transparent; margin-left: -1px; color: var(--muted); }
-.document-toc .toc-subheading a { padding-left: 24px; font-size: 14px; }
+.document-outline { display: flex; flex-direction: column; align-items: stretch; gap: 0; flex: 1; min-height: 0; overflow: hidden; padding-top: 24px; border-top: 1px solid var(--line); margin: 24px 0 0; }
+.document-outline > .implementation-nav-label { flex-shrink: 0; }
+.document-toc-scroll { flex: 1; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; min-height: 0; padding-right: 8px; }
+.document-toc { border-left: 1px solid var(--line); margin-left: 14px; padding-bottom: 8px; }
+.document-toc a { display: block; padding: 10px 12px; min-height: 44px; font-size: 15px; line-height: 1.4; text-decoration: none; border-left: 2px solid transparent; margin-left: -1px; color: var(--muted); }
+.toc-heading { display: flex; align-items: start; }
+.toc-heading > a { flex: 1; min-width: 0; }
+.document-toc ol a { padding-left: 24px; font-size: 14px; }
+.document-toc ol[hidden], .toc-heading button[hidden] { display: none; }
+.toc-heading button { display: grid; place-items: center; min-width: 44px; width: 44px; min-height: 44px; border: 0; padding: 0; background: transparent; color: var(--muted); cursor: pointer; }
+.toc-heading button:hover { background: var(--wash); color: var(--accent); }
+.toc-chevron { width: 8px; height: 8px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(-45deg); }
+.toc-heading button[aria-expanded='true'] .toc-chevron { transform: rotate(45deg); }
+.implementation-sidebar :is(a, button, summary):focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.navigation-current { display: block; margin: 4px 0 0 18px; font-size: 14px; line-height: 1.4; color: var(--muted); }
 .document-toc a:hover, .document-toc a.active { color: var(--accent); background: var(--accent-soft); border-left-color: var(--accent); }
 .implementation-main { min-width: 0; padding: 40px 0 0; }
 .document-topline { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 28px; color: var(--muted); font-size: 16px; scroll-margin-top: 120px; }
@@ -72,13 +86,16 @@ html.implementation-document { scroll-padding-top: 0; }
   .implementation-header-inner { min-height: 80px; gap: 20px; padding: 12px 24px; }
   .implementation-header-title { display: none; }
   .implementation-layout { display: block; padding: 0 24px; }
-  .implementation-sidebar { top: var(--implementation-header-height, 80px); z-index: 12; height: auto; max-height: calc(100dvh - var(--implementation-header-height, 80px)); padding: 0; margin-inline: -24px; background: var(--paper); border-bottom: 1px solid var(--line); }
-  .implementation-navigation > summary { display: list-item; padding: 14px 24px; min-height: 52px; color: var(--accent); cursor: pointer; }
-  .implementation-nav { padding: 12px 24px 24px; }
+  .implementation-sidebar { top: var(--implementation-header-height, 80px); z-index: 12; height: auto; padding: 0; margin-inline: -24px; background: var(--paper); border-bottom: 1px solid var(--line); }
+  .implementation-navigation[open] { height: auto; }
+  .implementation-navigation-body { height: min(600px, calc(100dvh - var(--implementation-header-height, 80px) - var(--implementation-navigation-summary-height, 78px) - 8px)); }
+  .implementation-navigation > summary { display: list-item; flex-shrink: 0; padding: 12px 24px; min-height: 52px; color: var(--accent); cursor: pointer; }
+  .implementation-nav { padding: 12px 24px 0; }
+  .document-outline { margin: 16px 24px 0; padding-top: 16px; padding-bottom: 16px; }
   .document-link, .document-toc a { min-height: 48px; }
-  .document-toc a, .document-toc .toc-subheading a { padding-top: 12px; padding-bottom: 12px; font-size: 16px; }
+  .document-toc a, .document-toc ol a { padding-top: 12px; padding-bottom: 12px; font-size: 16px; }
   .implementation-main { padding-top: 24px; }
-  .markdown-document [id], .document-topline { scroll-margin-top: calc(var(--implementation-header-height, 80px) + 75px); }
+  .markdown-document [id], .document-topline { scroll-margin-top: calc(var(--implementation-header-height, 80px) + var(--implementation-navigation-summary-height, 78px) + 12px); }
   .markdown-document h1 { font-size: 42px; }
 }
 @media (max-width: 600px) {
@@ -92,6 +109,7 @@ html.implementation-document { scroll-padding-top: 0; }
   .implementation-layout { padding-inline: 20px; }
   .implementation-sidebar { margin-inline: -20px; }
   .implementation-navigation > summary, .implementation-nav { padding-inline: 20px; }
+  .document-outline { margin-inline: 20px; }
   .markdown-document h1 { font-size: 36px; }
   .markdown-document h2 { font-size: 29px; margin-top: 32px; padding-top: 28px; }
   .markdown-document h3 { font-size: 23px; }

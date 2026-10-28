@@ -9,6 +9,16 @@ export default defineConfig({
   site: process.env.SITE_URL || undefined,
   base: process.env.BASE_PATH || '/',
   devToolbar: { enabled: false },
+  integrations: [{
+    name: 'command-scoped-vite-cache',
+    hooks: {
+      'astro:config:setup': ({ command, updateConfig }) => {
+        // Astro builds also optimize dependencies. Keep their cache separate
+        // from a running dev server so its published module hashes stay valid.
+        updateConfig({ vite: { cacheDir: `node_modules/.vite/${command}` } });
+      },
+    },
+  }],
   vite: { plugins: [implementationEditorPlugin()] },
   markdown: {
     processor: unified({

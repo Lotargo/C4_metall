@@ -29,11 +29,11 @@ const toc = { id: 'inputs', n: '1', title: 'Входящие данные', sub:
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Общий план — входящие данные</title>
-  <meta name="description" content="Общий план «Подготовки производства»: шесть видов входящих данных — как работают, что проверено, как выглядят на экране и что не выполнено." />
+  <title>Входящие данные и примеры</title>
+  <meta name="description" content="Шесть видов входящих данных: как работают, что проверено, как выглядят на экране и что не выполнено. Примеры от 19–22 октября 2026 года." />
   <meta name="robots" content="noindex, nofollow" />
   <meta name="theme-color" content="#f7f6f2" />
-  <meta property="og:title" content="Общий план — входящие данные" />
+  <meta property="og:title" content="Входящие данные и примеры" />
   <meta property="og:description" content="Требования, поверхности, материал, заготовка, масса и база знаний «Станки»." />
   <meta property="og:type" content="website" />
   <link rel="icon" type="image/svg+xml" href={sitePath('/favicon.svg')} />
@@ -45,7 +45,7 @@ const toc = { id: 'inputs', n: '1', title: 'Входящие данные', sub:
   <header class="site-header">
     <div class="wrap header-inner">
       <a class="brand" href={sitePath('/')}><span class="brand-mark" aria-hidden="true">ПП</span><span>Подготовка<br/>производства</span></a>
-      <span class="doc-header-title">Общий план · редакция от {edition}</span>
+      <span class="doc-header-title">Входящие данные · редакция от {edition}</span>
       <button class="secondary-button doc-print" id="print-doc" type="button">Печать / PDF</button>
       <a class="audience-link" href={sitePath('/')}>К презентации <span aria-hidden="true">↗</span></a>
     </div>
@@ -67,7 +67,8 @@ const toc = { id: 'inputs', n: '1', title: 'Входящие данные', sub:
     <main id="main" class="doc-sheet">
       <header class="doc-title" id="top">
         <p class="doc-kicker">Подготовка производства</p>
-        <h1>Общий план</h1>
+        <h1>Входящие данные и примеры</h1>
+        <p>Сохранённые примеры интерфейса и проверок на указанные даты. Актуальный объём работ и готовность проекта приведены в <a href={sitePath('/implementation/')}>общем плане реализации</a>.</p>
         <table class="doc-meta">
           <tbody>
             <tr><th scope="row">Редакция</th><td>{edition}</td></tr>
@@ -117,7 +118,7 @@ const toc = { id: 'inputs', n: '1', title: 'Входящие данные', sub:
         <div class="doc-note"><p><b>Общие границы.</b></p><ul>{general.map((g) => <li>{g}</li>)}</ul></div>
       </section>
 
-      <footer class="doc-footer"><span>Подготовка производства · Общий план</span><span>Редакция от {edition}</span><a href="#top">Наверх ↑</a></footer>
+      <footer class="doc-footer"><span>Подготовка производства · Входящие данные</span><span>Редакция от {edition}</span><a href="#top">Наверх ↑</a></footer>
     </main>
   </div>
 

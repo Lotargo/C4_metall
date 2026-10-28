@@ -11,6 +11,7 @@ import { implementationSeed } from '../editor/seed.mjs';
 import type { ImplementationDocument } from '../utils/documents';
 import { sitePath } from '../utils/site-path.mjs';
 import { implementationPath } from '../utils/document-path.mjs';
+import { groupDocumentHeadings } from '../utils/document-toc.mjs';
 import '@fontsource/ibm-plex-sans/latin-400.css';
 import '@fontsource/ibm-plex-sans/latin-500.css';
 import '@fontsource/ibm-plex-sans/cyrillic-400.css';
@@ -19,6 +20,7 @@ import 'katex/dist/katex.min.css';
 import '../styles/global.css';
 import '../styles/implementation.css';
 import '../styles/document-editor.css';
+import '../styles/document-attachments.css';
 
 interface Props {
   documents: { entry: ImplementationDocument; title: string }[];
@@ -28,7 +30,7 @@ const { documents, document } = Astro.props;
 const rendered = document ? await render(document) : undefined;
 const Content = rendered?.Content;
 const headings = rendered?.headings ?? [];
-const toc = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
+const toc = groupDocumentHeadings(headings);
 const title = documents.find(({ entry }) => entry.id === document?.id)?.title || 'План реализации';
 const description = document?.data.description || 'Документы плана реализации «Подготовки производства».';
 const imageAssets = import.meta.glob('/documents/implementation/**/*.{avif,gif,jpeg,jpg,png,svg,webp}', { eager: true, query: '?url', import: 'default' });
@@ -69,22 +71,35 @@ const seedJson = seed ? JSON.stringify(seed).replace(/</g, '\\u003c') : '';
   <div class="implementation-layout">
     <aside class="implementation-sidebar" aria-label="Навигация по плану реализации">
       <details class="implementation-navigation" open>
-        <summary>Документы и содержание</summary>
+        <summary><span>Документы и содержание</span><span class="navigation-current">{title}</span></summary>
+        <div class="implementation-navigation-body">
         <nav class="implementation-nav" aria-label="Документы плана">
-          <p class="implementation-nav-label">План реализации</p>
+          <p class="implementation-nav-label">Документы</p>
           <ul class="document-list">
-            {documents.map(({ entry, title: entryTitle }, index) => <li>
+            {documents.map(({ entry, title: entryTitle }) => <li>
               <a class:list={['document-link', { selected: entry.id === document?.id }]} href={sitePath(implementationPath(entry.id))} aria-current={entry.id === document?.id ? 'page' : undefined}>
-                <span class="document-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span><span>{entryTitle}</span>
+                <span>{entryTitle}</span><span class="document-current-mark" aria-hidden="true">{entry.id === document?.id && '•'}</span>
               </a>
-              {entry.id === document?.id && <ol class="document-toc" data-editor-toc>
-                {toc.map((heading) => <li class:list={{ 'toc-subheading': heading.depth === 3 }}>
-                  <a href={'#' + heading.slug} data-document-toc={heading.slug}>{heading.text}</a>
-                </li>)}
-              </ol>}
             </li>)}
           </ul>
         </nav>
+        {document && <nav class="document-outline" aria-label="Содержание текущего документа">
+          <p class="implementation-nav-label">В этом документе</p>
+          <div class="document-toc-scroll" data-toc-scroll>
+            <ol class="document-toc" data-editor-toc>
+              {toc.map(({ heading, children }) => <li data-toc-group={heading.slug}>
+                <div class="toc-heading">
+                  <a href={'#' + heading.slug} data-document-toc={heading.slug}>{heading.text}</a>
+                  {!!children.length && <button type="button" data-toc-toggle aria-label={'Подразделы: ' + heading.text} aria-controls={'toc-children-' + heading.slug} aria-expanded="false" hidden><span class="toc-chevron" aria-hidden="true"></span></button>}
+                </div>
+                {!!children.length && <ol id={'toc-children-' + heading.slug} data-toc-children>
+                  {children.map((child) => <li><a href={'#' + child.slug} data-document-toc={child.slug}>{child.text}</a></li>)}
+                </ol>}
+              </li>)}
+            </ol>
+          </div>
+        </nav>}
+        </div>
       </details>
     </aside>
     <main id="main" class="implementation-main" tabindex="-1">
@@ -109,7 +124,8 @@ const seedJson = seed ? JSON.stringify(seed).replace(/</g, '\\u003c') : '';
   <script>import '../scripts/implementation.ts';</script>
   <script>
     if (document.getElementById('editor-seed')) {
-      void import('../scripts/document-editor').catch(() => {
+      void import('../scripts/document-editor').catch((error) => {
+        console.error('Не удалось загрузить редактор плана.', error);
         const status = document.querySelector('[data-editor-status]');
         if (status) status.textContent = 'Не удалось загрузить редактор. Обновите страницу.';
         document.getElementById('editor')?.setAttribute('aria-busy', 'false');
