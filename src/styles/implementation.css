@@ -117,7 +117,16 @@ html.implementation-document { scroll-padding-top: 0; }
   .document-diagram { padding: 16px; }
 }
 @media (prefers-reduced-motion: reduce) { html.implementation-document { scroll-behavior: auto; } }
+.document-image-open { overflow: hidden; }
+#image-dialog .viewer-stage.scroll-view { overflow: auto; overscroll-behavior: contain; touch-action: pan-x pan-y; cursor: auto; }
+#image-dialog .scroll-view img { position: relative; display: block; margin: 0 auto; box-shadow: none; }
+.document-image-viewer .viewer-tools { flex-wrap: wrap; }
+.document-image-viewer .viewer-top { flex-wrap: wrap; }
+#editor img[role="button"] { cursor: zoom-in; }
+#editor img[role="button"]:focus-visible, #image-stage:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
+#document-image-status:not(:empty) { position: fixed; bottom: 20px; right: 20px; z-index: 30; max-width: 400px; padding: 12px 16px; background: var(--surface); color: var(--ink); border: 1px solid var(--line); }
 @media print {
+  .document-image-viewer, #document-image-status { display: none !important; }
   .implementation-header, .implementation-sidebar, .document-print, .implementation-footer, .diagram-source { display: none; }
   .implementation-layout { display: block; padding: 0; }
   .implementation-main { padding: 0; }

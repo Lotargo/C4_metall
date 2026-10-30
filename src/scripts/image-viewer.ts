@@ -9,9 +9,10 @@ export type ViewerImage = {
   file: string;
   title: string;
   note: string;
-  date: string;
+  date?: string;
   width: number;
   height: number;
+  scroll?: boolean;
 };
 
 const $ = <T extends HTMLElement = HTMLElement>(selector: string) =>
@@ -31,7 +32,9 @@ let scale = 1,
   fit = 1;
 
 function apply() {
-  image.style.transform = `translate(${x}px, ${y}px) scale(${scale})`;
+  image.style.transform = current?.scroll ? '' : `translate(${x}px, ${y}px) scale(${scale})`;
+  image.style.width = current?.scroll ? `${current.width * scale}px` : '';
+  image.style.height = current?.scroll ? `${current.height * scale}px` : '';
   label.textContent = Math.round(scale * 100) + "%";
   stage.classList.toggle("zoomed", scale > fit + 0.001);
   $<HTMLButtonElement>("#image-zoom-out").disabled = scale <= minScale() + 0.001;
@@ -52,10 +55,26 @@ function clamp() {
 
 function zoomTo(next: number, px = stage.clientWidth / 2, py = stage.clientHeight / 2) {
   next = Math.min(MAX, Math.max(minScale(), next));
+  if (current?.scroll) {
+    const left = (stage.scrollLeft + px) / scale;
+    const top = (stage.scrollTop + py) / scale;
+    scale = next;
+    apply();
+    stage.scrollLeft = left * scale - px;
+    stage.scrollTop = top * scale - py;
+    return;
+  }
   x = px - ((px - x) * next) / scale;
   y = py - ((py - y) * next) / scale;
   scale = next;
   clamp();
+  apply();
+}
+
+function widthView() {
+  if (!current) return;
+  fitView();
+  scale = Math.min(stage.clientWidth / current.width, 1);
   apply();
 }
 
@@ -69,6 +88,7 @@ function fitView() {
   scale = fit;
   clamp();
   apply();
+  if (current.scroll) { stage.scrollTop = 0; stage.scrollLeft = 0; }
 }
 
 export function openImage(item: ViewerImage, from?: HTMLElement | null) {
@@ -76,19 +96,21 @@ export function openImage(item: ViewerImage, from?: HTMLElement | null) {
   trigger = from ?? null;
   $("#image-dialog-title").textContent = item.title;
   $("#image-dialog-note").textContent =
-    `Скриншот интерфейса от ${item.date}. ${item.note}`;
+    item.date ? `Скриншот интерфейса от ${item.date}. ${item.note}` : item.note;
   image.src = sitePath(item.file);
   image.alt = item.title;
   image.width = item.width;
   image.height = item.height;
+  stage.classList.toggle('scroll-view', !!item.scroll);
   dialog.showModal();
-  requestAnimationFrame(fitView);
+  requestAnimationFrame(item.scroll ? widthView : fitView);
   $("#close-image").focus();
 }
 
 stage.addEventListener(
   "wheel",
   (event) => {
+    if (current?.scroll && !event.ctrlKey && !event.metaKey) return;
     event.preventDefault();
     const rect = stage.getBoundingClientRect();
     const factor = Math.exp(-event.deltaY * (event.deltaMode === 1 ? 0.05 : 0.0018));
@@ -104,6 +126,7 @@ const outsideImage = (cx: number, cy: number) => {
 };
 let drag: { px: number; py: number; x: number; y: number; moved: boolean } | null = null;
 stage.addEventListener("pointerdown", (event) => {
+  if (current?.scroll) return;
   if (event.button !== 0) return;
   event.preventDefault();
   drag = { px: event.clientX, py: event.clientY, x, y, moved: false };
@@ -142,12 +165,29 @@ $("#image-zoom-in").addEventListener("click", () => zoomTo(scale * 1.4));
 $("#image-zoom-out").addEventListener("click", () => zoomTo(scale / 1.4));
 $("#image-fit").addEventListener("click", fitView);
 $("#image-actual").addEventListener("click", () => zoomTo(1));
+document.querySelector('#image-width')?.addEventListener('click', widthView);
 $("#close-image").addEventListener("click", () => dialog.close());
-dialog.addEventListener("close", () => trigger?.focus());
+dialog.addEventListener("close", () => trigger?.focus({ preventScroll: true }));
 dialog.addEventListener("click", (event) => {
   if (event.target === dialog) dialog.close();
 });
 dialog.addEventListener("keydown", (event) => {
+  if (event.key === 'Tab') {
+    const controls = [...dialog.querySelectorAll<HTMLElement>('button:not(:disabled), [tabindex="0"]')]
+      .filter(control => control.getClientRects().length > 0);
+    const first = controls[0], last = controls.at(-1);
+    if (first && last && (event.shiftKey ? document.activeElement === first : document.activeElement === last)) {
+      event.preventDefault();
+      (event.shiftKey ? last : first).focus({ preventScroll: true });
+    }
+    return;
+  }
+  if (event.key === 'Escape') {
+    event.preventDefault();
+    event.stopPropagation();
+    dialog.close();
+    return;
+  }
   if (event.key === "+" || event.key === "=") zoomTo(scale * 1.4);
   else if (event.key === "-") zoomTo(scale / 1.4);
   else if (event.key === "0") fitView();
@@ -155,5 +195,5 @@ dialog.addEventListener("keydown", (event) => {
   event.preventDefault();
 });
 window.addEventListener("resize", () => {
-  if (dialog.open) fitView();
+  if (dialog.open) (current?.scroll ? widthView : fitView)();
 });

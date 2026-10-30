@@ -163,6 +163,10 @@ function imageView(node: { attrs: { src: string; alt: string; title?: string } }
   const relative = decodeURIComponent(new URL(src, `https://documents.invalid/${seed.documentId}.md`).pathname.slice(1));
   dom.src = seed.imageAssets?.[relative] || (src.startsWith('/') ? sitePath(src) : src);
   dom.alt = node.attrs.alt;
+  dom.tabIndex = 0;
+  dom.setAttribute('role', 'button');
+  dom.setAttribute('aria-haspopup', 'dialog');
+  dom.setAttribute('aria-label', `Увеличить: ${node.attrs.alt || 'изображение'}`);
   if (node.attrs.title) dom.title = node.attrs.title;
   return { dom };
 }

@@ -42,7 +42,11 @@ export function editorExtensions(views) {
         { types: ['heading', 'paragraph'], attributes: { id: { default: null, keepOnSplit: false } } },
         { types: ['link'], attributes: { originalHref: {
           default: null, parseHTML: (el) => el.getAttribute('data-original-href'),
-          renderHTML: (attrs) => attrs.originalHref ? { 'data-original-href': attrs.originalHref } : {},
+          renderHTML: (attrs) => ({
+            ...(attrs.originalHref ? { 'data-original-href': attrs.originalHref } : {}),
+            ...(/\.(?:avif|gif|jpe?g|png|svg|webp)(?:[?#].*)?$/i.test(attrs.href || attrs.originalHref || '')
+              ? { tabindex: '0', 'aria-haspopup': 'dialog' } : {}),
+          }),
         } } },
         { types: ['tableCell', 'tableHeader'], attributes: { textAlign: {
           default: null, parseHTML: (el) => el.style.textAlign || null,

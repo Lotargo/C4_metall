@@ -1,0 +1,154 @@
+{
+  "date": "2026-10-30",
+  "source_head": "f75238b6737d8a7bfe6c2e83e013c6632a19f6a9",
+  "source_worktree_status": "",
+  "screenshots": [
+    {
+      "source": "F:\\projects\\metall-dev-2\\docs\\03-reports\\222-illustrated-valve-workflow-2026-10-30\\screenshots\\001-thread.png",
+      "output": "F:\\projects\\C4_metall\\public\\documents\\implementation\\customer-progress-2026-10-30\\01-thread-inputs.png",
+      "sha256": "77b3b48007e3826ebffc5ad2e827b2fa1d7566e198dfc8d34e1534391cabc5fb"
+    },
+    {
+      "source": "F:\\projects\\metall-dev-2\\docs\\03-reports\\222-illustrated-valve-workflow-2026-10-30\\screenshots\\001-operation.png",
+      "output": "F:\\projects\\C4_metall\\public\\documents\\implementation\\customer-progress-2026-10-30\\02-turning-operation.png",
+      "sha256": "5b112d54dbedece8e94809c940c8e16dc2253697f54a79010def7eeec1243324"
+    },
+    {
+      "source": "F:\\projects\\metall-dev-2\\docs\\03-reports\\222-illustrated-valve-workflow-2026-10-30\\screenshots\\002-operation.png",
+      "output": "F:\\projects\\C4_metall\\public\\documents\\implementation\\customer-progress-2026-10-30\\03-radial-operation.png",
+      "sha256": "7298d314e6b6d5515727f4ae7b2fac730d16e8fd80fb8a4ea328ba961ea13a17"
+    },
+    {
+      "source": "F:\\projects\\metall-dev-2\\docs\\03-reports\\222-illustrated-valve-workflow-2026-10-30\\screenshots\\002-bore-geometry.png",
+      "output": "F:\\projects\\C4_metall\\public\\documents\\implementation\\customer-progress-2026-10-30\\04-bore-geometry.png",
+      "sha256": "eee99fe7ffd47c9a4a67e3c2aba6bfff888e910086ada7016173d101aa22e7c0"
+    }
+  ],
+  "document_sha256": "8dd35be9d890e35f70d2984e8b82e3bfabaa8d0fbf53dfc28302178b1b0dafc9",
+  "checks": {
+    "six_requested_sections": true,
+    "no_document_links": true,
+    "images_exist_and_unchanged": true,
+    "control_money_reconciles": true,
+    "no_source_mutation": true
+  },
+  "sources": [
+    {
+      "path": "docs/01-current/00-ОБЩИЙ_ПЛАН_2026-10-27.md",
+      "sha256": "c07d3ef66727baa70477798edb496776a5f64a1ad88ac01497277676682d7b05"
+    },
+    {
+      "path": "docs/01-current/17-ПЛАН_ПЕРВОГО_СКВОЗНОГО_РАСЧЁТА_2026-10-28.md",
+      "sha256": "11b27d77315c50e811f65945c92642486f67053759c3b981693598be666eda70"
+    },
+    {
+      "path": "docs/03-reports/216-engineering-native-round-2026-10-29/REPORT.md",
+      "sha256": "d0ddc7ad78caf21c49557130cc979a35c8ffa81d54c64a6bff8ec395a48092bd"
+    },
+    {
+      "path": "docs/03-reports/219-engineering-customer-norms-2026-10-30/REPORT.md",
+      "sha256": "d9136813799030252162435437faf864d7f55ea03121e88ab5194031feb186e6"
+    },
+    {
+      "path": "docs/03-reports/220-customer-valves-native-ui-2026-10-30/REPORT.md",
+      "sha256": "6883a904ef5b6aa5a59bc3a8824c5ad8e76ef02ad32d1138734accd7e129a2b9"
+    },
+    {
+      "path": "docs/03-reports/221-drawing-work-inventory-2026-10-30/REPORT.md",
+      "sha256": "37f0f6b0c3d03efab61c774710f00bff8f15e918606846f961062992d5a0e39c"
+    },
+    {
+      "path": "docs/03-reports/222-illustrated-valve-workflow-2026-10-30/REPORT.md",
+      "sha256": "11038fce887f425a0b7e18f1fceede887ce67fb4fb4879e063a90cf01e6a8d9a"
+    },
+    {
+      "path": "mvp/src/metall_mvp/workflows/work_inventory.py",
+      "sha256": "db55c4690cdacb76aeaa11db9e8b9dfa6fc4f8bfff89dfba9ead1bfaac002eb9"
+    },
+    {
+      "path": "mvp/src/metall_mvp/workflows/route_history.py",
+      "sha256": "be350dbdce43c9445a371e1d61dc49855dd13592f26b8ddb63ee90884dcbb233"
+    },
+    {
+      "path": "mvp/src/metall_mvp/api/routes_parts/route_history.py",
+      "sha256": "cc6359eb14b275ba0fdad0421a65b24f921901f3ab44166e4a40f85c4bb7e62e"
+    },
+    {
+      "path": "mvp/src/metall_mvp/workflows/normative_time.py",
+      "sha256": "4d6d2884e317118796f9d18811c39807e7104a70cc8047680478740284ff7129"
+    },
+    {
+      "path": "mvp/src/metall_mvp/workflows/accepted_time.py",
+      "sha256": "55e69fa9673828401702706941e813ff4f4f0863d053b00e773d3fa9a405134b"
+    }
+  ],
+  "workbook": {
+    "file": "F:\\projects\\metall-dev-2\\.samples\\Пример расчёта от заказчика\\1\\!Расчёт 260415.xlsx",
+    "sha256": "f2a5b7d7a79346b0f704fdaf05ae27b72cc0dee106d70ee169c9679b37e941cc",
+    "sheet": "260375"
+  },
+  "native_route_evidence": [
+    {
+      "file": "F:\\projects\\metall-dev-2\\docs\\03-reports\\221-drawing-work-inventory-2026-10-30\\native-final\\001\\work-detail.json",
+      "sha256": "15958d2b61f182e4e4032026d713959326802ab073de880c7c9b1de6eba2a153",
+      "operations": 6,
+      "works": 23
+    },
+    {
+      "file": "F:\\projects\\metall-dev-2\\docs\\03-reports\\221-drawing-work-inventory-2026-10-30\\native-final\\002\\work-detail.json",
+      "sha256": "9cd367a888fb1b1d3ae250010fe576c4f99d8c4b8ad20ad4c84fe1aeb38ecefc",
+      "operations": 6,
+      "works": 22
+    }
+  ],
+  "full_page_captures": [
+    {
+      "part": "001",
+      "works": 23,
+      "operations": 6,
+      "file": "F:/projects/C4_metall/public/documents/implementation/customer-progress-2026-10-30/full-valve-001.png",
+      "bytes": 1836147,
+      "sha256": "f45e5adcfea7bad453217b9748e42dd26b0aba121839843dfb80bc597dc4b2e5",
+      "layout": {
+        "width": 1800,
+        "contentWidth": 1800,
+        "height": 12002,
+        "last": 11963.71875,
+        "clippedTable": false
+      },
+      "geometryDetailsOpened": 24,
+      "kind": "Screenshot of unchanged Metall SavedView and WorkInventoryPanel rendered from preserved native data",
+      "renderer": "web/src/components/route/RouteHistoryView.tsx#SavedView",
+      "source": "docs/03-reports/221-drawing-work-inventory-2026-10-30/native-final/001/work-detail.json",
+      "sourceSha256": "15958d2b61f182e4e4032026d713959326802ab073de880c7c9b1de6eba2a153",
+      "codeSourceSha256": "24c5d2e692defcbf3663d7d768818a8ba26a272dd804cc0f663e034b8a13b5bc",
+      "stylesheetSha256": "a2a83a13f01b64879664851df916504e237aad049acc5250abd900c3de241dbf",
+      "presentation": "Standalone continuous view with identifying header/footer; no app sidebars or launch controls; geometry disclosures opened, technical logs closed",
+      "noApiOrModels": true
+    },
+    {
+      "part": "002",
+      "works": 22,
+      "operations": 6,
+      "file": "F:/projects/C4_metall/public/documents/implementation/customer-progress-2026-10-30/full-valve-002.png",
+      "bytes": 1688371,
+      "sha256": "ae06d396ebef4b98421b89438ad62545feae94512a681afc897ffb11b8a27d22",
+      "layout": {
+        "width": 1800,
+        "contentWidth": 1800,
+        "height": 11324,
+        "last": 11285.890625,
+        "clippedTable": false
+      },
+      "geometryDetailsOpened": 17,
+      "kind": "Screenshot of unchanged Metall SavedView and WorkInventoryPanel rendered from preserved native data",
+      "renderer": "web/src/components/route/RouteHistoryView.tsx#SavedView",
+      "source": "docs/03-reports/221-drawing-work-inventory-2026-10-30/native-final/002/work-detail.json",
+      "sourceSha256": "9cd367a888fb1b1d3ae250010fe576c4f99d8c4b8ad20ad4c84fe1aeb38ecefc",
+      "codeSourceSha256": "24c5d2e692defcbf3663d7d768818a8ba26a272dd804cc0f663e034b8a13b5bc",
+      "stylesheetSha256": "a2a83a13f01b64879664851df916504e237aad049acc5250abd900c3de241dbf",
+      "presentation": "Standalone continuous view with identifying header/footer; no app sidebars or launch controls; geometry disclosures opened, technical logs closed",
+      "noApiOrModels": true
+    }
+  ]
+}

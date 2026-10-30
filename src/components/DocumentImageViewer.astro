@@ -1,0 +1,17 @@
+<dialog id="image-dialog" class="image-viewer document-image-viewer" aria-labelledby="image-dialog-title" aria-describedby="image-dialog-note document-image-help">
+  <div class="viewer-top">
+    <div class="viewer-heading"><h2 id="image-dialog-title">Просмотр изображения</h2><p id="image-dialog-note" class="caption"></p></div>
+    <div class="viewer-tools" role="toolbar" aria-label="Масштаб изображения">
+      <button type="button" class="diagram-button" id="image-zoom-out" aria-label="Уменьшить">−</button>
+      <output id="image-zoom-label" aria-live="polite">100%</output>
+      <button type="button" class="diagram-button" id="image-zoom-in" aria-label="Увеличить">+</button>
+      <button type="button" class="diagram-button" id="image-width">По ширине</button>
+      <button type="button" class="diagram-button" id="image-fit">Целиком</button>
+      <button type="button" class="diagram-button" id="image-actual">100%</button>
+      <button type="button" class="close-button" id="close-image" aria-label="Закрыть просмотр">✕</button>
+    </div>
+  </div>
+  <div class="viewer-stage" id="image-stage" tabindex="0" role="region" aria-label="Изображение с прокруткой"><img id="image-dialog-img" alt="" draggable="false" /></div>
+  <p class="caption viewer-hint" id="document-image-help">Колёсико и полоса прокрутки: перемещение по снимку. Ctrl + колёсико или кнопки −/+: масштаб. Для чтения с клавиатуры перейдите в область изображения. Esc: закрыть.</p>
+</dialog>
+<p id="document-image-status" role="status"></p>

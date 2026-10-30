@@ -5,6 +5,7 @@ import ThemeToggle from './ThemeToggle.astro';
 import EditorControls from './EditorControls.astro';
 import EditorRecovery from './EditorRecovery.astro';
 import EditorMenu from './EditorMenu.astro';
+import DocumentImageViewer from './DocumentImageViewer.astro';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { implementationSeed } from '../editor/seed.mjs';
@@ -117,11 +118,13 @@ const seedJson = seed ? JSON.stringify(seed).replace(/</g, '\\u003c') : '';
       <footer class="implementation-footer"><a href="#top">К началу документа ↑</a><a href={sitePath('/results/')}>Результаты</a><a href={sitePath('/')}>К презентации</a></footer>
     </main>
   </div>
+  <DocumentImageViewer />
   {document && <>
     <EditorMenu />
     <script type="application/json" id="editor-seed" set:html={seedJson} />
   </>}
   <script>import '../scripts/implementation.ts';</script>
+  <script>import '../scripts/document-image-viewer.ts';</script>
   <script>
     if (document.getElementById('editor-seed')) {
       void import('../scripts/document-editor').catch((error) => {

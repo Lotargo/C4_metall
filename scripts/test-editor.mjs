@@ -241,8 +241,8 @@ test('the rich editor fixture stays outside the published catalogue and imports 
 
 test('customer documents replace the trial catalogue and all links resolve at either site base', async () => {
   const files = await implementationFiles(root);
-  assert.deepEqual([...files.keys()].sort(), ['engineering-calculations', 'general-plan', 'operator-review', 'workspace-uiux']);
-  const expectedTitles = { 'general-plan': 'Общий план', 'operator-review': 'Проверка оператором перед планированием и перед задачами операций', 'engineering-calculations': 'Инженерные расчёты', 'workspace-uiux': 'UI/UX рабочего пространства' };
+  assert.deepEqual([...files.keys()].sort(), ['customer-progress-2026-10-30', 'engineering-calculations', 'general-plan', 'operator-review', 'workspace-uiux']);
+  const expectedTitles = { 'general-plan': 'Общий план', 'operator-review': 'Проверка оператором перед планированием и перед задачами операций', 'engineering-calculations': 'Инженерные расчёты', 'workspace-uiux': 'UI/UX рабочего пространства', 'customer-progress-2026-10-30': 'Результаты расчёта на примере заказчика' };
   for (const base of ['', '/C4_metall']) {
     const documents = new Map();
     for (const [id, filename] of files) {
