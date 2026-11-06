@@ -63,7 +63,7 @@ test('attachment previews preserve the saved document and render every workbook 
     const tree = await processor.run(processor.parse(markdown), { path: path.join(root, 'documents/implementation/general-plan.md') });
     const rendered = JSON.stringify(tree);
     assert.equal((rendered.match(/data-attachment-preview=/g) || []).length, 6, 'SSR also displays all six attachments');
-    const uiuxMarkdown = await readFile(path.join(root, 'documents/implementation/workspace-uiux.md'), 'utf8');
+    const uiuxMarkdown = await readFile(path.join(root, 'documents/archive/workspace-uiux.md'), 'utf8');
     const uiux = implementationSeed({ id: 'workspace-uiux', markdown: uiuxMarkdown, documentIds: ['workspace-uiux', 'operator-review'], base });
     const uiuxDoc = schema.nodeFromJSON(uiux.document);
     assert.equal(attachmentPreviewEntries(uiuxDoc).length, 22, 'all 22 unique supplied screenshots appear inline');
@@ -239,10 +239,10 @@ test('the rich editor fixture stays outside the published catalogue and imports 
   assert.equal(plain.document.content[1].content[0].text, 'Обычный текст.');
 });
 
-test('customer documents replace the trial catalogue and all links resolve at either site base', async () => {
+test('only the two plans are published and all links resolve at either site base', async () => {
   const files = await implementationFiles(root);
-  assert.deepEqual([...files.keys()].sort(), ['customer-progress-2026-10-30', 'engineering-calculations', 'general-plan', 'operator-review', 'workspace-uiux']);
-  const expectedTitles = { 'general-plan': 'Общий план', 'operator-review': 'Проверка оператором перед планированием и перед задачами операций', 'engineering-calculations': 'Инженерные расчёты', 'workspace-uiux': 'UI/UX рабочего пространства', 'customer-progress-2026-10-30': 'Результаты расчёта на примере заказчика' };
+  assert.deepEqual([...files.keys()].sort(), ['engineering-calculations', 'general-plan']);
+  const expectedTitles = { 'general-plan': 'Общий план', 'engineering-calculations': 'Инженерные расчёты' };
   for (const base of ['', '/C4_metall']) {
     const documents = new Map();
     for (const [id, filename] of files) {
@@ -258,8 +258,6 @@ test('customer documents replace the trial catalogue and all links resolve at ei
       walk(current.document);
       documents.set(id, { ...current, anchors });
     }
-    assert.ok(preservedContent(documents.get('operator-review').document).links.some((link) => link.href === base + '/implementation/workspace-uiux/'));
-    assert.ok(preservedContent(documents.get('workspace-uiux').document).links.some((link) => link.href === base + '/implementation/operator-review/'));
     for (const [id, current] of documents) {
       for (const link of preservedContent(current.document).links) {
         if (!link.href) {
@@ -287,7 +285,8 @@ test('all original requirements, statuses and separately marked addenda remain v
   const sha = (text) => createHash('sha256').update(text).digest('hex');
   const bodies = new Map();
   for (const id of ['general-plan', 'operator-review', 'engineering-calculations', 'workspace-uiux']) {
-    const markdown = (await readFile(path.join(root, `documents/implementation/${id}.md`), 'utf8')).replaceAll('\r\n', '\n');
+    const directory = ['operator-review', 'workspace-uiux'].includes(id) ? 'archive' : 'implementation';
+    const markdown = (await readFile(path.join(root, `documents/${directory}/${id}.md`), 'utf8')).replaceAll('\r\n', '\n');
     bodies.set(id, markdown.replace(/^---\n[\s\S]*?\n---\n/, ''));
   }
   assert.equal(sha(bodies.get('general-plan')), 'a83260ec8218cdad8e4d36a84f07de4bed93404e4beee94d244d823261da907e');

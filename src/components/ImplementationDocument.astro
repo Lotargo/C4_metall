@@ -76,6 +76,8 @@ const seedJson = seed ? JSON.stringify(seed).replace(/</g, '\\u003c') : '';
         <div class="implementation-navigation-body">
         <nav class="implementation-nav" aria-label="Документы плана">
           <p class="implementation-nav-label">Документы</p>
+          <details class="document-category" open>
+            <summary><span class="toc-chevron" aria-hidden="true"></span><span>Планы</span></summary>
           <ul class="document-list">
             {documents.map(({ entry, title: entryTitle }) => <li>
               <a class:list={['document-link', { selected: entry.id === document?.id }]} href={sitePath(implementationPath(entry.id))} aria-current={entry.id === document?.id ? 'page' : undefined}>
@@ -83,6 +85,7 @@ const seedJson = seed ? JSON.stringify(seed).replace(/</g, '\\u003c') : '';
               </a>
             </li>)}
           </ul>
+          </details>
         </nav>
         {document && <nav class="document-outline" aria-label="Содержание текущего документа">
           <p class="implementation-nav-label">В этом документе</p>
