@@ -1,6 +1,7 @@
 ---
 import { sitePath } from '../utils/site-path.mjs';
 import { resultImageSize } from '../utils/results-images.mjs';
+import Icon from './Icon.astro';
 const { content, tableName = 'Параметры' } = Astro.props;
 const hasTable = content.columns?.length && content.rows?.length;
 const longTable = hasTable && content.rows.length > 6;
@@ -23,9 +24,13 @@ const TableWrapper = longTable ? 'details' : 'div';
 {content.notes?.length > 0 && <ul class="result-notes">{content.notes.map((note) => <li>{note}</li>)}</ul>}
 {content.evidence?.length > 0 && <div class:list={['result-evidence', { 'evidence-pair': content.evidence.length === 2 }]}>
   {content.evidence.map((evidence) => <figure>
-    <a class:list={['result-image-link', { 'preview-top': evidence.preview === 'top' }]} href={sitePath(evidence.src)} data-result-image data-caption={evidence.caption ?? evidence.alt} aria-label={'Увеличить: ' + evidence.alt}>
-      <img src={sitePath(evidence.src)} alt={evidence.alt} width={resultImageSize(evidence.src).width} height={resultImageSize(evidence.src).height} loading="lazy" decoding="async" />
-      <span class="result-image-hint" aria-hidden="true">Увеличить</span>
+    <a class:list={['result-image-link', { 'preview-top': evidence.preview === 'top' }]} href={sitePath(evidence.src)} data-result-image data-image-title={tableName} data-caption={evidence.caption ?? evidence.alt} aria-label={'Открыть скриншот: ' + evidence.alt}>
+      <span class="result-image-header" aria-hidden="true">
+        <span class="result-image-label"><Icon name="image"/>Скриншот интерфейса</span>
+        <span class="result-image-action"><Icon name="expand"/>Открыть целиком</span>
+      </span>
+      <span class="result-image-preview"><img src={sitePath(evidence.src)} alt={evidence.alt} width={resultImageSize(evidence.src).width} height={resultImageSize(evidence.src).height} loading="lazy" decoding="async" /></span>
+      <span class="result-image-hint" aria-hidden="true">{evidence.preview === 'top' ? 'Показан фрагмент · Откройте снимок для просмотра целиком' : 'Нажмите на снимок, чтобы рассмотреть детали'}</span>
     </a>
     {evidence.caption && <figcaption>{evidence.caption}</figcaption>}
   </figure>)}

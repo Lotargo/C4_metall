@@ -32,6 +32,7 @@ for (const link of links) link.addEventListener('click', () => {
 
 const dialog = document.querySelector<HTMLDialogElement>('#result-image-dialog')!;
 const expanded = document.querySelector<HTMLImageElement>('#result-image-expanded')!;
+const imageTitle = document.querySelector<HTMLElement>('#result-image-title')!;
 const caption = document.querySelector<HTMLElement>('#result-image-caption')!;
 const original = document.querySelector<HTMLAnchorElement>('#result-image-original')!;
 const closeButton = document.querySelector<HTMLButtonElement>('#result-image-close')!;
@@ -51,8 +52,11 @@ function imageSize(mode: ImageSize) {
   actualButton.setAttribute('aria-pressed', String(mode === 'actual'));
   stage.scrollTo(0, 0);
 }
-const defaultImageSize = (image: HTMLImageElement): ImageSize =>
-  image.naturalWidth > 0 && image.naturalHeight > image.naturalWidth * 2 ? 'width' : 'fit';
+function defaultImageSize(image: HTMLImageElement): ImageSize {
+  const width = image.naturalWidth || Number(image.getAttribute('width'));
+  const height = image.naturalHeight || Number(image.getAttribute('height'));
+  return width > 0 && height > width ? 'width' : 'fit';
+}
 function chooseImageSize(mode: ImageSize) {
   manualSize = true;
   imageSize(mode);
@@ -71,6 +75,7 @@ for (const link of document.querySelectorAll<HTMLAnchorElement>('[data-result-im
     };
     expanded.src = link.href;
     expanded.alt = image.alt;
+    imageTitle.textContent = link.dataset.imageTitle ?? 'Скриншот интерфейса';
     caption.textContent = link.dataset.caption ?? image.alt;
     original.href = link.href;
     imageSize(defaultImageSize(image));
