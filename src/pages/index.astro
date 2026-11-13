@@ -35,13 +35,13 @@ const sections = await overviewSections();
       </div></section>
       {sections.map((entry, index) => <OverviewSection entry={entry} index={index}/>)}
       <section class="chapter section" id="examples" data-chapter="Примеры интерфейса"><div class="wrap">
-        <SectionHeading eyebrow="Примеры / Технические паспорта" title="Посмотреть, что получилось." icon="prepared">Три сохранённых примера в текущем интерфейсе. Каждый паспорт можно открыть целиком и прочитать без потери деталей.</SectionHeading>
+        <SectionHeading eyebrow="Примеры / Паспорт, маршрут и смета" title="Посмотреть, что получилось." icon="prepared">Три детали с рассчитанными операциями, временем и стоимостью работ. Для каждой можно открыть целиком паспорт, полный маршрут и смету.</SectionHeading>
         <div class="example-cards">{drawings.map(drawing => {
-          const picture = drawing.sections.flatMap(s => s.evidence || [])[0];
+          const picture = drawing.sections.find(s => s.id === 'route').evidence[0];
           const size = resultImageSize(picture.src);
-          return <a class="example-card" href={sitePath(drawingPath(drawing))}><div class="example-card-image"><img src={sitePath(picture.src)} alt={'Фрагмент технического паспорта: ' + drawing.title} loading="lazy" width={size.width} height={size.height}/></div><div class="example-card-copy"><span class="eyebrow">Паспорт детали</span><h3>{drawing.title}<span aria-hidden="true">↗</span></h3><p>{drawing.summary}</p><span class="example-card-action">Открыть длинный скриншот <Icon name="chevron"/></span></div></a>;
+          return <a class="example-card" href={sitePath(drawingPath(drawing))}><div class="example-card-image"><img src={sitePath(picture.src)} alt={'Начало полного маршрута: ' + drawing.title} loading="lazy" width={size.width} height={size.height}/></div><div class="example-card-copy"><span class="eyebrow">Паспорт · Маршрут · Смета</span><h3>{drawing.title}<span aria-hidden="true">↗</span></h3><p>{drawing.summary}</p><span class="example-card-action">Посмотреть все три этапа <Icon name="chevron"/></span></div></a>;
         })}</div>
-        <p class="content-note">Скриншоты сделаны 13 ноября 2026 года на сохранённых результатах. Это иллюстрации интерфейса и конкретных примеров, а не новый запуск распознавания или подтверждение готовности всех расчётов.</p>
+        <p class="content-note">Снимки от 13 ноября 2026 года показывают сохранённые результаты с рассчитанными работами. Ставки демонстрационные, стоимость материала не включена. Условия и инженерные допущения приведены внутри каждого примера.</p>
       </div></section>
     </main>
     <SiteFooter/>

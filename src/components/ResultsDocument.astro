@@ -20,7 +20,7 @@ const { drawing } = Astro.props;
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>{drawing.title} — результаты чтения чертежа</title>
+  <title>{drawing.title} — паспорт, маршрут и смета</title>
   <meta name="description" content={drawing.summary} />
   <meta name="robots" content="noindex, nofollow" />
   <meta name="theme-color" content="#f4f6f8" />
@@ -31,7 +31,7 @@ const { drawing } = Astro.props;
   <a class="skip-link" href="#main">Перейти к результату</a>
   <ThemeToggle />
   <div class="metall-page" id="page-start">
-  <SiteHeader page="results" title="Результаты чертежей" subtitle="Metall · Детали и инженерные паспорта" />
+  <SiteHeader page="results" title="Результаты чертежей" subtitle="Metall · Паспорт, маршрут и смета" />
   <div class="results-layout">
     <aside class="results-sidebar" aria-label="Навигация по результатам">
       <details class="results-navigation" open>
@@ -56,11 +56,11 @@ const { drawing } = Astro.props;
     </aside>
     <main id="main" class="results-main">
       <header class="result-title" id="top">
-        <p class="result-kicker">Результат чтения чертежа</p>
+        <p class="result-kicker">От чертежа к расчёту работ</p>
         <h1>{drawing.title}</h1>
         <p class="result-designation">{drawing.designation}</p>
         <p class="result-intro">{drawing.summary}</p>
-        <div class="section-edition"><span class="content-status">Текущий интерфейс · сохранённый пример</span><span>Скриншот от {drawing.updated}</span></div>
+        <div class="section-edition"><span class="content-status">Текущий интерфейс · сохранённый пример</span><span>Снимки от {drawing.updated}</span></div>
       </header>
       {drawing.sections.map((section) => <section class="result-section" id={section.id} data-result-anchor>
         <h2><span class="result-section-symbol"><Icon name={section.id === 'passport' ? 'prepared' : section.id === 'limits' ? 'coverage' : 'units'} /></span>{section.title}</h2>

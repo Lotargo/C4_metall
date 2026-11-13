@@ -57,9 +57,17 @@ assert(resultFiles.length>=3,'Keep at least three current drawing examples');
 for(const file of resultFiles) {
   const result=JSON.parse(await read(file));
   const pictures=result.sections.flatMap(s=>s.evidence||[]);
-  assert.equal(pictures.length,1,'Use one current long screenshot per drawing');
-  assert(pictures[0].src.startsWith('/results/current/'));
-  await stat(path.join(root,'public',pictures[0].src));
+  assert.equal(pictures.length,3,'Keep one screenshot for each stage: passport, route, estimate');
+  assert.equal(new Set(pictures.map(p=>p.src)).size,3,'Stage screenshots must be distinct');
+  for(const stage of ['passport','route','estimate']) {
+    const sections=result.sections.filter(s=>s.id===stage);
+    assert.equal(sections.length,1,`Missing or duplicate result stage: ${stage}`);
+    assert.equal(sections[0].evidence?.length,1,`Keep one complete screenshot of ${stage}`);
+    const picture=sections[0].evidence[0];
+    assert(picture.src.startsWith('/results/current/')&&!picture.src.includes('..'));
+    assert(picture.alt&&picture.caption,'Describe the stage and provenance');
+    await stat(path.join(root,'public',picture.src));
+  }
 }
 const built=await files(dist);
 const forbidden=[
