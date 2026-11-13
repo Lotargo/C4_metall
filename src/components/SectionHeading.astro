@@ -1,0 +1,13 @@
+---
+import Icon from './Icon.astro';
+import icons from '../data/metall-icons.json';
+interface Props { eyebrow: string; title: string; icon?: keyof typeof icons }
+const { eyebrow, title, icon = 'scenarios' } = Astro.props;
+---
+<div class="section-heading section-heading-panel">
+  <div class="section-title-card">
+    <div class="section-title-kicker"><Icon name={icon} /><p class="eyebrow">{eyebrow}</p></div>
+    <h2>{title}</h2>
+  </div>
+  <p class="section-intro"><slot /></p>
+</div>

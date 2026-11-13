@@ -1,0 +1,28 @@
+---
+import { sitePath } from '../utils/site-path.mjs';
+import Icon from './Icon.astro';
+---
+<footer class="metall-footer" aria-label="О проекте и навигация">
+  <div class="metall-footer-main">
+    <div class="metall-footer-about">
+      <a class="metall-brand" href={sitePath('/')}><span class="metall-brand-mark" aria-hidden="true">M</span><span><strong>Metall</strong><small>Подготовка производства</small></span></a>
+      <p>От исходного чертежа до предварительной сметы. Работа агентов, расчёты программы и решения технолога в одной цепочке.</p>
+    </div>
+    <nav class="metall-footer-nav" aria-label="О продукте в футере">
+      <h2>О продукте</h2>
+      <a href={sitePath('/') + '#pipeline'}>Как устроен процесс</a>
+      <a href={sitePath('/') + '#agents'}>Команда агентов</a>
+      <a href={sitePath('/results/')}>Результаты чертежей</a>
+      <a href={sitePath('/') + '#limits'}>Границы результата</a>
+      <a href={sitePath('/3d/')}>Создание 3D-модели</a>
+    </nav>
+    <nav class="metall-footer-nav" aria-label="Материалы в футере">
+      <h2>Материалы проекта</h2>
+      <a href={sitePath('/implementation/')}>План реализации</a>
+      <a href={sitePath('/documentation/')}>Документация</a>
+      <a href={sitePath('/plan/')}>Входящие данные и примеры</a>
+      <a href={sitePath('/voksa/')}>Разбор ВоксаТех</a>
+    </nav>
+  </div>
+  <div class="metall-footer-bottom"><p>Подготовка производства <span aria-hidden="true">·</span> Интерактивный обзор проекта</p><a class="metall-back-top" href="#page-start">К началу <Icon name="chevron" /></a></div>
+</footer>

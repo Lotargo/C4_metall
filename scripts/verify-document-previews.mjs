@@ -1,9 +1,10 @@
 import { readFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
-import catalog from '../src/data/document-attachments.json' with { type: 'json' };
+import catalog from '../content/public/attachments.json' with { type: 'json' };
+import { readEvidenceAsset } from './private-evidence-asset.mjs';
 
 for (const [key, asset] of Object.entries(catalog.assets)) {
-  const bytes = await readFile(new URL('../public/documents/implementation/' + key, import.meta.url));
+  const bytes = await readEvidenceAsset('documents/implementation/' + key);
   if (createHash('sha256').update(bytes).digest('hex') !== asset.sha256) {
     throw new Error(`Attachment preview is stale: ${key}. Rebuild with scripts/build-document-previews.py.`);
   }

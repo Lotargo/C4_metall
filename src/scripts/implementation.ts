@@ -132,7 +132,7 @@ async function renderDiagrams() {
       securityLevel: 'strict',
       suppressErrorRendering: true,
       theme: 'base',
-      fontFamily: 'IBM Plex Sans, Arial, sans-serif',
+      fontFamily: 'Inter Variable, Inter, Arial, sans-serif',
       themeVariables: {
         useGradient: false, dropShadow: 'none',
         darkMode: theme === 'dark',

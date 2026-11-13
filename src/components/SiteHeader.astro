@@ -1,0 +1,59 @@
+---
+import Icon from './Icon.astro';
+import { sitePath } from '../utils/site-path.mjs';
+import { overviewSections } from '../utils/public-content';
+import icons from '../data/metall-icons.json';
+
+interface Props {
+  page?: 'home' | 'plan' | 'results' | 'implementation' | 'documentation' | 'models' | 'voksa';
+  title?: string;
+  subtitle?: string;
+}
+const { page = 'home', title = 'Подготовка производства', subtitle = 'Metall · Обзор продукта' } = Astro.props;
+const overview = [['top', 'Обзор продукта', 'start'], ...(await overviewSections()).map(({ data }) => [data.id, data.nav, data.icon]), ['examples', 'Примеры интерфейса', 'prepared']];
+const materials = [
+  ['results', '/results/', 'Результаты чертежей', 'prepared'],
+  ['models', '/3d/', 'Создание 3D-модели', 'geometry'],
+  ['implementation', '/implementation/', 'План реализации', 'library'],
+  ['documentation', '/documentation/', 'Документация', 'start'],
+  ['plan', '/plan/', 'Входящие данные', 'units'],
+] as const;
+const research = [
+  ['voksa', '/voksa/', 'Разбор ВоксаТех', 'comparison'],
+] as const;
+---
+<aside class="metall-sidebar" id="metall-sidebar" aria-label="Разделы сайта">
+  <img class="metall-sidebar-art" src={sitePath('/brand/engineering-drawing.svg')} alt="" aria-hidden="true" />
+  <div class="metall-sidebar-head">
+    <a class="metall-brand" href={sitePath('/')} aria-label="Metall: Подготовка производства">
+      <span class="metall-brand-mark" aria-hidden="true">M</span>
+      <span><strong>Metall</strong><small>Подготовка производства</small></span>
+    </a>
+    <button type="button" class="metall-menu-close metall-icon-button" data-metall-close aria-label="Закрыть разделы сайта"><Icon name="close" /></button>
+  </div>
+  <nav class="metall-sidebar-scroll" aria-label="Навигация по сайту">
+    <div class="metall-nav-group">
+      <p class="metall-nav-label">О продукте</p>
+      {overview.map(([id, label, icon]) => <a href={page === 'home' ? '#' + id : sitePath('/') + '#' + id} data-metall-section={page === 'home' ? id : undefined} aria-current={page === 'home' && id === 'top' ? 'location' : undefined}><Icon name={icon as keyof typeof icons} /><span>{label}</span></a>)}
+    </div>
+    <div class="metall-nav-group">
+      <p class="metall-nav-label">Материалы проекта</p>
+      {materials.map(([id, href, label, icon]) => <a href={sitePath(href)} aria-current={page === id ? 'page' : undefined}><Icon name={icon} /><span>{label}</span></a>)}
+    </div>
+    <div class="metall-nav-group">
+      <p class="metall-nav-label">Исследования</p>
+      {research.map(([id, href, label, icon]) => <a href={sitePath(href)} aria-current={page === id ? 'page' : undefined}><Icon name={icon} /><span>{label}</span></a>)}
+    </div>
+  </nav>
+  <div class="metall-sidebar-bottom"><span>Чертёж. Решение. Производство.</span></div>
+</aside>
+<dialog class="metall-nav-dialog" id="metall-nav-dialog" aria-label="Разделы сайта"></dialog>
+<header class:list={['site-header', 'metall-topbar', { 'implementation-header': page === 'implementation' || page === 'documentation' }]}>
+  <div class="metall-heading">
+    <button type="button" class="metall-menu-toggle metall-icon-button" data-metall-open aria-controls="metall-sidebar" aria-expanded="false" aria-label="Открыть разделы сайта"><Icon name="menu" /></button>
+    <span class="metall-heading-symbol"><Icon name={page === 'home' ? 'scenarios' : page === 'results' ? 'prepared' : page === 'models' ? 'geometry' : 'start'} /></span>
+    <div class="metall-heading-copy"><p class="metall-page-title">{title}</p><p class="metall-page-subtitle">{subtitle}</p></div>
+  </div>
+  <div class="metall-header-actions"><slot /></div>
+</header>
+<script>import '../scripts/site-shell.ts'; import '../scripts/ui-effects.ts';</script>

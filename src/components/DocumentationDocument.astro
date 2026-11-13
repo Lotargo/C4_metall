@@ -1,0 +1,91 @@
+---
+import SiteHeader from './SiteHeader.astro';
+import SiteFooter from './SiteFooter.astro';
+import Icon from './Icon.astro';
+import { render } from 'astro:content';
+import ThemeHead from './ThemeHead.astro';
+import ThemeToggle from './ThemeToggle.astro';
+import DocumentationNavigation from './DocumentationNavigation.astro';
+import { getImplementationDocuments } from '../utils/documents';
+import { getDocumentationDocuments, type DocumentationEntry } from '../utils/documentation';
+import { sitePath } from '../utils/site-path.mjs';
+import { implementationPath } from '../utils/document-path.mjs';
+import { groupDocumentHeadings } from '../utils/document-toc.mjs';
+import '../styles/global.css';
+import '../styles/implementation.css';
+import '@fontsource-variable/inter/wght.css';
+import '../styles/metall.css';
+import '../styles/interactive.css';
+
+interface Props { document: DocumentationEntry; }
+const { document } = Astro.props;
+const [{ Content, headings }, documents, plans] = await Promise.all([
+  render(document), getDocumentationDocuments(), getImplementationDocuments(),
+]);
+const current = documents.find(({ entry }) => entry.id === document.id)!;
+const toc = groupDocumentHeadings(headings);
+---
+<!doctype html>
+<html lang="ru" class="implementation-document">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{current.title} · Документация</title>
+  <meta name="description" content={current.description} />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#f4f6f8" />
+  <link rel="icon" type="image/svg+xml" href={sitePath('/favicon.svg')} />
+  <ThemeHead />
+</head>
+<body class="implementation-page documentation-page">
+  <a class="skip-link" href="#main">Перейти к документу</a>
+  <ThemeToggle />
+  <div class="metall-page" id="page-start">
+  <SiteHeader page="documentation" title="Документация" subtitle="Metall · Устройство и работа системы" />
+  <div class="implementation-layout">
+    <aside class="implementation-sidebar" aria-label="Навигация по документации">
+      <details class="implementation-navigation" open>
+        <summary><span>Документы и содержание</span><span class="navigation-current">{current.title}</span></summary>
+        <div class="implementation-navigation-body">
+          <nav class="implementation-nav" aria-label="Документы проекта">
+            <p class="implementation-nav-label">Документы</p>
+            <details class="document-category">
+              <summary><span class="toc-chevron" aria-hidden="true"></span><span>Планы</span></summary>
+              <ul class="document-list">
+                {plans.map(({ entry, title }) => <li><a class="document-link" href={sitePath(implementationPath(entry.id))}>{title}</a></li>)}
+              </ul>
+            </details>
+            <DocumentationNavigation activeId={document.id} />
+          </nav>
+          <nav class="document-outline" aria-label="Содержание текущего документа">
+            <p class="implementation-nav-label">В этом документе</p>
+            <div class="document-toc-scroll" data-toc-scroll>
+              <ol class="document-toc" data-editor-toc>
+                {toc.map(({ heading, children }) => <li data-toc-group={heading.slug}>
+                  <div class="toc-heading">
+                    <a href={'#' + heading.slug} data-document-toc={heading.slug}>{heading.text}</a>
+                    {!!children.length && <button type="button" data-toc-toggle aria-label={'Подразделы: ' + heading.text} aria-controls={'toc-children-' + heading.slug} aria-expanded="false" hidden><span class="toc-chevron" aria-hidden="true"></span></button>}
+                  </div>
+                  {!!children.length && <ol id={'toc-children-' + heading.slug} data-toc-children>
+                    {children.map((child) => <li><a href={'#' + child.slug} data-document-toc={child.slug}>{child.text}</a></li>)}
+                  </ol>}
+                </li>)}
+              </ol>
+            </div>
+          </nav>
+        </div>
+      </details>
+    </aside>
+    <main id="main" class="implementation-main" tabindex="-1">
+      <div class="document-topline" id="top"><p>Документация</p><button type="button" class="document-print" data-document-print aria-label="Печать / PDF" title="Печать / PDF" hidden><Icon name="print" /></button></div>
+      <article id="document-content" class="markdown-document" aria-label={current.title}>
+        <Content />
+      </article>
+      <footer class="implementation-footer"><a href="#top">К началу документа ↑</a><a href={sitePath('/results/')}>Результаты</a><a href={sitePath('/')}>К презентации</a></footer>
+    </main>
+  </div>
+  <script>import '../scripts/implementation.ts';</script>
+  <SiteFooter />
+  </div>
+</body>
+</html>

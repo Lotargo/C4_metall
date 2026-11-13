@@ -20,7 +20,7 @@ const updateButton = () => {
 const apply = (theme: Theme) => {
   const changed = root.dataset.theme !== theme;
   root.dataset.theme = theme;
-  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#161d1a' : '#f7f6f2');
+  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#111820' : '#f4f6f8');
   updateButton();
   if (changed) window.dispatchEvent(new CustomEvent('themechange', { detail: { theme } }));
 };

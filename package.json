@@ -8,15 +8,17 @@
     "dev": "astro dev --host 127.0.0.1 --port 4325",
     "prebuild": "node scripts/verify-document-previews.mjs",
     "build": "astro build",
+    "postbuild": "node scripts/verify-public.mjs",
     "preview": "astro preview --host 127.0.0.1 --port 4326",
     "verify:evidence": "node scripts/verify-evidence.mjs",
+    "verify:public": "node scripts/verify-public.mjs",
     "typecheck": "tsc --project tsconfig.scripts.json",
     "test:editor": "node --test scripts/test-editor.mjs",
     "deploy": "powershell -NoProfile -File scripts/deploy-both.ps1"
   },
   "dependencies": {
     "@astrojs/markdown-remark": "^7.3.4",
-    "@fontsource/ibm-plex-sans": "^5.3.0",
+    "@fontsource-variable/inter": "^5.3.0",
     "@tiptap/core": "3.32.0",
     "@tiptap/extension-highlight": "3.32.0",
     "@tiptap/extension-list": "3.32.0",
@@ -32,10 +34,12 @@
     "remark-gfm": "4.0.1",
     "remark-math": "^6.0.0",
     "remark-parse": "11.0.0",
+    "three": "^0.186.0",
     "unified": "11.0.5",
     "unist-util-visit": "^5.2.0"
   },
   "devDependencies": {
+    "@types/three": "^0.187.0",
     "temporal-spec": "1.0.1",
     "type-fest": "^5.10.0",
     "typescript": "^7.0.2"

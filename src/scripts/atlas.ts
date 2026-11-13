@@ -114,7 +114,7 @@ function wrapText(text: string, max: number) {
 const diagramCss = `
 .c4-node{cursor:pointer}
 .c4-node .shape{stroke-width:1.5}
-.c4-node text{font-family:"IBM Plex Sans",Arial,sans-serif;pointer-events:none;text-anchor:middle}
+.c4-node text{font-family:"Inter Variable",Inter,Arial,sans-serif;pointer-events:none;text-anchor:middle}
 .c4-node .t-title{font-size:18px;font-weight:600}
 .c4-node .t-type{font-size:13px;opacity:.88}
 .c4-node .t-sub{font-size:13.5px}
@@ -132,11 +132,11 @@ const diagramCss = `
 .c4-edge.optional path{stroke-dasharray:6 5}
 .c4-edge.active path{stroke:var(--c4-active,#0b4884);stroke-width:2.4}
 .c4-edge .l-bg{fill:var(--c4-canvas,#f6f7f4);opacity:.94}
-.c4-edge text{font-family:"IBM Plex Sans",Arial,sans-serif;text-anchor:middle;fill:var(--ink,#2c3238)}
+.c4-edge text{font-family:"Inter Variable",Inter,Arial,sans-serif;text-anchor:middle;fill:var(--ink,#2c3238)}
 .c4-edge .l-main{font-size:12.5px;font-weight:500}.c4-edge .l-tech{font-size:11px;fill:var(--muted,#5e6670)}
 .c4-edge.active text{fill:var(--c4-active,#0b4884)}
 .c4-boundary rect{fill:none;stroke:var(--c4-boundary,#7b8590);stroke-width:1.4;stroke-dasharray:8 6}
-.c4-boundary text{font-family:"IBM Plex Sans",Arial,sans-serif;fill:var(--muted,#3f4850)}
+.c4-boundary text{font-family:"Inter Variable",Inter,Arial,sans-serif;fill:var(--muted,#3f4850)}
 .c4-boundary .b-title{font-size:14px;font-weight:600}.c4-boundary .b-sub{font-size:12px}
 `;
 const style = document.createElementNS("http://www.w3.org/2000/svg", "style");

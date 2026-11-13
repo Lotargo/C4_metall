@@ -19,7 +19,7 @@ export default defineConfig({
       },
     },
   }],
-  vite: { plugins: [implementationEditorPlugin()] },
+  vite: { plugins: [implementationEditorPlugin()], server: { watch: { ignored: ['**/outputs/**', '**/.evidence/**'] } } },
   markdown: {
     processor: unified({
       shikiConfig: { themes: { light: 'github-light', dark: 'github-dark' } },

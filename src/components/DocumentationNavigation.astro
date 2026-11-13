@@ -1,0 +1,17 @@
+---
+import { getDocumentationDocuments, documentationPath } from '../utils/documentation';
+import { sitePath } from '../utils/site-path.mjs';
+interface Props { activeId?: string; }
+const { activeId } = Astro.props;
+const documents = await getDocumentationDocuments();
+---
+<details class="document-category" open={!!activeId}>
+  <summary><span class="toc-chevron" aria-hidden="true"></span><span>Документация</span></summary>
+  <ul class="document-list">
+    {documents.map(({ entry, title }) => <li>
+      <a class:list={['document-link', { selected: entry.id === activeId }]} href={sitePath(documentationPath(entry.id))} aria-current={entry.id === activeId ? 'page' : undefined}>
+        <span>{title}</span><span class="document-current-mark" aria-hidden="true">{entry.id === activeId && '•'}</span>
+      </a>
+    </li>)}
+  </ul>
+</details>

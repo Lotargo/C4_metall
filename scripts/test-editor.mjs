@@ -40,36 +40,24 @@ test('source releases isolate older shared drafts and keep the same storage key 
   assert.equal(legacy.storageId, legacy.documentId, 'documents without source releases retain their shared records');
 });
 
-test('attachment previews preserve the saved document and render every workbook sheet on both site bases', async () => {
+test('private attachments are not expanded into the public editor or server render', async () => {
   const markdown = await readFile(path.join(root, 'documents/implementation/general-plan.md'), 'utf8');
   for (const base of ['', '/C4_metall']) {
-    const snapshot = implementationSeed({ id: 'general-plan', markdown, documentIds: ['general-plan', 'operator-review', 'engineering-calculations'], base });
+    const snapshot = implementationSeed({ id: 'general-plan', markdown, documentIds: ['general-plan', 'engineering-calculations'], base });
     const schema = getSchema(editorExtensions());
     const doc = schema.nodeFromJSON(snapshot.document);
     const before = doc.toJSON();
     const plugin = createAttachmentPreviewPlugin({ base });
     const state = EditorState.create({ schema, doc, plugins: [plugin] });
-    assert.equal(plugin.getState(state).find().length, 6);
-    assert.deepEqual(state.doc.toJSON(), before);
-    assert.equal(attachmentPreviewEntries(doc).length, 6, 'duplicate source references do not repeat previews');
-    const stock = attachmentPreviewHtml('00-general-plan-2026-10-27/stock-forms.xlsx', 'Формы и размеры');
-    assert.equal((stock.match(/<details /g) || []).length, 5);
-    assert.match(stock, /0,50%/);
-    assert.match(stock, /Прокта труба бесшовная /);
-    const image = attachmentPreviewHtml('00-general-plan-2026-10-27/drawing-title-block.png', '<рамка>', base);
-    assert.ok(image.includes(`src="${base}/documents/implementation/`));
-    assert.ok(image.includes('&lt;рамка&gt;'));
+    assert.equal(plugin.getState(state).find().length, 0);
+    assert.deepEqual(state.doc.toJSON(), before, 'privacy does not modify canonical document data');
+    assert.equal(attachmentPreviewEntries(doc).length, 0);
+    assert.equal(attachmentPreviewHtml('00-general-plan-2026-10-27/stock-forms.xlsx', 'Формы и размеры'), '');
     const processor = unified().use(remarkParse).use(remarkGfm).use(remarkDocuments);
     const tree = await processor.run(processor.parse(markdown), { path: path.join(root, 'documents/implementation/general-plan.md') });
     const rendered = JSON.stringify(tree);
-    assert.equal((rendered.match(/data-attachment-preview=/g) || []).length, 6, 'SSR also displays all six attachments');
-    const uiuxMarkdown = await readFile(path.join(root, 'documents/archive/workspace-uiux.md'), 'utf8');
-    const uiux = implementationSeed({ id: 'workspace-uiux', markdown: uiuxMarkdown, documentIds: ['workspace-uiux', 'operator-review'], base });
-    const uiuxDoc = schema.nodeFromJSON(uiux.document);
-    assert.equal(attachmentPreviewEntries(uiuxDoc).length, 22, 'all 22 unique supplied screenshots appear inline');
-    const uiuxState = EditorState.create({ schema, doc: uiuxDoc, plugins: [createAttachmentPreviewPlugin({ base })] });
-    assert.deepEqual(uiuxState.doc.toJSON(), uiuxDoc.toJSON(), 'screenshots do not change the saved source');
-    await encodeCloudDocument(uiuxDoc.toJSON(), base);
+    assert.equal((rendered.match(/data-attachment-preview=/g) || []).length, 0);
+    assert.doesNotMatch(rendered, /Источник не включён в этот раздел:/, 'private target paths are never copied into title attributes');
   }
 });
 
@@ -242,7 +230,7 @@ test('the rich editor fixture stays outside the published catalogue and imports 
 test('only the two plans are published and all links resolve at either site base', async () => {
   const files = await implementationFiles(root);
   assert.deepEqual([...files.keys()].sort(), ['engineering-calculations', 'general-plan']);
-  const expectedTitles = { 'general-plan': 'Общий план', 'engineering-calculations': 'Инженерные расчёты' };
+  const expectedTitles = { 'general-plan': 'Общий план развития', 'engineering-calculations': 'Инженерные расчёты' };
   for (const base of ['', '/C4_metall']) {
     const documents = new Map();
     for (const [id, filename] of files) {
@@ -266,7 +254,7 @@ test('only the two plans are published and all links resolve at either site base
           assert.doesNotMatch(link.originalHref, /^(?:https?:|#)/);
           continue;
         }
-        if (/^https?:/.test(link.href)) continue;
+        if (/^https?:/.test(link.href) || link.href.startsWith(base + '/#')) continue;
         if (link.href.startsWith(base + '/documents/implementation/')) {
           await readFile(path.join(root, 'public', decodeURIComponent(link.href.slice(base.length))));
           continue;

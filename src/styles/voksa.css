@@ -26,7 +26,7 @@
 .voksa-page th[scope="row"] {
   background: transparent;
   border-bottom: 1px solid var(--line);
-  font-size: 18px;
+  font-size: 16px;
   text-align: left;
 }
 .knowledge-table table {
@@ -42,7 +42,7 @@
   max-width: 100ch;
 }
 .api-flow li {
-  font-size: 18px;
+  font-size: 16px;
 }
 .role-split {
   display: grid;
@@ -74,7 +74,7 @@
 .role-column li {
   padding: 12px 0;
   border-bottom: 1px solid var(--line);
-  font-size: 19px;
+  font-size: 16px;
 }
 .boundary-note {
   display: grid;
@@ -112,12 +112,12 @@
 }
 #roles .inline-shot figcaption {
   margin: 0;
-  font-size: 18px;
+  font-size: 16px;
 }
 #roles .inline-shot figcaption b {
   display: block;
   color: var(--ink);
-  font-size: 22px;
+  font-size: 18px;
   margin-bottom: 12px;
 }
 .calc-layout,
@@ -155,7 +155,7 @@
   gap: 24px;
   padding: 12px 0;
   border-bottom: 1px solid var(--line);
-  font-size: 18px;
+  font-size: 16px;
 }
 .calc-sheet dt {
   color: var(--muted);
@@ -186,13 +186,13 @@
 }
 .formula p {
   margin: 0 0 10px;
-  font-size: 19px;
+  font-size: 16px;
 }
 .formula p:last-child {
   margin-bottom: 0;
 }
 .subhead {
-  font-size: 32px;
+  font-size: 24px;
   margin: 56px 0 28px;
 }
 .note-grid {
@@ -208,7 +208,7 @@
   margin: 10px 0 12px;
 }
 .note-grid p {
-  font-size: 18px;
+  font-size: 16px;
   color: var(--muted);
 }
 .shared-ground {
@@ -229,10 +229,10 @@
   width: 22%;
 }
 .compare-table td {
-  font-size: 18px;
+  font-size: 16px;
 }
 .compare-table td:last-child {
-  background: #f3f6f2;
+  background: #f8fafb;
 }
 .pair-tabs {
   margin-bottom: 28px;
@@ -266,7 +266,7 @@
 }
 .pair-side p {
   margin-top: 18px;
-  font-size: 18px;
+  font-size: 16px;
 }
 .pair-side .caption {
   margin-top: 8px;
@@ -313,7 +313,7 @@
   padding-top: 36px;
 }
 .not-adopted h3 {
-  font-size: 32px;
+  font-size: 24px;
 }
 .not-adopted ul {
   margin: 0;
@@ -323,7 +323,7 @@
 .not-adopted li {
   padding: 14px 0 14px 32px;
   border-bottom: 1px solid var(--line);
-  font-size: 18px;
+  font-size: 16px;
   position: relative;
 }
 .not-adopted li::before {
@@ -348,13 +348,13 @@
   border-bottom: 1px solid var(--line);
 }
 .roadmap-id {
-  font-size: 18px;
+  font-size: 16px;
   color: var(--muted);
   font-variant-numeric: tabular-nums;
 }
 .roadmap-title {
-  font-size: 22px;
-  font-weight: 500;
+  font-size: 18px;
+  font-weight: 600;
 }
 .roadmap-note {
   grid-column: 2 / -1;
@@ -434,7 +434,7 @@
     margin-bottom: 16px;
   }
   .compare-table th[scope="row"] {
-    font-size: 21px;
+    font-size: 17px;
     padding: 18px 20px 6px;
     border: 0;
   }
@@ -476,7 +476,7 @@
     margin: 32px 0;
   }
   .subhead {
-    font-size: 27px;
+    font-size: 22px;
     margin: 44px 0 22px;
   }
   .calc-sheet {
@@ -494,7 +494,7 @@
     font-size: 17px;
   }
   .not-adopted h3 {
-    font-size: 27px;
+    font-size: 22px;
   }
   .roadmap li {
     grid-template-columns: 52px minmax(0, 1fr);
@@ -504,7 +504,7 @@
     justify-self: start;
   }
   .roadmap-title {
-    font-size: 19px;
+    font-size: 16px;
   }
   .checks-table table,
   .checks-table caption,
@@ -528,7 +528,7 @@
     padding: 2px 0;
   }
   .checks-table th[scope="row"] {
-    font-weight: 500;
+    font-weight: 600;
     margin-bottom: 4px;
   }
   .checks-table td::before {

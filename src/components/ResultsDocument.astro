@@ -1,15 +1,18 @@
 ---
+import SiteHeader from './SiteHeader.astro';
+import SiteFooter from './SiteFooter.astro';
+import Icon from './Icon.astro';
 import { sitePath } from '../utils/site-path.mjs';
 import { drawings, drawingPath } from '../data/results.mjs';
 import ResultBody from './ResultBody.astro';
 import ThemeHead from './ThemeHead.astro';
 import ThemeToggle from './ThemeToggle.astro';
-import '@fontsource/ibm-plex-sans/latin-400.css';
-import '@fontsource/ibm-plex-sans/latin-500.css';
-import '@fontsource/ibm-plex-sans/cyrillic-400.css';
-import '@fontsource/ibm-plex-sans/cyrillic-500.css';
 import '../styles/global.css';
 import '../styles/results.css';
+import '@fontsource-variable/inter/wght.css';
+import '../styles/metall.css';
+import '../styles/interactive.css';
+import '../styles/overview.css';
 const { drawing } = Astro.props;
 ---
 <!doctype html>
@@ -20,21 +23,15 @@ const { drawing } = Astro.props;
   <title>{drawing.title} — результаты чтения чертежа</title>
   <meta name="description" content={drawing.summary} />
   <meta name="robots" content="noindex, nofollow" />
-  <meta name="theme-color" content="#f7f6f2" />
+  <meta name="theme-color" content="#f4f6f8" />
   <link rel="icon" type="image/svg+xml" href={sitePath('/favicon.svg')} />
   <ThemeHead />
 </head>
 <body class="results-page">
   <a class="skip-link" href="#main">Перейти к результату</a>
   <ThemeToggle />
-  <header class="site-header results-header">
-    <div class="results-header-inner">
-      <a class="brand" href={sitePath('/')}><span class="brand-mark" aria-hidden="true">ПП</span><span>Подготовка<br/>производства</span></a>
-      <span class="results-header-title">Результаты чтения чертежей</span>
-      <a class="results-plan" href={sitePath('/implementation/')}>План реализации</a>
-      <a class="results-home" href={sitePath('/')}>К презентации</a>
-    </div>
-  </header>
+  <div class="metall-page" id="page-start">
+  <SiteHeader page="results" title="Результаты чертежей" subtitle="Metall · Детали и инженерные паспорта" />
   <div class="results-layout">
     <aside class="results-sidebar" aria-label="Навигация по результатам">
       <details class="results-navigation" open>
@@ -63,9 +60,10 @@ const { drawing } = Astro.props;
         <h1>{drawing.title}</h1>
         <p class="result-designation">{drawing.designation}</p>
         <p class="result-intro">{drawing.summary}</p>
+        <div class="section-edition"><span class="content-status">Текущий интерфейс · сохранённый пример</span><span>Скриншот от {drawing.updated}</span></div>
       </header>
       {drawing.sections.map((section) => <section class="result-section" id={section.id} data-result-anchor>
-        <h2>{section.title}</h2>
+        <h2><span class="result-section-symbol"><Icon name={section.id === 'passport' ? 'prepared' : section.id === 'limits' ? 'coverage' : 'units'} /></span>{section.title}</h2>
         <ResultBody content={section} tableName={section.title} />
         {section.items?.map((item) => <section class="result-item" id={item.id} data-result-anchor>
           <h3>{item.title}</h3>
@@ -82,5 +80,7 @@ const { drawing } = Astro.props;
     <p class="result-image-help"><a id="result-image-original" href="" target="_blank" rel="noopener">Открыть изображение в отдельной вкладке ↗</a></p>
   </dialog>
   <script>import '../scripts/results.ts';</script>
+  <SiteFooter />
+  </div>
 </body>
 </html>

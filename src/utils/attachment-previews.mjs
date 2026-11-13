@@ -1,4 +1,4 @@
-import catalog from '../data/document-attachments.json' with { type: 'json' };
+import catalog from '../../content/public/attachments.json' with { type: 'json' };
 
 const prefix = '/documents/implementation/';
 const escape = (value) => String(value).replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);

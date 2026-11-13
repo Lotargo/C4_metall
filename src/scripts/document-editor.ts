@@ -188,7 +188,7 @@ function mermaidView(node: { attrs: { source: string } }) {
       try {
         const { default: mermaid } = await import('mermaid');
         mermaid.initialize({ startOnLoad: false, securityLevel: 'strict', suppressErrorRendering: true,
-          theme: document.documentElement.dataset.theme === 'dark' ? 'dark' : 'default', fontFamily: 'IBM Plex Sans, Arial, sans-serif' });
+          theme: document.documentElement.dataset.theme === 'dark' ? 'dark' : 'default', fontFamily: 'Inter Variable, Inter, Arial, sans-serif' });
         const { svg } = await mermaid.render(`editor-diagram-${++diagramId}`, node.attrs.source);
         if (!active) return;
         viewport.innerHTML = svg;

@@ -1,11 +1,11 @@
 /* "Общий план" as a document: contents sidebar, numbered sections, ruled tables. */
 .plan-page {
   --human: #3f5f86;
-  --result: #262d2b;
-  --doc-bg: #eceae3;
-  --sheet: #fffefa;
-  --rule: #c9ccc3;
-  --head: #f1f0ea;
+  --result: #17202a;
+  --doc-bg: #f4f6f8;
+  --sheet: #ffffff;
+  --rule: #dfe4e9;
+  --head: #f8fafb;
   background: var(--doc-bg);
 }
 .plan-page .site-header {
@@ -48,7 +48,7 @@
 .doc-toc-box > summary {
   list-style: none;
   padding: 14px 18px;
-  font-weight: 500;
+  font-weight: 600;
   font-size: 16px;
   border-bottom: 1px solid var(--rule);
   cursor: default;
@@ -88,7 +88,7 @@
   border-left-color: var(--accent);
   background: var(--accent-soft);
   color: var(--accent);
-  font-weight: 500;
+  font-weight: 600;
 }
 .toc-n {
   font-variant-numeric: tabular-nums;
@@ -102,10 +102,10 @@
 .doc-sheet {
   background: var(--sheet);
   border: 1px solid var(--rule);
-  box-shadow: 0 1px 3px #262d2b14;
+  box-shadow: 0 1px 3px #17202a14;
   padding: 52px 52px 40px;
   min-width: 0;
-  font-size: 18px;
+  font-size: 16px;
   line-height: 1.6;
 }
 .doc-sheet p {
@@ -124,12 +124,12 @@
   margin: 0 0 12px;
 }
 .doc-title h1 {
-  font-size: 44px;
+  font-size: 32px;
   line-height: 1.15;
   margin: 0;
 }
 .doc-subtitle {
-  font-size: 22px;
+  font-size: 18px;
   color: var(--muted);
   margin: 8px 0 28px;
 }
@@ -148,7 +148,7 @@
 }
 .doc-meta th {
   width: 170px;
-  font-weight: 500;
+  font-weight: 600;
   background: var(--head);
 }
 .doc-legend {
@@ -162,21 +162,21 @@
   scroll-margin-top: 90px;
 }
 .doc-section h2 {
-  font-size: 30px;
+  font-size: 24px;
   line-height: 1.25;
   margin: 0 0 18px;
   padding-bottom: 10px;
   border-bottom: 1px solid var(--rule);
 }
 .doc-section h3 {
-  font-size: 23px;
+  font-size: 19px;
   line-height: 1.3;
   margin: 36px 0 14px;
   scroll-margin-top: 90px;
 }
 .doc-section h4 {
-  font-size: 18px;
-  font-weight: 500;
+  font-size: 16px;
+  font-weight: 600;
   margin: 30px 0 12px;
   color: var(--accent);
 }
@@ -217,7 +217,7 @@
 }
 .status-planned {
   color: #4f5551;
-  background: #eeede7;
+  background: #edf2f5;
   border-color: #c4c7bf;
 }
 .status-open {
@@ -241,7 +241,7 @@
   line-height: 1.5;
 }
 .summary-box h3 {
-  font-size: 19px;
+  font-size: 16px;
   margin: 0 0 10px;
   color: var(--box);
 }
@@ -293,11 +293,11 @@
 }
 .doc-table thead th {
   background: var(--head);
-  font-weight: 500;
+  font-weight: 600;
   font-size: 15px;
 }
 .doc-table tbody th {
-  font-weight: 500;
+  font-weight: 600;
 }
 .status-table {
   min-width: 720px;
@@ -315,7 +315,7 @@
 }
 .not-done-table td:first-child {
   width: 48%;
-  font-weight: 500;
+  font-weight: 600;
 }
 .not-done-table td:last-child {
   color: var(--muted);
@@ -471,7 +471,7 @@
 }
 .route-steps b {
   color: var(--ink);
-  font-weight: 500;
+  font-weight: 600;
 }
 .route-step-num {
   display: inline-grid;
@@ -509,7 +509,7 @@
 }
 .plan-shot figcaption b {
   color: var(--ink);
-  font-weight: 500;
+  font-weight: 600;
 }
 .shot-date {
   white-space: nowrap;
@@ -589,10 +589,10 @@
     font-size: 17px;
   }
   .doc-title h1 {
-    font-size: 32px;
+    font-size: 24px;
   }
   .doc-subtitle {
-    font-size: 19px;
+    font-size: 16px;
   }
   .doc-meta,
   .doc-meta tbody,
@@ -609,10 +609,10 @@
     border-top: 0;
   }
   .doc-section h2 {
-    font-size: 25px;
+    font-size: 20px;
   }
   .doc-section h3 {
-    font-size: 20px;
+    font-size: 16px;
   }
   .sec-n {
     min-width: 0;

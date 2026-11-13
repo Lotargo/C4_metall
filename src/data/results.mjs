@@ -1,9 +1,8 @@
 // Each drawing is a separate document. Only the selected document is rendered.
-const modules = import.meta.glob('./results/*.mjs', { eager: true, import: 'default' });
-const order = ['drive-shaft', 'steel-copper', 'pc-shaft'];
+const modules = import.meta.glob('../../content/public/results/*.json', { eager: true, import: 'default' });
 
 export const drawings = Object.values(modules).sort(
-  (a, b) => order.indexOf(a.slug) - order.indexOf(b.slug),
+  (a, b) => a.order - b.order,
 );
 
 export const drawingPath = (drawing) => `/results/${drawing.slug}/`;

@@ -1,0 +1,31 @@
+---
+import Icon from './Icon.astro';
+---
+<div class="product-banner" data-product-banner>
+  <div class="product-banner-copy">
+    <p class="product-banner-kicker"><span></span> Подготовка производства</p>
+    <h1>От чертежа<br/>к решениям<br/><em>технолога.</em></h1>
+    <p class="product-banner-lead">Читаем деталь, собираем паспорт, уточняем исходные данные и готовим основу для маршрута и расчёта работ.</p>
+    <div class="product-banner-actions"><a class="primary-button" href="#pipeline">Пройти по процессу <Icon name="chevron" /></a><a href="#recognition" class="banner-text-link">Что происходит с чертежом <span aria-hidden="true">↗</span></a></div>
+    <p class="product-banner-edition">Обзор текущей версии · 13 ноября 2026<br/>Маршрут и смета продолжают развиваться.</p>
+  </div>
+  <div class="product-banner-scene" aria-label="От чертежа через проверку к структурированным сведениям о детали" role="img">
+    <svg viewBox="0 0 620 540" fill="none" aria-hidden="true" class="banner-drawing">
+      <defs><pattern id="banner-grid" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0V24" stroke="#8fb4d0" stroke-opacity=".09"/></pattern></defs>
+      <rect width="620" height="540" fill="url(#banner-grid)"/>
+      <g class="banner-sheet"><rect x="42" y="96" width="286" height="342" rx="12" fill="#21313e" stroke="#7194ae" stroke-opacity=".65"/><path d="M64 130h92m-92 12h58" stroke="#81a3bd" stroke-width="3"/>
+        <g stroke="#c6e4f6" stroke-width="1.8"><path d="M86 226h42v-32h118v32h42v92h-42v32H128v-32H86z"/><path d="M86 242h202m-202 60h202M152 194v156m68-156v156" opacity=".65"/><path d="M70 272h234" stroke-dasharray="9 5 2 5"/><circle cx="186" cy="272" r="31"/><circle cx="186" cy="272" r="12"/><path d="M86 372h202m-202-10v20m202-20v20M66 226v92m-10-92h20m-20 92h20" stroke="#81a3bd" stroke-width="1"/></g>
+        <path d="M170 372h32m-124 35h104m16 0h100m-220 10h58" stroke="#81a3bd" stroke-width="2"/>
+        <rect class="banner-scan" x="70" y="186" width="230" height="9" rx="4" fill="#b2d8f4" fill-opacity=".6"/>
+      </g>
+      <path d="M326 272h35v-70h33m-33 70v92h33" stroke="#7ca8c6" stroke-width="1.5" stroke-dasharray="4 6"/>
+      <circle class="banner-signal" cx="350" cy="272" r="4" fill="#c6e4f6"/>
+      <g class="banner-data-card card-one"><rect x="380" y="132" width="205" height="136" rx="12" fill="#2c4355" stroke="#91b9d3"/><circle cx="404" cy="158" r="8" stroke="#c6e4f6"/><path d="m400 158 3 3 5-6" stroke="#c6e4f6" stroke-width="1.5"/><text x="424" y="163" fill="#ecf6fd" font-size="14" font-weight="600">Паспорт детали</text><path d="M400 190h64m-64 19h136m-136 19h112m-112 19h82" stroke="#a5c4da" stroke-width="3" stroke-linecap="round"/></g>
+      <g class="banner-data-card card-two"><rect x="362" y="300" width="205" height="124" rx="12" fill="#1e3546" stroke="#709ab8"/><path d="m383 327 6 6 10-12" stroke="#c6e4f6" stroke-width="2"/><text x="411" y="332" fill="#ecf6fd" font-size="14" font-weight="600">Решение технолога</text><path d="M383 355h153m-153 19h114m-114 19h139" stroke="#7ca8c6" stroke-width="3" stroke-linecap="round"/></g>
+      <circle cx="328" cy="272" r="5" fill="#18252f" stroke="#c6e4f6"/>
+    </svg>
+    <span class="banner-scene-note">Чертёж → факты → проверка → решение</span>
+  </div>
+  <button class="banner-motion-toggle" type="button" data-banner-motion aria-pressed="false"><span data-motion-label>Остановить анимацию</span><span aria-hidden="true" data-motion-symbol>Ⅱ</span></button>
+</div>
+<script>import '../scripts/product-banner';</script>

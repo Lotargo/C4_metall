@@ -1,0 +1,32 @@
+---
+import models from '../../content/public/models/examples.json';
+import Icon from './Icon.astro';
+import { sitePath } from '../utils/site-path.mjs';
+const initial = models[0];
+const publicModels = models.map(m => ({...m, whole:sitePath(m.whole), section:sitePath(m.section), measurements:sitePath(m.measurements)}));
+---
+<div class="model-viewer" data-model-viewer>
+  <script type="application/json" data-model-data set:html={JSON.stringify(publicModels).replace(/</g, '\\u003c')}></script>
+  <div data-model-home><div data-model-content>
+  <div class="model-example-tabs" role="group" aria-label="Пример 3D-модели">{models.map((m,i) => <button type="button" data-model-id={m.id} aria-pressed={String(i===0)}><span class="model-tab-number">0{i+1}</span><span><small>{m.label}</small><strong>{m.title}</strong></span><Icon name="geometry"/></button>)}</div>
+  <div class="model-viewer-body">
+    <div class="model-stage-wrap">
+      <div class="model-toolbar"><div role="group" aria-label="Ракурс модели"><button type="button" data-view="iso" aria-pressed="true">Объём</button><button type="button" data-view="front" aria-pressed="false">Спереди</button><button type="button" data-view="top" aria-pressed="false">Сверху</button><button type="button" data-view="side" aria-pressed="false">Сбоку</button></div><div class="model-window-tools"><button type="button" data-model-action="fit"><Icon name="reset"/> Вписать</button><button type="button" data-model-expand aria-haspopup="dialog" aria-controls="model-fullscreen-dialog"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> На весь экран</button></div></div>
+      <div class="model-stage" data-model-stage><p class="model-loading" data-model-message role="status">Загружаем модель…</p></div>
+      <div class="model-controls"><div role="group" aria-label="Отображение модели"><button type="button" data-model-action="dimensions" aria-pressed="false" aria-controls="model-dimensions"><Icon name="units"/> Все размеры</button><button type="button" data-model-action="section" aria-pressed="false"><Icon name="geometry"/> Сечение</button><button type="button" data-model-action="edges" aria-pressed="true">Контуры</button><button type="button" data-model-action="grid" aria-pressed="true">Сетка</button></div><div role="group" aria-label="Масштаб"><button type="button" data-model-action="out" aria-label="Уменьшить модель">−</button><button type="button" data-model-action="in" aria-label="Увеличить модель">+</button></div></div>
+      <p class="model-interaction-help">Вращайте перетаскиванием · колесо — масштаб · нажмите на поверхность для её выбора. С клавиатуры: стрелки — вращение, +/− — масштаб, 0 — вписать.</p>
+    </div>
+    <aside class="model-inspector" aria-label="Сведения о модели">
+      <p class="eyebrow" data-model-label>{initial.label}</p><h3 data-model-title>{initial.title}</h3><p data-model-summary>{initial.summary}</p>
+      <dl class="model-metrics"><div><dt>Габариты</dt><dd data-model-size>{initial.size}</dd></div><div><dt>Объём</dt><dd data-model-volume>{initial.volume}</dd></div></dl>
+      <div class="model-measurement-selection" data-measurement-selection hidden><h4>Выбранный размер</h4><p data-measurement-label aria-live="polite">Выберите значение в списке размеров</p></div>
+      <div class="model-face-inspector"><h4>Выбранная поверхность</h4><p data-face-title aria-live="polite">Выберите грань на модели</p><dl data-face-values></dl><div class="face-navigation"><button type="button" data-face-prev aria-label="Предыдущая поверхность">←</button><span>Перебор граней</span><button type="button" data-face-next aria-label="Следующая поверхность">→</button></div></div>
+      <p class="model-limit" data-model-limit>{initial.limitations}</p>
+    </aside>
+  </div>
+  <section class="model-dimension-panel" id="model-dimensions" aria-labelledby="model-dimensions-title" hidden><div class="model-dimension-heading"><h3 id="model-dimensions-title">Все размеры модели <span data-measurement-count></span></h3><p>Номер в списке соответствует подписи на модели. Выберите размер, чтобы выделить его линии.</p></div><p class="model-measurement-note" data-measurement-note></p><div class="model-dimension-groups" data-measurement-list></div></section>
+  </div></div>
+  <dialog class="model-fullscreen-dialog" id="model-fullscreen-dialog" data-model-dialog aria-labelledby="model-fullscreen-title"><header class="model-dialog-header"><div><p>Полноэкранный просмотр</p><h2 id="model-fullscreen-title">3D-модель · <span data-fullscreen-title>{initial.title}</span></h2></div><button type="button" class="model-dialog-close" data-model-dialog-close autofocus>Закрыть <Icon name="close"/></button></header><div class="model-dialog-slot" data-model-dialog-slot></div></dialog>
+  <noscript><p class="content-note">Для интерактивного осмотра моделей включите JavaScript. Описание примеров, габариты и ограничения доступны в статье.</p></noscript>
+</div>
+<script>import '../scripts/model-viewer';</script>

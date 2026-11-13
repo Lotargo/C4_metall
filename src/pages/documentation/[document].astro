@@ -1,0 +1,10 @@
+---
+import DocumentationDocument from '../../components/DocumentationDocument.astro';
+import { getDocumentationDocuments } from '../../utils/documentation';
+export async function getStaticPaths() {
+  const documents = await getDocumentationDocuments();
+  return documents.map(({ entry }) => ({ params: { document: entry.id }, props: { document: entry } }));
+}
+const { document } = Astro.props;
+---
+<DocumentationDocument document={document} />

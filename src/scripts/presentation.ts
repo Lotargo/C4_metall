@@ -1,73 +1,22 @@
-import productScreens from "../data/screenshots.json";
-import cycleScreens from "../data/cycle-screens.json";
-import voksaScreens from "../data/voksa-screens.json";
-import manifest from "../data/instructions-manifest.json";
 import "./shared";
-import { openImage } from "./image-viewer";
-import { sitePath } from "../utils/site-path.mjs";
-
-interface InstructionFile {
-  file: string;
-  source: string;
-  chars: number;
-}
-const instructionFiles = manifest.files;
-
-// The research page shows product captures next to cropped VoksaTech ones.
-const screenshots = [...productScreens, ...cycleScreens, ...voksaScreens];
-
+import { sitePath } from '../utils/site-path.mjs';
 const $ = <T extends HTMLElement = HTMLElement>(selector: string) =>
   document.querySelector<T>(selector)!;
 const $$ = <T extends HTMLElement = HTMLElement>(selector: string) =>
   Array.from(document.querySelectorAll<T>(selector));
 
-// Screenshots open in the shared zoomable viewer.
-document.addEventListener("click", (event) => {
-  const button = (event.target as Element).closest<HTMLElement>("[data-image]");
-  if (!button) return;
-  const item = screenshots.find((s) => s.id === button.dataset.image);
-  if (item) openImage(item, button);
-});
-// Agent instructions are loaded on demand and shown verbatim.
-const textDialog = document.querySelector<HTMLDialogElement>("#text-dialog");
-let textTrigger: HTMLElement | null = null;
+// Read image metadata from the visible page; private registries never enter the bundle.
 document.addEventListener("click", async (event) => {
-  const button = (event.target as Element).closest<HTMLElement>(
-    "[data-instruction]",
-  );
-  if (!button) return;
-  const entry = (instructionFiles as Record<string, InstructionFile>)[
-    button.dataset.instruction!
-  ];
-  if (!entry || !textDialog) return;
-  textTrigger = button;
-  $("#text-dialog-title").textContent = button.dataset.label ?? "";
-  $("#text-dialog-note").textContent =
-    `${entry.chars.toLocaleString("ru-RU")} знаков · источник в продукте: ${entry.source}`;
-  $<HTMLAnchorElement>("#text-dialog-download").href = sitePath(entry.file);
-  const body = $("#text-dialog-body");
-  body.textContent = "Загрузка…";
-  textDialog.showModal();
-  $("#close-text").focus();
-  try {
-    const response = await fetch(sitePath(entry.file));
-    if (!response.ok) throw new Error(String(response.status));
-    body.textContent = await response.text();
-    body.scrollTop = 0;
-  } catch {
-    body.textContent =
-      "Не удалось загрузить текст. Его можно скачать по ссылке ниже.";
-  }
+  const button = (event.target as Element).closest<HTMLElement>("[data-image]");
+  const picture = button?.querySelector<HTMLImageElement>("img");
+  if (!button || !picture || !document.querySelector("#image-dialog")) return;
+  const { openImage } = await import("./image-viewer");
+  const file = new URL(picture.src).pathname;
+  const base = sitePath('/').replace(/\/$/, "");
+  openImage({ file: base && file.startsWith(base + "/") ? file.slice(base.length) : file,
+    title: picture.alt, note: button.closest("figure")?.querySelector("figcaption")?.textContent ?? "",
+    width: picture.naturalWidth, height: picture.naturalHeight }, button);
 });
-// The Voksa review reuses this script without the instruction dialog.
-if (textDialog) {
-  $("#close-text").addEventListener("click", () => textDialog.close());
-  textDialog.addEventListener("close", () => textTrigger?.focus());
-  textDialog.addEventListener("click", (event) => {
-    if (event.target === textDialog) textDialog.close();
-  });
-}
-
 $$("[data-screen]").forEach((button) =>
   button.addEventListener("click", () => {
     const id = button.dataset.screen;
@@ -85,6 +34,12 @@ $$("[data-screen]").forEach((button) =>
 // Presentation is a local reading mode; each chapter remains scrollable.
 const chapters = $$("[data-chapter]");
 const trigger = $("#start-presentation");
+const presentationLabel = trigger?.querySelector<HTMLElement>("[data-presentation-label]");
+function setPresentationLabel(label: string) {
+  if (presentationLabel) presentationLabel.textContent = label;
+  trigger.setAttribute("aria-label", label);
+  trigger.setAttribute("title", label);
+}
 let presenting = false;
 let current = 0;
 let returnScroll = 0;
@@ -111,11 +66,11 @@ function endPresentation() {
   chapters.forEach((chapter) => chapter.classList.remove("chapter-active"));
   $("#presentation-bar").hidden = true;
   trigger.setAttribute("aria-pressed", "false");
-  trigger.innerHTML = 'Режим показа <span aria-hidden="true">↗</span>';
+  setPresentationLabel("Режим показа");
   window.scrollTo({ top: returnScroll, behavior: "instant" });
   trigger.focus({ preventScroll: true });
 }
-trigger.addEventListener("click", () => {
+trigger?.addEventListener("click", () => {
   if (presenting) {
     endPresentation();
     return;
@@ -128,7 +83,7 @@ trigger.addEventListener("click", () => {
   document.body.classList.add("presenting");
   $("#presentation-bar").hidden = false;
   trigger.setAttribute("aria-pressed", "true");
-  trigger.innerHTML = 'Завершить показ <span aria-hidden="true">×</span>';
+  setPresentationLabel("Завершить показ");
   showChapter(Math.max(0, nearest));
 });
 $("#chapter-prev").addEventListener("click", () => showChapter(current - 1));

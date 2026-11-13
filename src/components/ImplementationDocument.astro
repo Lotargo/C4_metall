@@ -1,4 +1,7 @@
 ---
+import SiteHeader from './SiteHeader.astro';
+import SiteFooter from './SiteFooter.astro';
+import Icon from './Icon.astro';
 import { render } from 'astro:content';
 import ThemeHead from './ThemeHead.astro';
 import ThemeToggle from './ThemeToggle.astro';
@@ -6,6 +9,7 @@ import EditorControls from './EditorControls.astro';
 import EditorRecovery from './EditorRecovery.astro';
 import EditorMenu from './EditorMenu.astro';
 import DocumentImageViewer from './DocumentImageViewer.astro';
+import DocumentationNavigation from './DocumentationNavigation.astro';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { implementationSeed } from '../editor/seed.mjs';
@@ -13,15 +17,14 @@ import type { ImplementationDocument } from '../utils/documents';
 import { sitePath } from '../utils/site-path.mjs';
 import { implementationPath } from '../utils/document-path.mjs';
 import { groupDocumentHeadings } from '../utils/document-toc.mjs';
-import '@fontsource/ibm-plex-sans/latin-400.css';
-import '@fontsource/ibm-plex-sans/latin-500.css';
-import '@fontsource/ibm-plex-sans/cyrillic-400.css';
-import '@fontsource/ibm-plex-sans/cyrillic-500.css';
 import 'katex/dist/katex.min.css';
 import '../styles/global.css';
 import '../styles/implementation.css';
 import '../styles/document-editor.css';
 import '../styles/document-attachments.css';
+import '@fontsource-variable/inter/wght.css';
+import '../styles/metall.css';
+import '../styles/interactive.css';
 
 interface Props {
   documents: { entry: ImplementationDocument; title: string }[];
@@ -34,13 +37,16 @@ const headings = rendered?.headings ?? [];
 const toc = groupDocumentHeadings(headings);
 const title = documents.find(({ entry }) => entry.id === document?.id)?.title || 'План реализации';
 const description = document?.data.description || 'Документы плана реализации «Подготовки производства».';
-const imageAssets = import.meta.glob('/documents/implementation/**/*.{avif,gif,jpeg,jpg,png,svg,webp}', { eager: true, query: '?url', import: 'default' });
 const seed = document ? implementationSeed({
-  id: document.id, markdown: await readFile(path.join(process.cwd(), 'documents/implementation', document.id + '.md'), 'utf8'),
+  id: document.id, markdown: await readFile(path.join(process.cwd(), 'content/public/plans', document.id + '.md'), 'utf8'),
   documentIds: documents.map(({ entry }) => entry.id), title,
   base: import.meta.env.BASE_URL.replace(/\/$/, ''),
 }) : undefined;
-if (seed) seed.imageAssets = Object.fromEntries(Object.entries(imageAssets).map(([file, url]) => [file.replace('/documents/implementation/', ''), url]));
+if (seed) {
+  seed.imageAssets = {};
+  delete seed.originalMarkdown;
+  delete seed.sourceFile;
+}
 const seedJson = seed ? JSON.stringify(seed).replace(/</g, '\\u003c') : '';
 ---
 <!doctype html>
@@ -51,24 +57,15 @@ const seedJson = seed ? JSON.stringify(seed).replace(/</g, '\\u003c') : '';
   <title>{document ? `${title} · План реализации` : 'План реализации'}</title>
   <meta name="description" content={description} />
   <meta name="robots" content="noindex, nofollow" />
-  <meta name="theme-color" content="#f7f6f2" />
+  <meta name="theme-color" content="#f4f6f8" />
   <link rel="icon" type="image/svg+xml" href={sitePath('/favicon.svg')} />
   <ThemeHead />
 </head>
 <body class:list={['implementation-page', { 'implementation-editor-page': !!document }]}>
   <a class="skip-link" href="#main">Перейти к документу</a>
   <ThemeToggle />
-  <header class="site-header implementation-header">
-    <div class="implementation-header-inner">
-      <a class="brand" href={sitePath('/')}><span class="brand-mark" aria-hidden="true">ПП</span><span>Подготовка<br/>производства</span></a>
-      <span class="implementation-header-title">План реализации</span>
-      {document && <EditorControls />}
-      <nav class="implementation-header-links" aria-label="Разделы проекта">
-        <a href={sitePath('/results/')}>Результаты</a>
-        <a href={sitePath('/')}>К презентации</a>
-      </nav>
-    </div>
-  </header>
+  <div class="metall-page" id="page-start">
+  <SiteHeader page="implementation" title="План реализации" subtitle="Metall · Документы проекта">{document && <EditorControls />}</SiteHeader>
   <div class="implementation-layout">
     <aside class="implementation-sidebar" aria-label="Навигация по плану реализации">
       <details class="implementation-navigation" open>
@@ -86,6 +83,7 @@ const seedJson = seed ? JSON.stringify(seed).replace(/</g, '\\u003c') : '';
             </li>)}
           </ul>
           </details>
+          <DocumentationNavigation />
         </nav>
         {document && <nav class="document-outline" aria-label="Содержание текущего документа">
           <p class="implementation-nav-label">В этом документе</p>
@@ -138,5 +136,7 @@ const seedJson = seed ? JSON.stringify(seed).replace(/</g, '\\u003c') : '';
       });
     }
   </script>
+  <SiteFooter />
+  </div>
 </body>
 </html>

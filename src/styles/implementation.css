@@ -1,5 +1,5 @@
 html.implementation-document { scroll-padding-top: 0; }
-.implementation-page { --body: 18px; }
+.implementation-page { --body: 16px; }
 .implementation-header-inner { display: flex; align-items: center; gap: 32px; max-width: 1540px; margin: auto; padding: 16px 40px; min-height: 90px; }
 .implementation-header-title { color: var(--muted); font-size: 17px; }
 .implementation-header .implementation-header-links { display: flex; gap: 24px; margin-left: auto; font-size: 16px; }
@@ -47,13 +47,13 @@ html.implementation-document { scroll-padding-top: 0; }
 .document-print:hover { background: var(--accent-soft); }
 .document-print:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .markdown-document { overflow-wrap: anywhere; }
-.markdown-document h1 { font-size: 56px; line-height: 1.1; margin: 0 0 28px; max-width: 20ch; }
-.markdown-document h2 { border-top: 1px solid var(--line); padding-top: 32px; margin: 44px 0 24px; font-size: 34px; line-height: 1.2; }
-.markdown-document h3 { margin: 32px 0 20px; font-size: 25px; line-height: 1.3; }
-.markdown-document h4, .markdown-document h5, .markdown-document h6 { margin: 28px 0 16px; font-size: 20px; }
+.markdown-document h1 { font-size: 38px; line-height: 1.1; margin: 0 0 28px; max-width: 20ch; }
+.markdown-document h2 { border-top: 1px solid var(--line); padding-top: 32px; margin: 44px 0 24px; font-size: 26px; line-height: 1.2; }
+.markdown-document h3 { margin: 32px 0 20px; font-size: 20px; line-height: 1.3; }
+.markdown-document h4, .markdown-document h5, .markdown-document h6 { margin: 28px 0 16px; font-size: 16px; }
 .markdown-document [id] { scroll-margin-top: 120px; }
 .markdown-document p { margin: 0 0 20px; max-width: 72ch; }
-.markdown-document h1 + p { color: var(--muted); font-size: 22px; line-height: 1.5; }
+.markdown-document h1 + p { color: var(--muted); font-size: 18px; line-height: 1.5; }
 .markdown-document :is(ul, ol) { margin: 20px 0; padding-left: 26px; }
 .markdown-document li + li { margin-top: 8px; }
 .markdown-document li > :is(ul, ol) { margin: 8px 0; }
@@ -61,7 +61,7 @@ html.implementation-document { scroll-padding-top: 0; }
 .markdown-document .task-list-item input { margin-right: 8px; }
 .markdown-document blockquote { border-left: 3px solid var(--accent); background: var(--accent-soft); margin: 28px 0; padding: 20px 24px; }
 .markdown-document blockquote > :last-child { margin-bottom: 0; }
-.markdown-document strong { font-weight: 500; }
+.markdown-document strong { font-weight: 600; }
 .markdown-document hr { border: 0; border-top: 1px solid var(--line); margin: 36px 0; }
 .markdown-document code { font: .88em/1.5 var(--mono); background: var(--wash); padding: 2px 5px; border-radius: 2px; }
 .markdown-document pre { overflow-x: auto; padding: 20px; margin: 24px 0; font-size: 15px; line-height: 1.6; background: var(--wash); scrollbar-width: thin; }
@@ -69,7 +69,7 @@ html.implementation-document { scroll-padding-top: 0; }
 .markdown-document table { display: block; max-width: 100%; overflow-x: auto; border-collapse: collapse; margin: 28px 0; font-size: 16px; }
 .markdown-document table:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
 .markdown-document th, .markdown-document td { padding: 14px 20px 14px 0; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; min-width: 150px; }
-.markdown-document th { font-weight: 500; border-top: 1px solid var(--line); }
+.markdown-document th { font-weight: 600; border-top: 1px solid var(--line); }
 .markdown-document img { height: auto; margin: 24px 0; }
 .markdown-document .katex-display { overflow-x: auto; overflow-y: hidden; padding: 12px 0; margin: 24px 0; }
 .markdown-document .katex { font-size: 1.1em; overflow-wrap: normal; }
@@ -85,7 +85,7 @@ html.implementation-document { scroll-padding-top: 0; }
 @media (max-width: 1200px) {
   .implementation-layout { grid-template-columns: 260px minmax(0, 1fr); gap: 40px; padding-inline: 32px; }
   .implementation-header-inner { padding-inline: 32px; }
-  .markdown-document h1 { font-size: 48px; }
+  .markdown-document h1 { font-size: 32px; }
 }
 @media (max-width: 1000px) {
   .implementation-header-inner { min-height: 80px; gap: 20px; padding: 12px 24px; }
@@ -101,7 +101,7 @@ html.implementation-document { scroll-padding-top: 0; }
   .document-toc a, .document-toc ol a { padding-top: 12px; padding-bottom: 12px; font-size: 16px; }
   .implementation-main { padding-top: 24px; }
   .markdown-document [id], .document-topline { scroll-margin-top: calc(var(--implementation-header-height, 80px) + var(--implementation-navigation-summary-height, 78px) + 12px); }
-  .markdown-document h1 { font-size: 42px; }
+  .markdown-document h1 { font-size: 30px; }
 }
 @media (max-width: 600px) {
   .implementation-header-inner { padding-inline: 20px; gap: 12px; }
@@ -115,10 +115,10 @@ html.implementation-document { scroll-padding-top: 0; }
   .implementation-sidebar { margin-inline: -20px; }
   .implementation-navigation > summary, .implementation-nav { padding-inline: 20px; }
   .document-outline { margin-inline: 20px; }
-  .markdown-document h1 { font-size: 36px; }
-  .markdown-document h2 { font-size: 29px; margin-top: 32px; padding-top: 28px; }
-  .markdown-document h3 { font-size: 23px; }
-  .markdown-document h1 + p { font-size: 20px; }
+  .markdown-document h1 { font-size: 28px; }
+  .markdown-document h2 { font-size: 24px; margin-top: 32px; padding-top: 28px; }
+  .markdown-document h3 { font-size: 19px; }
+  .markdown-document h1 + p { font-size: 16px; }
   .document-diagram { padding: 16px; }
 }
 @media (prefers-reduced-motion: reduce) { html.implementation-document { scroll-behavior: auto; } }
@@ -135,8 +135,8 @@ html.implementation-document { scroll-padding-top: 0; }
   .implementation-header, .implementation-sidebar, .document-print, .implementation-footer, .diagram-source { display: none; }
   .implementation-layout { display: block; padding: 0; }
   .implementation-main { padding: 0; }
-  .markdown-document h1 { font-size: 32px; }
-  .markdown-document h2 { font-size: 24px; break-after: avoid; }
+  .markdown-document h1 { font-size: 24px; }
+  .markdown-document h2 { font-size: 20px; break-after: avoid; }
   .markdown-document pre, .markdown-document table, .markdown-document .katex-display, .diagram-viewport { overflow: visible; }
   .diagram-viewport svg { max-width: 100%; }
 }

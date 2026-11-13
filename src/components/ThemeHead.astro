@@ -8,6 +8,6 @@ import '../styles/theme.css';
     const theme = stored === 'light' || stored === 'dark'
       ? stored : matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     document.documentElement.dataset.theme = theme;
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#161d1a' : '#f7f6f2');
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#111820' : '#f4f6f8');
   })();
 </script>

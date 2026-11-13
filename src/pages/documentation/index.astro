@@ -1,0 +1,6 @@
+---
+import DocumentationDocument from '../../components/DocumentationDocument.astro';
+import { getDocumentationDocuments } from '../../utils/documentation';
+const documents = await getDocumentationDocuments();
+---
+<DocumentationDocument document={documents[0].entry} />

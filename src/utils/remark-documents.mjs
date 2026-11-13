@@ -7,20 +7,30 @@ import { implementationAssetPath } from './document-assets.mjs';
 import { attachmentKey, attachmentPreviewHtml } from './attachment-previews.mjs';
 
 const directory = fileURLToPath(new URL('../../documents/implementation/', import.meta.url));
+const documentationDirectory = fileURLToPath(new URL('../../docs/production-preparation/', import.meta.url));
+const publicPlanDirectory = fileURLToPath(new URL('../../content/public/plans/', import.meta.url));
+const publicDocumentationDirectory = fileURLToPath(new URL('../../content/public/documentation/', import.meta.url));
+const publicContentDirectory = fileURLToPath(new URL('../../content/public/', import.meta.url));
 const escapeHtml = (text) => text.replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
 const localReference = (node) => {
   node.data = {
     ...node.data,
     hName: 'span',
-    hProperties: { ...node.data?.hProperties, href: null, title: `Источник не включён в этот раздел: ${node.url}` },
+    hProperties: { ...node.data?.hProperties, href: null, title: null },
   };
 };
 
-// This plugin only changes the document collection, never other site Markdown.
+// Shared diagram presentation; source/attachment rewriting remains plan-only.
 export default function remarkDocuments() {
   return (tree, file) => {
-    const relative = path.relative(directory, String(file.path || ''));
-    if (!relative || relative.startsWith('..') || path.isAbsolute(relative)) return;
+    const planDirectory = String(file.path || '').startsWith(publicPlanDirectory) ? publicPlanDirectory : directory;
+    const relative = path.relative(planDirectory, String(file.path || ''));
+    const inDirectory = (root) => {
+      const relativePath = path.relative(root, String(file.path || ''));
+      return !!relativePath && !relativePath.startsWith('..') && !path.isAbsolute(relativePath);
+    };
+    const isImplementation = inDirectory(directory) || inDirectory(publicPlanDirectory);
+    if (!isImplementation && !inDirectory(documentationDirectory) && !inDirectory(publicContentDirectory)) return;
     const base = (process.env.BASE_PATH || '/').replace(/\/$/, '');
     let diagram = 0;
     const definitions = new Map();
@@ -35,6 +45,11 @@ export default function remarkDocuments() {
         };
       }
 
+      if (['link', 'image'].includes(node.type) && node.url?.startsWith('/') && !node.url.startsWith('//')) {
+        node.url = base + node.url;
+        return;
+      }
+      if (!isImplementation) return;
       // Resolve reference syntax without modifying the supplied Markdown file.
       if (node.type === 'linkReference' || node.type === 'imageReference') {
         const definition = definitions.get(node.identifier);
@@ -64,15 +79,16 @@ export default function remarkDocuments() {
         return;
       }
       const target = path.resolve(path.dirname(String(file.path)), decodeURIComponent(pathname));
-      const targetRelative = path.relative(directory, target);
+      const targetRelative = path.relative(planDirectory, target);
       const id = implementationSourceId(targetRelative.split(path.sep).join('/').replace(/\.md$/i, ''));
-      if (targetRelative.startsWith('..') || path.isAbsolute(targetRelative) || !existsSync(path.join(directory, id + '.md'))) {
+      if (targetRelative.startsWith('..') || path.isAbsolute(targetRelative) || !existsSync(path.join(planDirectory, id + '.md'))) {
         localReference(node);
         return;
       }
       node.url = base + implementationPath(id) + suffix;
     });
 
+    if (!isImplementation) return;
     // Add read-only projections after the original paragraphs, once per file.
     const seenAttachments = new Set();
     const insertions = [];

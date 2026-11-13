@@ -1,5 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
+import { readEvidenceAsset } from './private-evidence-asset.mjs';
 const data = JSON.parse(await readFile("src/data/evidence.json", "utf8"));
 let checks = 0;
 for (const object of [
@@ -25,7 +26,7 @@ for (const object of [
   }
 }
 for (const screenshot of data.screenshots) {
-  const bytes = await readFile("public" + screenshot.file);
+  const bytes = await readEvidenceAsset(screenshot.file);
   if (createHash("sha256").update(bytes).digest("hex") !== screenshot.sha256)
     throw Error("Screenshot hash mismatch " + screenshot.file);
 }
@@ -34,12 +35,17 @@ const voksaScreens = JSON.parse(
   await readFile("src/data/voksa-screens.json", "utf8"),
 );
 for (const screenshot of voksaScreens) {
-  const bytes = await readFile("public" + screenshot.file);
+  const bytes = await readEvidenceAsset(screenshot.file);
   if (createHash("sha256").update(bytes).digest("hex") !== screenshot.sha256)
     throw Error("Research capture hash mismatch " + screenshot.file);
   if (!screenshot.crop && screenshot.sha256 !== screenshot.sourceSha256)
     throw Error("Uncropped capture differs from its source " + screenshot.file);
   checks++;
+}
+const privateAttachments = JSON.parse(await readFile('src/data/document-attachments.json','utf8'));
+for (const [key,asset] of Object.entries(privateAttachments.assets)) {
+  const bytes = await readEvidenceAsset('documents/implementation/' + key);
+  if(createHash('sha256').update(bytes).digest('hex')!==asset.sha256) throw Error('Private attachment hash mismatch');
 }
 for (const diagram of Object.values(data.diagrams)) {
   const ids = new Set(diagram.nodes.map((n) => n.id));
@@ -80,7 +86,7 @@ for (const s of Object.values(data.sources)) {
 }
 if (
   JSON.stringify(data) !==
-  JSON.stringify(JSON.parse(await readFile("public/architecture.json", "utf8")))
+  JSON.stringify(JSON.parse((await readEvidenceAsset('architecture.json')).toString('utf8')))
 )
   throw Error("Download differs");
 console.log(

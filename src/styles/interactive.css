@@ -1,0 +1,246 @@
+/* The second design pass gives content groups hierarchy and useful interaction. */
+.metall-page .section-heading-panel {
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  align-items: stretch;
+  gap: 0;
+  margin-bottom: 28px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+  box-shadow: var(--metall-shadow);
+}
+.section-title-card { min-width: 0; padding: 28px 30px; background: var(--accent-soft); }
+.section-title-kicker { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; color: var(--accent); }
+.section-title-kicker > .metall-icon { display: grid; place-items: center; width: 32px; height: 32px; border: 1px solid color-mix(in srgb, var(--accent) 18%, transparent); border-radius: 9px; background: var(--surface); }
+.metall-page .section-title-kicker .eyebrow { margin: 0; color: var(--accent); font-size: 11px; letter-spacing: .035em; }
+.metall-page .section-title-card h2 { max-width: 24ch; font-size: 30px; line-height: 1.3; letter-spacing: -.035em; }
+.metall-page .section-heading-panel .section-intro { align-self: center; max-width: none; margin: 0; padding: 28px 32px; font-size: 16px; line-height: 1.85; }
+
+/* The roster is a set of readable, expandable role cards. */
+.roster-heading { display: flex; align-items: center; gap: 16px; padding: 22px 24px; margin: 12px 0 18px; border: 1px solid var(--line); border-radius: 12px; background: var(--wash); }
+.roster-symbol { display: grid; flex: 0 0 auto; place-items: center; width: 44px; height: 44px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); color: var(--accent); }
+.roster-symbol svg { width: 23px; height: 23px; }
+.metall-page .roster-heading .eyebrow { margin: 0 0 4px; font-size: 11px; }
+.metall-page .roster-title { margin: 0; font-size: 25px; line-height: 1.3; }
+.roster-hint { margin-left: auto; max-width: 24ch; color: var(--muted); font-size: 12px; line-height: 1.7; }
+.metall-page .agents-controls { display: grid; grid-template-columns: minmax(0, 1fr) 240px auto; align-items: center; gap: 14px; margin: 0 0 20px; }
+.metall-page .filter-chips { display: flex; align-items: center; flex-wrap: wrap; gap: 7px; }
+.metall-page .filter-chips button { display: inline-flex; align-items: center; gap: 7px; min-height: 42px; padding: 9px 12px; border-radius: 8px; font-size: 13px; font-weight: 500; }
+.filter-chips .metall-icon svg { width: 15px; height: 15px; }
+.agent-search { position: relative; min-width: 0; }
+.agent-search > .metall-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
+.agent-search input { width: 100%; min-width: 0; height: 44px; padding: 10px 36px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--ink); font: inherit; font-size: 13px; }
+.agent-search input::placeholder { color: var(--muted); opacity: 1; }
+.agent-search input::-webkit-search-cancel-button { display: none; }
+.agent-search button { position: absolute; inset: 4px 4px auto auto; display: grid; place-items: center; width: 36px; height: 36px; min-height: 36px; padding: 0; border: 0; border-radius: 6px; background: transparent; color: var(--muted); }
+.agent-search button:hover { background: var(--accent-soft); color: var(--accent); }
+.agent-count { padding: 6px 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--wash); color: var(--muted); font-size: 12px; line-height: 1.6; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.metall-page .role-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 16px; border: 0; }
+.metall-page .role-card { --role-color: var(--accent); --role-soft: var(--accent-soft); min-width: 0; margin: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); box-shadow: 0 2px 4px rgb(15 23 42 / 3%); }
+.metall-page .role-card[data-agent-kind='llm'] { --role-color: var(--model); --role-soft: var(--model-soft); }
+.metall-page .role-card > summary { display: grid; grid-template-columns: 44px minmax(0, 1fr) 20px; align-items: start; gap: 16px; min-height: 166px; padding: 24px; list-style: none; }
+.role-symbol { display: flex; align-items: center; flex-direction: column; gap: 10px; }
+.role-symbol > .metall-icon { display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid color-mix(in srgb, var(--role-color) 18%, transparent); border-radius: 12px; background: var(--role-soft); color: var(--role-color); }
+.role-symbol .metall-icon svg { width: 22px; height: 22px; }
+.metall-page .role-symbol .agent-number { width: auto; font-size: 11px; line-height: 1.3; color: var(--muted); }
+.metall-page .role-card .agent-summary { display: block; min-width: 0; }
+.metall-page .role-card .agent-title { display: block; max-width: 32ch; margin: 0 0 7px; font-size: 18px; font-weight: 600; line-height: 1.45; letter-spacing: -.02em; }
+.metall-page .role-card .agent-name { display: block; font-size: 12px; line-height: 1.65; color: var(--muted); }
+.role-meta { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 14px; }
+.metall-page .role-card .badge { padding: 4px 8px; border: 1px solid color-mix(in srgb, var(--role-color) 12%, transparent); border-radius: 5px; font-size: 11px; line-height: 1.4; }
+.role-open-label { color: var(--role-color); font-size: 12px; }
+.role-chevron { display: inline-flex; margin-top: 3px; color: var(--muted); transition: transform 180ms ease-out; }
+.role-card[open] .role-chevron { transform: rotate(180deg); }
+.metall-page .role-card[open] { border-color: color-mix(in srgb, var(--role-color) 45%, var(--line)); }
+.metall-page .role-card:focus-within { border-color: var(--role-color); }
+.metall-page .role-card > summary:focus-visible { outline-offset: -4px; border-radius: 12px; }
+.metall-page .role-card .agent-body { padding: 0 24px 24px; }
+.metall-page .role-card dl.role-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 0; padding-top: 18px; border-top: 1px solid var(--line); }
+.role-card .role-facts > div { min-width: 0; padding: 14px; border: 1px solid var(--line); border-radius: 8px; background: var(--wash); }
+.metall-page .role-card .role-facts dt { margin: 0 0 8px; font-size: 11px; font-weight: 600; line-height: 1.6; color: var(--role-color); }
+.metall-page .role-card .role-facts dd { margin: 0; font-size: 14px; line-height: 1.8; overflow-wrap: anywhere; }
+.agent-empty { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 32px 24px; border: 1px dashed var(--line); border-radius: 12px; background: var(--wash); color: var(--muted); font-size: 15px; }
+.agent-empty p { margin: 0; }
+
+/* Lists have a deliberate rhythm without changing their underlying text. */
+.metall-page .principles { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin: 32px 0 40px; }
+.metall-page .principles article { padding: 24px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); }
+.metall-page .principles .ordinal { display: inline-grid; place-items: center; width: 32px; height: 32px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); font-size: 12px; }
+.metall-page .principles h3 { max-width: 35ch; margin: 16px 0 10px; font-size: 19px; line-height: 1.4; }
+.metall-page .principles p { font-size: 16px; line-height: 1.8; }
+.metall-page .method-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.metall-page .method-strip article { position: relative; padding: 26px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); }
+.metall-page .method-number { display: inline-grid; place-items: center; width: 36px; height: 36px; border-radius: 9px; background: var(--accent-soft); font-size: 13px; }
+.metall-page .method-owner { margin: 16px 0 8px; min-height: 0; font-size: 12px; line-height: 1.7; }
+.metall-page .method-strip h3 { min-height: 0; margin: 8px 0 12px; font-size: 20px; line-height: 1.45; }
+.metall-page .method-strip article > p:last-of-type { font-size: 16px; line-height: 1.8; }
+.metall-page .anatomy { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.metall-page .anatomy article, .metall-page .approaches article { border: 1px solid var(--line); border-radius: 12px; padding: 24px; }
+.metall-page .anatomy h4 { font-size: 19px; line-height: 1.4; }
+.metall-page .anatomy p, .metall-page .approaches p { font-size: 16px; line-height: 1.8; }
+.metall-page .instr-block > h3 { display: flex; align-items: center; min-height: 64px; margin-bottom: 20px; padding: 18px 22px; border: 1px solid var(--line); border-radius: 10px; background: var(--accent-soft); font-size: 23px; line-height: 1.4; }
+.metall-page .instr-lead { font-size: 16px; line-height: 1.8; }
+.metall-page .instr-steps, .metall-page .reading-method > ol { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin: 24px 0; padding: 0; list-style: none; counter-reset: explanation-step; }
+.metall-page .instr-steps > li, .metall-page .reading-method > ol > li { position: relative; margin: 0; padding: 20px 20px 20px 62px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); font-size: 15px; line-height: 1.85; counter-increment: explanation-step; }
+.metall-page .instr-steps > li::before, .metall-page .reading-method > ol > li::before { content: counter(explanation-step, decimal-leading-zero); position: absolute; left: 18px; top: 20px; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 7px; background: var(--accent-soft); color: var(--accent); font-size: 11px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.metall-page .instr-table { border-top: 0; }
+.metall-page .instr-table .agent-row { margin: 10px 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.metall-page .instr-table .agent-row > summary { padding: 20px; }
+.metall-page .instr-table .agent-body { padding: 0 24px 24px; }
+.metall-page .destination-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; border: 0; }
+.metall-page .destination-list article { display: grid; grid-template-columns: 32px minmax(0, 1fr); gap: 16px; padding: 24px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); }
+.metall-page .destination-list article > div:last-child:empty { display: none; }
+.metall-page .destination-list .ordinal { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 8px; background: var(--accent-soft); font-size: 12px; }
+.metall-page .destination-list h3 { font-size: 19px; line-height: 1.4; }
+.metall-page .destination-list p { font-size: 16px; line-height: 1.8; }
+.metall-page .bounded-detail { margin-top: 24px; padding: 0 20px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+.metall-page .bounded-detail > summary { min-height: 60px; padding: 16px 0; font-size: 15px; line-height: 1.6; }
+.metall-page .bounded-detail[open] { padding-bottom: 20px; }
+.metall-page .bounded-detail > summary > span { transition: transform 180ms ease-out; }
+.metall-page .markdown-document h2 { margin: 40px 0 24px; padding: 18px 22px; border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: 10px; background: var(--accent-soft); font-size: 25px; line-height: 1.4; }
+.metall-page .markdown-document h3 { margin: 32px 0 20px; padding-bottom: 12px; border-bottom: 1px solid var(--line); font-size: 21px; line-height: 1.45; }
+.technical-page .section > .wrap > h2 { padding: 20px 24px; border: 1px solid var(--line); border-radius: 12px; background: var(--accent-soft); }
+
+/* The graph is an explorable surface rather than a static picture. */
+.metall-page .interactive-flow { --flow-human: #486d8b; --flow-human-soft: #eaf1f7; --flow-model: #745399; --flow-model-soft: #f2ecf8; --flow-code: #255f85; --flow-code-soft: #e8f1f7; --flow-source: #6a7582; --flow-source-soft: #f4f6f8; --flow-result: #182029; overflow: hidden; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); box-shadow: var(--metall-shadow); }
+.flow-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 18px; border-bottom: 1px solid var(--line); background: var(--wash); }
+.flow-toolbar-label { display: flex; align-items: center; gap: 9px; color: var(--ink); font-size: 13px; font-weight: 600; }
+.flow-toolbar-label > .metall-icon { color: var(--accent); }
+.flow-view-switch { display: inline-flex; flex: 0 0 auto; gap: 3px; padding: 3px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+.flow-view-switch button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 34px; padding: 7px 10px; border: 0; border-radius: 5px; background: transparent; color: var(--muted); font-size: 12px; font-weight: 500; line-height: 1.5; }
+.flow-view-switch .metall-icon svg { width: 15px; height: 15px; }
+.flow-view-switch button[aria-pressed='true'] { background: var(--accent); color: var(--surface); }
+.flow-view-switch button:hover:not([aria-pressed='true']) { background: var(--accent-soft); color: var(--accent); }
+.metall-page .interactive-flow .flow-canvas { padding: 18px; border: 0; border-bottom: 1px solid var(--line); background: var(--surface); }
+.interactive-flow .flow-lane.lane-1 > rect:first-child { fill: var(--paper); }
+.interactive-flow .flow-lane rect.flow-lane-head { fill: var(--wash); }
+.interactive-flow .flow-lane-label { font-size: 14px; font-weight: 600; }
+.interactive-flow .flow-node[role='button'] { cursor: pointer; }
+.interactive-flow .flow-node, .interactive-flow .flow-edge { transition: opacity 160ms ease-out; }
+.interactive-flow .flow-node.is-muted, .interactive-flow .flow-edge.is-muted { opacity: .22; }
+.interactive-flow .flow-node:hover path, .interactive-flow .flow-node.is-active path { stroke-width: 3; }
+.interactive-flow .flow-node:focus-visible { outline: none; }
+.interactive-flow .flow-node:focus-visible path { stroke: var(--accent); stroke-width: 3.5; stroke-dasharray: 4 2; }
+.interactive-flow .flow-edge.is-active path { stroke: var(--accent); stroke-width: 2.5; }
+.interactive-flow .flow-legend { align-items: center; gap: 7px; padding: 14px 18px 12px; margin: 0; font-size: 11px; }
+.interactive-flow .flow-legend button { display: inline-flex; align-items: center; gap: 7px; min-height: 34px; padding: 6px 9px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--muted); font-size: 11px; line-height: 1.6; }
+.interactive-flow .flow-legend button i { display: block; flex: 0 0 auto; width: 10px; height: 10px; border: 1px solid var(--k); border-radius: 3px; background: var(--k-soft); }
+.interactive-flow .flow-legend button[aria-pressed='true'] { border-color: color-mix(in srgb, var(--accent) 40%, var(--line)); background: var(--accent-soft); color: var(--accent); }
+.interactive-flow .flow-legend button:hover { border-color: var(--accent); color: var(--accent); }
+.interactive-flow .flow-legend > span { padding: 6px 3px; }
+.flow-explore-hint { display: flex; align-items: center; gap: 8px; padding: 0 18px 16px; color: var(--muted); font-size: 11px; line-height: 1.6; }
+.flow-explore-hint .metall-icon svg { width: 14px; height: 14px; }
+.flow-selection { padding: 22px; border-top: 1px solid var(--line); background: var(--wash); }
+.flow-selection-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; }
+.flow-selection-heading h4 { margin: 10px 0 0; font-size: 21px; font-weight: 600; line-height: 1.45; letter-spacing: -.02em; }
+.flow-selection-heading .metall-icon-button { width: 36px; height: 36px; min-height: 36px; }
+.flow-who-model { color: var(--model); background: var(--model-soft); }
+.flow-connections { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; margin-top: 20px; }
+.flow-connections > div > p { margin: 0 0 10px; color: var(--muted); font-size: 11px; font-weight: 600; line-height: 1.6; }
+.flow-connections button { display: block; width: 100%; min-height: 42px; margin-top: 6px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 7px; background: var(--surface); color: var(--accent); font-size: 13px; line-height: 1.65; text-align: left; }
+.flow-connections button:hover { border-color: var(--accent); background: var(--accent-soft); }
+.flow-endpoint { display: block; padding: 10px 0; color: var(--muted); font-size: 13px; }
+.metall-page .interactive-flow[data-flow-view='diagram'] .flow-canvas { display: block; }
+.metall-page .interactive-flow[data-flow-view='diagram'] .flow-list { display: none; }
+.metall-page .interactive-flow[data-flow-view='steps'] .flow-canvas { display: none; }
+.metall-page .interactive-flow[data-flow-view='steps'] .flow-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; padding: 18px; }
+.metall-page .interactive-flow .flow-list li { margin: 0; padding: 16px; border: 1px solid var(--line); border-left: 3px solid var(--k); border-radius: 8px; background: var(--surface); color: var(--ink); }
+.interactive-flow .flow-list li + li::before { display: none; }
+.interactive-flow .flow-list .flow-list-who { color: var(--accent); font-size: 11px; line-height: 1.6; }
+.flow-list-select { display: flex; align-items: center; justify-content: space-between; gap: 14px; width: 100%; min-height: 44px; padding: 6px 0; border: 0; background: transparent; color: var(--ink); font: inherit; font-size: 16px; font-weight: 600; line-height: 1.6; text-align: left; }
+.flow-list-select .metall-icon { transform: rotate(-90deg); color: var(--muted); }
+.flow-list-select:hover, .flow-list-select.is-active { color: var(--accent); }
+.interactive-flow .flow-list-branch { font-size: 12px; line-height: 1.7; }
+.interactive-flow .flow-list li:has(.is-active) { border-color: var(--accent); background: var(--accent-soft); }
+.interactive-flow .flow-list li:has(.is-muted) { opacity: .35; }
+.interactive-flow .flow-list li > .flow-selection { margin: 12px -16px -16px; padding: 18px 16px; border-radius: 0 0 7px 7px; }
+.interactive-flow .flow-list .flow-selection-heading h4 { font-size: 18px; }
+.interactive-flow .flow-list .flow-connections { grid-template-columns: 1fr; gap: 14px; }
+.interactive-flow .flow-list .flow-connections button { font-weight: 400; }
+
+@media screen {
+  [data-theme='dark'] .metall-page .interactive-flow { --flow-human: #a7c9e6; --flow-human-soft: #293d50; --flow-model: #d3b8f1; --flow-model-soft: #372b47; --flow-code: #a7d6f3; --flow-code-soft: #243e53; --flow-source: #adb9c7; --flow-source-soft: #273440; --flow-result: #32688b; }
+  [data-theme='dark'] .role-card, [data-theme='dark'] .section-heading-panel, [data-theme='dark'] .interactive-flow { box-shadow: none; }
+}
+@media (hover: hover) and (pointer: fine) {
+  .role-card { transition: transform 180ms cubic-bezier(.22,1,.36,1); }
+  .role-card:hover { transform: translateY(-2px); border-color: color-mix(in srgb, var(--role-color) 50%, var(--line)); }
+  .metall-sidebar-scroll a .metall-icon { transition: transform 160ms ease-out; }
+  .metall-sidebar-scroll a:hover .metall-icon { transform: translateX(2px); }
+  .metall-banner-actions a, .flow-view-switch button, .filter-chips button { transition: transform 150ms ease-out; }
+  .metall-banner-actions a:hover, .flow-view-switch button:hover, .filter-chips button:hover { transform: translateY(-1px); }
+}
+@supports (animation-timeline: scroll()) {
+  .metall-topbar::after { content: ''; position: absolute; bottom: -1px; left: 0; height: 2px; width: 100%; background: var(--accent); transform-origin: left; animation: metall-reading linear both; animation-duration: auto; animation-timeline: scroll(root); }
+  @keyframes metall-reading { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+}
+@media (max-width: 1050px) {
+  .metall-page .agents-controls { grid-template-columns: minmax(0, 1fr) auto; }
+  .agent-search { grid-column: 1 / -1; grid-row: 2; }
+}
+@media (max-width: 760px) {
+  .metall-page .section-heading-panel { grid-template-columns: 1fr; }
+  .section-title-card { padding: 24px; }
+  .metall-page .section-title-card h2 { max-width: none; font-size: 27px; }
+  .metall-page .section-heading-panel .section-intro { padding: 22px 24px; }
+  .metall-page .role-cards { grid-template-columns: 1fr; }
+  .metall-page .principles, .metall-page .method-strip, .metall-page .anatomy, .metall-page .destination-list { grid-template-columns: 1fr; }
+  .metall-page .instr-steps, .metall-page .reading-method > ol { grid-template-columns: 1fr; }
+  .roster-hint { display: none; }
+  .flow-toolbar-label { font-size: 12px; }
+  .flow-connections { gap: 16px; }
+}
+@media (max-width: 600px) {
+  .metall-page .section-title-card h2 { font-size: 25px; }
+  .section-title-card { padding: 22px; }
+  .metall-page .section-heading-panel .section-intro { padding: 20px 22px; line-height: 1.8; }
+  .roster-heading { padding: 20px; }
+  .metall-page .roster-title { font-size: 24px; }
+  .metall-page .filter-chips button { min-height: 42px; padding-inline: 10px; font-size: 12px; }
+  .filter-chips .metall-icon { display: none; }
+  .agent-count { font-size: 11px; padding-inline: 7px; }
+  .agent-search input { font-size: 16px; }
+  .metall-page .role-card > summary { min-height: 160px; padding: 22px 18px; grid-template-columns: 38px minmax(0, 1fr) 18px; gap: 12px; }
+  .role-symbol > .metall-icon { width: 38px; height: 38px; }
+  .metall-page .role-card .agent-title { font-size: 18px; }
+  .metall-page .role-card .agent-name { font-size: 12px; }
+  .metall-page .role-card .agent-body { padding: 0 18px 18px; }
+  .metall-page .role-card dl.role-facts { grid-template-columns: 1fr; }
+  .metall-page .role-card .role-facts dt { font-size: 12px; }
+  .metall-page .role-card .role-facts dd { font-size: 16px; }
+  .metall-page .principles article, .metall-page .method-strip article, .metall-page .anatomy article { padding: 22px; }
+  .metall-page .instr-steps > li, .metall-page .reading-method > ol > li { font-size: 16px; padding-right: 16px; }
+  .metall-page .markdown-document h2 { font-size: 22px; padding: 16px 18px; }
+  .metall-page .markdown-document h3 { font-size: 20px; }
+  .flow-toolbar { gap: 10px; padding: 12px; }
+  .flow-toolbar-label { max-width: 14ch; gap: 7px; line-height: 1.5; }
+  .flow-toolbar-label > .metall-icon { display: none; }
+  .flow-view-switch button { padding-inline: 8px; min-height: 38px; }
+  .flow-view-switch button .metall-icon { display: none; }
+  .interactive-flow .flow-legend { padding-inline: 12px; }
+  .interactive-flow .flow-legend button { min-height: 38px; font-size: 11px; }
+  .flow-explore-hint { padding-inline: 12px; font-size: 12px; align-items: flex-start; }
+  .flow-explore-hint .metall-icon { margin-top: 3px; }
+  .flow-selection { padding: 18px; }
+  .flow-selection-heading h4 { font-size: 19px; }
+  .flow-connections { grid-template-columns: 1fr; }
+  .flow-connections button { font-size: 14px; }
+  .metall-page .interactive-flow[data-flow-view='steps'] .flow-list { grid-template-columns: 1fr; padding: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .role-card, .role-chevron, .metall-sidebar-scroll a .metall-icon, .metall-banner-actions a, .flow-view-switch button, .filter-chips button, .interactive-flow .flow-node, .interactive-flow .flow-edge, .bounded-detail > summary > span { transition: none !important; }
+  .role-card:hover, .metall-banner-actions a:hover, .flow-view-switch button:hover, .filter-chips button:hover, .metall-sidebar-scroll a:hover .metall-icon { transform: none !important; }
+  .metall-topbar::after { display: none; animation: none; }
+}
+@media print {
+  .metall-page .section-heading-panel { box-shadow: none; break-inside: avoid; }
+  .metall-page .role-cards { display: block; }
+  .metall-page .role-card { margin-block: 12px; break-inside: avoid; box-shadow: none; }
+  .agent-search, .flow-toolbar, .flow-explore-hint, .flow-selection, .interactive-flow .flow-legend button { display: none !important; }
+  .metall-page .interactive-flow .flow-node.is-muted, .metall-page .interactive-flow .flow-edge.is-muted { opacity: 1; }
+  .metall-page .interactive-flow .flow-canvas { display: block !important; overflow: visible; }
+  .metall-page .interactive-flow .flow-canvas svg { min-width: 0; }
+  .metall-page .interactive-flow .flow-list { display: none !important; }
+}

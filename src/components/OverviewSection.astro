@@ -1,0 +1,25 @@
+---
+import { render } from 'astro:content';
+import Icon from './Icon.astro';
+import SectionHeading from './SectionHeading.astro';
+import RoleRoster from './RoleRoster.astro';
+import Flow from './Flow.astro';
+import icons from '../data/metall-icons.json';
+import { statusLabels } from '../utils/public-content';
+const { entry, index } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+const date = new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(d.updated));
+const nodes = d.steps.map((step, i) => ({ id: 'step-' + i, col: i, kind: step.who, title: step.title, shape: i === 0 ? 'start' : 'task' }));
+const edges = nodes.slice(1).map((node, i) => ({ from: nodes[i].id, to: node.id }));
+---
+<section class:list={['chapter', 'section', 'overview-section', { wash: index % 2 === 0 }]} id={d.id} data-chapter={d.nav}>
+  <div class="wrap">
+    <SectionHeading eyebrow={d.eyebrow} title={d.title} icon={d.icon as keyof typeof icons}>{d.summary}</SectionHeading>
+    <div class="section-edition"><span class={'content-status content-status-' + d.status}>{statusLabels[d.status]}</span><span>Проверено {date}</span></div>
+    <div class="overview-copy"><Content /></div>
+    {d.kind === 'process' && <><Flow id="current-process" label="Путь работы с деталью" nodes={nodes} edges={edges} /><p class="flow-note">Схема объединяет основные задачи. Перепроверка и способ разрешения вопросов зависят от режима запуска; маршрут и смета продолжают развиваться.</p><ol class="overview-steps">{d.steps.map((step, i) => <li><span>{String(i + 1).padStart(2, '0')}</span><div><h3>{step.title}</h3><p>{step.text}</p></div></li>)}</ol></>}
+    {d.cards.length > 0 && <div class="overview-cards">{d.cards.map((card) => <article><Icon name={card.icon as keyof typeof icons} /><h3>{card.title}</h3><p>{card.text}</p></article>)}</div>}
+    {d.kind === 'roles' && <RoleRoster roles={d.roles} />}
+  </div>
+</section>

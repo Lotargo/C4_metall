@@ -3,6 +3,7 @@
 // participant); without lanes it draws a single chain of shapes.
 // Phones get the same steps as an ordered list instead of a shrunken picture.
 import { kinds } from '../data/process.mjs';
+import Icon from './Icon.astro';
 
 interface Lane { id: string; label: string }
 interface Node {
@@ -102,9 +103,10 @@ const outgoing = (n: Node) => edges.filter((e) => e.from === n.id && e.label);
 const laneName = (n: Node) => (lanes.length ? lanes[laneIndex(n)].label : kinds[n.kind].label);
 const usedKinds = [...new Set(nodes.map((n) => n.kind))];
 ---
-<figure class="flow" aria-label={label}>
-  <div class="flow-canvas" style={`--flow-min:${Math.round(width * 0.78)}px`}>
-    <svg viewBox={`0 0 ${width} ${height}`} style={`max-width:${Math.round(width * 1.25)}px`} role="img" aria-labelledby={id + '-title'}>
+<figure class="flow interactive-flow" aria-label={label} data-flow-graph={JSON.stringify({ nodes: nodes.map((n) => ({ id: n.id, kind: n.kind, title: n.title, who: laneName(n) })), edges, order: order.map((n) => n.id) })}>
+  <div class="flow-toolbar"><div class="flow-toolbar-label"><Icon name="scenarios" /><span>Процесс по участникам</span></div><div class="flow-view-switch" role="group" aria-label="Вид схемы"><button type="button" data-flow-view-button="diagram" aria-pressed="true"><Icon name="scenarios" /> Схема</button><button type="button" data-flow-view-button="steps" aria-pressed="false"><Icon name="library" /> Шаги</button></div></div>
+  <div class="flow-canvas" style={`--flow-min:${Math.round(width * 0.74)}px`}>
+    <svg viewBox={`0 0 ${width} ${height}`} style={`max-width:${Math.round(width * 1.25)}px`} role="group" aria-labelledby={id + '-title'}>
       <title id={id + '-title'}>{label}</title>
       <defs>
         <marker id={id + '-arrow'} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
@@ -117,11 +119,11 @@ const usedKinds = [...new Set(nodes.map((n) => n.kind))];
         <rect class={'flow-lane-mark kind-' + l.id} x="0" y={i * LANE_H} width="4" height={LANE_H} />
         {wrap(l.label, 11).map((line, k, all) => <text class="flow-lane-label" x="16" y={i * LANE_H + LANE_H / 2 + (k - (all.length - 1) / 2) * 18 + 5}>{line}</text>)}
       </g>)}
-      {edges.map((e) => { const r = route(e); return <g class:list={['flow-edge', { dashed: e.dashed }]}>
+      {edges.map((e) => { const r = route(e); return <g class:list={['flow-edge', { dashed: e.dashed }]} data-flow-from={e.from} data-flow-to={e.to}>
         <path d={r.d} marker-end={`url(#${id}-arrow)`} />
         {e.label && <text x={r.lx} y={r.ly} text-anchor={r.anchor} class="flow-edge-label">{e.label}</text>}
       </g>; })}
-      {nodes.map((n) => { const p = byId[n.id]; const max = n.shape === 'decision' ? 10 : Math.floor((p.w - 14) / (FONT * 0.56)); const lines = wrap(n.title, max); return <g class:list={['flow-node', 'kind-' + n.kind, 'shape-' + (n.shape ?? 'task'), { here: n.here }]}>
+      {nodes.map((n, index) => { const p = byId[n.id]; const max = n.shape === 'decision' ? 10 : Math.floor((p.w - 14) / (FONT * 0.56)); const lines = wrap(n.title, max); return <g class:list={['flow-node', 'kind-' + n.kind, 'shape-' + (n.shape ?? 'task'), { here: n.here }]} role="button" tabindex={index === 0 ? 0 : -1} aria-label={'Шаг: ' + n.title} aria-pressed="false" data-flow-node={n.id}>
         <path d={shapePath(p)} />
         {lines.map((line, k) => <text x={p.cx} y={p.cy + (k - (lines.length - 1) / 2) * 18 + 5 - (n.shape === 'doc' ? 3 : 0)}>{line}</text>)}
       </g>; })}
@@ -130,13 +132,20 @@ const usedKinds = [...new Set(nodes.map((n) => n.kind))];
   <ol class="flow-list">
     {order.map((n) => <li class:list={['kind-' + n.kind, { here: n.here, decision: n.shape === 'decision' }]}>
       <span class="flow-list-who">{laneName(n)}{n.here && ' · этот пункт'}</span>
-      <b>{n.title}</b>
+      <button type="button" class="flow-list-select" data-flow-node={n.id} aria-pressed="false">{n.title}<Icon name="chevron" /></button>
       {outgoing(n).map((e) => <span class="flow-list-branch">{e.label} → {byId[e.to].title}</span>)}
     </li>)}
   </ol>
   {legend && <figcaption class="flow-legend">
-    {usedKinds.map((k) => <span class={'kind-' + k}><i aria-hidden="true"></i>{kinds[k].legend}</span>)}
+    <button type="button" class="flow-kind-reset" data-flow-kind="all" aria-pressed="true">Все участники</button>
+    {usedKinds.map((k) => <button type="button" class={'kind-' + k} data-flow-kind={k} aria-pressed="false"><i aria-hidden="true"></i>{kinds[k].legend}</button>)}
     {nodes.some((n) => n.shape === 'decision') && <span class="legend-decision"><i aria-hidden="true"></i>Решение / проверка</span>}
     {edges.some((e) => e.dashed) && <span class="legend-dashed"><i aria-hidden="true"></i>По необходимости</span>}
   </figcaption>}
+  <div class="flow-explore-hint"><Icon name="search" /><span>Выберите участника или блок, чтобы проследить его связи.</span></div>
+  <div class="flow-selection" data-flow-selection hidden aria-live="polite">
+    <div class="flow-selection-heading"><div><span class="badge" data-flow-who></span><h4 data-flow-title></h4></div><button type="button" class="metall-icon-button" data-flow-clear aria-label="Снять выбор блока"><Icon name="close" /></button></div>
+    <div class="flow-connections"><div><p>Получает от</p><div data-flow-incoming></div></div><div><p>Передаёт дальше</p><div data-flow-outgoing></div></div></div>
+  </div>
 </figure>
+<script>import '../scripts/flow-interactions.ts';</script>

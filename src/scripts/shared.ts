@@ -46,15 +46,15 @@ all("[data-step]").forEach((button) =>
     );
   }),
 );
-all("[data-agent-filter]").forEach((button) =>
-  button.addEventListener("click", () => {
-    const filter = button.dataset.agentFilter;
-    all("[data-agent-filter]").forEach((tab) =>
-      tab.setAttribute("aria-pressed", String(tab === button)),
-    );
+const roleSearch = document.querySelector<HTMLInputElement>('[data-agent-search-input]');
+const applyRoleFilters = () => {
+    const filter = document.querySelector<HTMLElement>('[data-agent-filter][aria-pressed="true"]')?.dataset.agentFilter ?? 'all';
+    const query = roleSearch?.value.trim().toLocaleLowerCase('ru-RU') ?? '';
     let count = 0;
-    all(".agent-row").forEach((row) => {
-      row.hidden = filter !== "all" && row.dataset.agentKind !== filter;
+    all(".agent-row[data-agent-kind]").forEach((row) => {
+      const matchesKind = filter === 'all' || row.dataset.agentKind === filter;
+      const matchesQuery = !query || (row.dataset.agentSearch ?? '').toLocaleLowerCase('ru-RU').includes(query);
+      row.hidden = !matchesKind || !matchesQuery;
       if (!row.hidden) count++;
     });
     const counter = document.querySelector("#agent-count");
@@ -62,5 +62,22 @@ all("[data-agent-filter]").forEach((button) =>
     const word =
       tens > 10 && tens < 20 ? "ролей" : ones === 1 ? "роль" : ones > 1 && ones < 5 ? "роли" : "ролей";
     if (counter) counter.textContent = count + " " + word;
+    const empty = document.querySelector<HTMLElement>('[data-agent-empty]');
+    if (empty) empty.hidden = count !== 0;
+    const clear = document.querySelector<HTMLButtonElement>('[data-agent-search-clear]');
+    if (clear) clear.hidden = !query;
+};
+all("[data-agent-filter]").forEach((button) =>
+  button.addEventListener("click", () => {
+    all("[data-agent-filter]").forEach((tab) => tab.setAttribute("aria-pressed", String(tab === button)));
+    applyRoleFilters();
   }),
 );
+roleSearch?.addEventListener('input', applyRoleFilters);
+document.querySelector('[data-agent-search-clear]')?.addEventListener('click', () => {
+  if (!roleSearch) return;
+  roleSearch.value = '';
+  applyRoleFilters();
+  roleSearch.focus();
+});
+applyRoleFilters();

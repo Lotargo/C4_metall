@@ -31,17 +31,17 @@
   body { padding-bottom: 80px; }
   :root[data-theme='dark'] {
     color-scheme: dark;
-    --paper: #161d1a;
-    --surface: #1c2520;
-    --wash: #232e27;
-    --ink: #e6eae3;
-    --muted: #acb6ad;
-    --line: #435148;
-    --accent: #a3d1bc;
-    --accent-soft: #2a4034;
-    --model: #e0bb92;
-    --model-soft: #3a3025;
-    --c4-canvas: #19231e;
+    --paper: #111820;
+    --surface: #18222d;
+    --wash: #202d39;
+    --ink: #e9eff5;
+    --muted: #a7b6c6;
+    --line: #344454;
+    --accent: #a7d6f3;
+    --accent-soft: #243e53;
+    --model: #d3b8f1;
+    --model-soft: #372b47;
+    --c4-canvas: #141e29;
     --c4-container: #2f6293;
     --c4-external: #53616a;
     --c4-component: #284764;
@@ -78,10 +78,10 @@
   :root[data-theme='dark'] .flow {
     --flow-human: #a7c3e6;
     --flow-human-soft: #29384b;
-    --flow-model: #e0bb92;
-    --flow-model-soft: #3a3025;
-    --flow-code: #a3d1bc;
-    --flow-code-soft: #2a4034;
+    --flow-model: #d3b8f1;
+    --flow-model-soft: #372b47;
+    --flow-code: #a7d6f3;
+    --flow-code-soft: #243e53;
     --flow-source: #b1bcb2;
     --flow-source-soft: #303931;
   }
@@ -105,11 +105,11 @@
     --head: var(--wash);
   }
   :root[data-theme='dark'] .plan-page .kind-source { --kind: var(--muted); }
-  :root[data-theme='dark'] .plan-page .box-done { --box: #a3d1bc; }
-  :root[data-theme='dark'] .plan-page .box-issue { --box: #e0bb92; }
+  :root[data-theme='dark'] .plan-page .box-done { --box: #a7d6f3; }
+  :root[data-theme='dark'] .plan-page .box-issue { --box: #d3b8f1; }
   :root[data-theme='dark'] .plan-page .box-next { --box: #a7c3e6; }
-  :root[data-theme='dark'] .plan-page .status-done { color: #a3d1bc; background: #2a4034; border-color: #607e6c; }
-  :root[data-theme='dark'] .plan-page .status-limited { color: #e0bb92; background: #3a3025; border-color: #8b7458; }
+  :root[data-theme='dark'] .plan-page .status-done { color: #a7d6f3; background: #243e53; border-color: #607e6c; }
+  :root[data-theme='dark'] .plan-page .status-limited { color: #d3b8f1; background: #372b47; border-color: #8b7458; }
   :root[data-theme='dark'] .plan-page .status-progress { color: #a7c3e6; background: #29384b; border-color: #677d98; }
   :root[data-theme='dark'] .plan-page .status-planned { color: var(--muted); background: var(--wash); border-color: var(--line); }
   :root[data-theme='dark'] .plan-page .status-open { color: #e8b3a8; background: #402e29; border-color: #916b60; }

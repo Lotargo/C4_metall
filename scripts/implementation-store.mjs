@@ -1,4 +1,4 @@
-import { readFile, readdir } from 'node:fs/promises';
+import { readFile, readdir, access } from 'node:fs/promises';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
 import { implementationSeed } from '../src/editor/seed.mjs';
@@ -13,11 +13,13 @@ export async function implementationFiles(root) {
       else if (entry.isFile() && entry.name.endsWith('.md')) files.set(relative.slice(0, -3), path.join(directory, entry.name));
     }
   }
-  await walk(path.join(root, 'documents/implementation'));
+  let sourceDirectory = path.join(root, 'content/public/plans');
+  try { await access(sourceDirectory); } catch { sourceDirectory = path.join(root, 'documents/implementation'); }
+  await walk(sourceDirectory);
   return files;
 }
 
-export function createImplementationStores(root, { base = '', directory = path.join(root, '.local/implementation') } = {}) {
+export function createImplementationStores(root, { base = '', directory = path.join(root, '.local/public-plans') } = {}) {
   const stores = new Map();
   return async (id) => {
     const files = await implementationFiles(root);

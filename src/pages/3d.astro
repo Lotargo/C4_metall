@@ -1,0 +1,27 @@
+---
+import { getEntry, render } from 'astro:content';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import ModelViewer from '../components/ModelViewer.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import ThemeHead from '../components/ThemeHead.astro';
+import ThemeToggle from '../components/ThemeToggle.astro';
+import models from '../../content/public/models/examples.json';
+import { sitePath } from '../utils/site-path.mjs';
+import '../styles/global.css';
+import '@fontsource-variable/inter/wght.css';
+import '../styles/metall.css';
+import '../styles/interactive.css';
+import '../styles/overview.css';
+import '../styles/models.css';
+const entry = await getEntry('modelArticle', 'article');
+if (!entry) throw new Error('Missing 3D article');
+const { Content, headings } = await render(entry);
+---
+<!doctype html><html lang="ru"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Создание 3D-модели — Подготовка производства</title><meta name="description" content={entry.data.summary}/><meta name="robots" content="noindex, nofollow"/><meta name="theme-color" content="#f4f6f8"/><link rel="icon" type="image/svg+xml" href={sitePath('/favicon.svg')}/><ThemeHead/></head>
+<body><a class="skip-link" href="#main">Перейти к статье</a><ThemeToggle/><div class="metall-page" id="page-start"><SiteHeader page="models" title="Создание 3D-модели" subtitle="Metall · Геометрия детали"/>
+<main id="main"><section class="section model-intro" id="top"><div class="wrap"><p class="eyebrow">Отдельный сценарий / Геометрия</p><h1>{entry.data.title}</h1><p class="lead">{entry.data.summary}</p><div class="section-edition"><span class="content-status content-status-evolving">Примеры и возможности текущей версии</span><span>Проверено 13 ноября 2026</span></div><a href="#viewer" class="primary-button">Рассмотреть модели <span aria-hidden="true">↓</span></a></div></section>
+<section class="section wash" id="viewer"><div class="wrap"><SectionHeading eyebrow="01 / Интерактивный просмотр" title="Две детали. Любой ракурс." icon="geometry">Переключайте примеры, открывайте сечение и выбирайте поверхности. Под каждым результатом сохранены его ограничения.</SectionHeading><ModelViewer/></div></section>
+<div class="wrap model-article-layout"><aside class="model-article-toc"><nav aria-label="Содержание статьи"><p class="eyebrow">В этой статье</p>{headings.filter(h=>h.depth===2).map(h=><a href={'#'+h.slug}>{h.text}</a>)}</nav></aside><article class="model-article"><Content/><div class="model-example-notes">{models.map(m=><section><p class="eyebrow">{m.label}</p><h3>{m.title}</h3><p>{m.summary}</p><dl class="model-metrics"><div><dt>Габариты</dt><dd>{m.size}</dd></div><div><dt>Объём</dt><dd>{m.volume}</dd></div></dl><p>{m.limitations}</p></section>)}</div></article></div>
+</main><SiteFooter/></div></body></html>
